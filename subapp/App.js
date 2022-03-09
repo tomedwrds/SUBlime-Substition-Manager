@@ -1,51 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList } from 'react-native';
 
 export default function App() {
  
 
   const [Items, setItems] = useState([
-    {name: 'Item 1' },
-    {name: 'Item 2' },
-    {name: 'Item 3' },
-    {name: 'Item 4' },
-    {name: 'Item 5' },
-    {name: 'Item 6' },
-    {name: 'Item 7' },
-    {name: 'Item 8' },
-    {name: 'Item 9' },
-    {name: 'Item 27' },
-    {name: 'Item 78' },
+    {title: 'Item 1', data: ['Item 1-1', 'Item 1-2'], },
+ 
+
   ]);
 
   const [Refreshing, setRefreshing] = useState(false);
-  const [currentKey, setCurrentKey] = useState(12)
+  const [currentKey, setCurrentKey] = useState(2)
 
   const onRefresh = () => {
     setRefreshing(true);
-    setItems([...Items, {name: `Item ${currentKey}`}]);
+    setItems([...Items, {title: `Item ${currentKey}`, data: [`Item ${currentKey}-1`, `Item ${currentKey}-2`]}]);
     setCurrentKey(currentKey + 1);
     setRefreshing(false);
   }
 
   return (
-      <FlatList
-      //Gets data to use for rendering
-      data ={Items}
-      //Render each item using data
-      renderItem = {({item}) => (
+      <SectionList
+        //Gets data to use for rendering
+        sections ={Items}
+        //Render each item using data
+        renderItem = {({item}) => (
+          
+            <Text style={styles.text}>{item}</Text>
+          
+        )}
+
+        renderSectionHeader = {({section})=>(
         <View style={styles.item}>
-          <Text style={styles.text}>{item.name}</Text>
+          <Text style={styles.text}>{section.title}</Text>
         </View>
-      )}
+          
+        )}
+        //Give each item a key
+        keyExtractor = {(item,index) => index.toString()}
 
-      //Give each item a key
-      keyExtractor = {(item,index) => index.toString()}
-
-      //Refreshing
-      refreshing={Refreshing}
-      onRefresh = {onRefresh}
+        //Refreshing
+        refreshing={Refreshing}
+        onRefresh = {onRefresh}
 
       />
       // <ScrollView
