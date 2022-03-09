@@ -1,22 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList } from 'react-native';
 
 export default function App() {
  
 
   const [Items, setItems] = useState([
-    { key: 1, item: 'Item 1' },
-    { key: 2, item: 'Item 2' },
-    { key: 3, item: 'Item 3' },
-    { key: 4, item: 'Item 4' },
-    { key: 5, item: 'Item 5' },
-    { key: 6, item: 'Item 6' },
-    { key: 7, item: 'Item 7' },
-    { key: 8, item: 'Item 8' },
-    { key: 9, item: 'Item 9' },
-    { key: 10, item: 'Item 27' },
-    { key: 11, item: 'Item 78' },
+    {name: 'Item 1' },
+    {name: 'Item 2' },
+    {name: 'Item 3' },
+    {name: 'Item 4' },
+    {name: 'Item 5' },
+    {name: 'Item 6' },
+    {name: 'Item 7' },
+    {name: 'Item 8' },
+    {name: 'Item 9' },
+    {name: 'Item 27' },
+    {name: 'Item 78' },
   ]);
 
   const [Refreshing, setRefreshing] = useState(false);
@@ -24,33 +24,50 @@ export default function App() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    setItems([...Items, { key: currentKey, item: `Item ${currentKey}`}]);
+    setItems([...Items, {name: `Item ${currentKey}`}]);
     setCurrentKey(currentKey + 1);
     setRefreshing(false);
   }
 
   return (
-    
-      <ScrollView
-        style={styles.body}
-        refreshControl={
-          <RefreshControl
-            refreshing={Refreshing}
-            onRefresh={onRefresh}
-            colors={['#ff00ff']}
-          />
-        }
-      >
-        {
-          Items.map((object) => {
-            return (
-              <View style={styles.item} key={object.key}>
-                <Text style={styles.text}>{object.item}</Text>
-              </View>
-            )
-          })
-        }
-      </ScrollView>
+      <FlatList
+      //Gets data to use for rendering
+      data ={Items}
+      //Render each item using data
+      renderItem = {({item}) => (
+        <View style={styles.item}>
+          <Text style={styles.text}>{item.name}</Text>
+        </View>
+      )}
+
+      //Give each item a key
+      keyExtractor = {(item,index) => index.toString()}
+
+      //Refreshing
+      refreshing={Refreshing}
+      onRefresh = {onRefresh}
+
+      />
+      // <ScrollView
+      //   style={styles.body}
+      //   refreshControl={
+      //     <RefreshControl
+      //       refreshing={Refreshing}
+      //       onRefresh={onRefresh}
+      //       colors={['#ff00ff']}
+      //     />
+      //   }
+      // >
+      //   {
+      //     Items.map((object) => {
+      //       return (
+      //         <View style={styles.item} key={object.key}>
+      //           <Text style={styles.text}>{object.item}</Text>
+      //         </View>
+      //       )
+      //     })
+      //   }
+      // </ScrollView>
    
 
     
