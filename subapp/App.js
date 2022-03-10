@@ -1,72 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList } from 'react-native';
+import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList, TextInput, Pressable } from 'react-native';
 
 export default function App() {
  
+  const [num1, setNum1] = useState(undefined);
+  const [num2, setNum2] = useState(undefined);
+  const [summed, setSummed] = useState(false);
+  const [total, setTotal] = useState(0);
 
-  const [Items, setItems] = useState([
-    {title: 'Item 1', data: ['Item 1-1', 'Item 1-2'], },
- 
-
-  ]);
-
-  const [Refreshing, setRefreshing] = useState(false);
-  const [currentKey, setCurrentKey] = useState(2)
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    setItems([...Items, {title: `Item ${currentKey}`, data: [`Item ${currentKey}-1`, `Item ${currentKey}-2`]}]);
-    setCurrentKey(currentKey + 1);
-    setRefreshing(false);
+  const onPressHandler = () => {
+    if (!isNaN(num1) && !isNaN(num2))
+    {
+      setSummed(!summed);
+      setTotal(num1 + num2);
+    }
   }
 
   return (
-      <SectionList
-        //Gets data to use for rendering
-        sections ={Items}
-        //Render each item using data
-        renderItem = {({item}) => (
-          
-            <Text style={styles.text}>{item}</Text>
-          
-        )}
+    
+    <View style ={styles.body}>
+      <Text style = {styles.text}>Please write your name</Text>
+      <TextInput 
+        style= {styles.input}
+        placeholder = "Number 1"
+        onChangeText={(k) =>setNum1(parseInt(k))}
+        />
+      <TextInput 
+        style= {styles.input}
+        placeholder = "Number 2"
+        onChangeText={(k) =>setNum2(parseInt(k))}
+        />
 
-        renderSectionHeader = {({section})=>(
-        <View style={styles.item}>
-          <Text style={styles.text}>{section.title}</Text>
-        </View>
-          
-        )}
-        //Give each item a key
-        keyExtractor = {(item,index) => index.toString()}
+      <Pressable
+        onPress={onPressHandler}
+      >
+        <Text style={styles.text}>{summed ? 'Clear' : 'Add' }</Text> 
+      </Pressable>
 
-        //Refreshing
-        refreshing={Refreshing}
-        onRefresh = {onRefresh}
-
-      />
-      // <ScrollView
-      //   style={styles.body}
-      //   refreshControl={
-      //     <RefreshControl
-      //       refreshing={Refreshing}
-      //       onRefresh={onRefresh}
-      //       colors={['#ff00ff']}
-      //     />
-      //   }
-      // >
-      //   {
-      //     Items.map((object) => {
-      //       return (
-      //         <View style={styles.item} key={object.key}>
-      //           <Text style={styles.text}>{object.item}</Text>
-      //         </View>
-      //       )
-      //     })
-      //   }
-      // </ScrollView>
-   
+      <Text style = {styles.text} >{summed ? (total).toString() : null }</Text>
+    </View>
 
     
     
@@ -77,7 +50,7 @@ export default function App() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'column',
+    alignItems: 'center',
     backgroundColor: '#ffffff',
   },
   item: {
@@ -88,9 +61,17 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000000',
-    fontSize: 45,
+    fontSize: 20,
     fontStyle: 'italic',
-    margin: 10,
+    margin: 30,
   },
+  input: {
+    borderWidth: 1,
+    width: 300,
+    borderRadius: 5,
+    textAlign: 'center',
+    padding: 10,
+    fontSize: 20,
+  }
   
 });
