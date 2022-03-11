@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList, TextInput, Pressable, Alert } from 'react-native';
+
+import Operator from './Operator';
 
 export default function App() {
  
@@ -9,11 +11,26 @@ export default function App() {
   const [summed, setSummed] = useState(false);
   const [total, setTotal] = useState(0);
 
-  const onPressHandler = () => {
+  const onPressHandle = (isAdd) => {
     if (!isNaN(num1) && !isNaN(num2))
     {
+      
       setSummed(!summed);
-      setTotal(num1 + num2);
+      if (isAdd)
+      {
+        setTotal(num1 + num2);
+      }
+      else
+      {
+        setTotal(num1 - num2);
+
+      }
+    }
+      
+    else
+    {
+      Alert.alert('Warning', 'Please enter valid numbers', [{text: 'Ok'}])
+
     }
   }
 
@@ -32,12 +49,23 @@ export default function App() {
         onChangeText={(k) =>setNum2(parseInt(k))}
         />
 
-      <Pressable
-        onPress={onPressHandler}
-      >
-        <Text style={styles.text}>{summed ? 'Clear' : 'Add' }</Text> 
-      </Pressable>
+    <Operator 
+      
+      onPressFunction = {() => onPressHandle(true)}
+      text = 'Add'
+      style = {[styles.text, styles.item, {padding: 10, margin: 0}]}
 
+    
+    ></Operator>  
+    <Operator 
+      
+      onPressFunction = {() => onPressHandle(false)}
+      text = 'Minus'
+      style = {[styles.text, styles.item, {padding: 10, margin: 0}]}
+
+    
+    ></Operator>
+    
       <Text style = {styles.text} >{summed ? (total).toString() : null }</Text>
     </View>
 
