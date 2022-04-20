@@ -1,105 +1,228 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, Linking, ScrollView, RefreshControl, FlatList, SectionList, TextInput, Pressable, Alert } from 'react-native';
+// In App.js in a new project
 
-import Operator from './Operator';
 
-export default function App() {
- 
-  const [num1, setNum1] = useState(undefined);
-  const [num2, setNum2] = useState(undefined);
-  const [summed, setSummed] = useState(false);
-  const [total, setTotal] = useState(0);
 
-  const onPressHandle = (isAdd) => {
-    if (!isNaN(num1) && !isNaN(num2))
-    {
-      
-      setSummed(!summed);
-      if (isAdd)
-      {
-        setTotal(num1 + num2);
-      }
-      else
-      {
-        setTotal(num1 - num2);
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import {Pressable, Text,View,StyleSheet, Animated} from 'react-native'
+import { FlatList, GestureHandlerRootView, PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler';
+import { shadow } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
 
-      }
-    }
-      
-    else
-    {
-      Alert.alert('Warning', 'Please enter valid numbers', [{text: 'Ok'}])
+//import { createStore } from 'redux';
+//import { Provider } from 'react-redux';
 
-    }
+//import PlayerView from './src/PlayerView';
+
+
+
+//Intalize Array that contains data of all players and then set it to list hook
+const players = [
+
+];
+
+const initalState = {
+  players: []
+}
+
+//Reducer function
+/*const reducer =(state = initalState,action) => {
+  switch (action.type) {
+    //switch in here
+  }
+  return state;
+}*/
+
+//const store = createStore(reducer)
+
+const DATA = [
+  {
+      name: '1',
+      color: 'red',
+      index: 0
+  },
+  {
+      name: '2',
+      color: 'purple',
+      index: 1
+  },
+  {
+      name: '3',
+      color: 'orange',
+      index: 2
+  },
+  {
+      name: '4',
+      color: 'black',
+      index: 3
+  },
+  {
+    name: '5',
+    color: 'yellow',
+    index: 4
   }
 
-  return (
-    
-    <View style ={styles.body}>
-      <Text style = {styles.text}>Please write your name</Text>
-      <TextInput 
-        style= {styles.input}
-        placeholder = "Number 1"
-        onChangeText={(k) =>setNum1(parseInt(k))}
-        />
-      <TextInput 
-        style= {styles.input}
-        placeholder = "Number 2"
-        onChangeText={(k) =>setNum2(parseInt(k))}
-        />
 
-    <Operator 
+
+]
+const sliderBarMargin = 20
+
+const TagSection = (props) =>
+{
+  
+  
+  return(
+    <Pressable
       
-      onPressFunction = {() => onPressHandle(true)}
-      text = 'Add'
-      style = {[styles.text, styles.item, {padding: 10, margin: 0}]}
-
-    
-    ></Operator>  
-    <Operator 
+      style = {{...styles.tagSection, backgroundColor: props.color, width: props.width  , justifyContent: 'center', alignItems: 'center'}}
       
-      onPressFunction = {() => onPressHandle(false)}
-      text = 'Minus'
-      style = {[styles.text, styles.item, {padding: 10, margin: 0}]}
+    >
+      <Text
+        style = {styles.tagSectionText}
+      >{props.name}</Text>
+    </Pressable>
+    
+  )
 
-    
-    ></Operator>
-    
-      <Text style = {styles.text} >{summed ? (total).toString() : null }</Text>
-    </View>
-
-    
-    
-  );
 }
 
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-  },
-  item: {
-    margin: 10,
-    backgroundColor: '#4ae1fa',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#000000',
-    fontSize: 20,
-    fontStyle: 'italic',
-    margin: 30,
-  },
-  input: {
-    borderWidth: 1,
-    width: 300,
-    borderRadius: 5,
-    textAlign: 'center',
-    padding: 10,
-    fontSize: 20,
-  }
+
+function App() {
+ 
   
-});
+  
+  
+  
+  const [width, setWidth] = useState(100)
+  
+
+
+  const windowWidth = Dimensions.get('window').width;
+  const [widths, setWidths] = useState((new Array(DATA.length).fill((windowWidth-2*sliderBarMargin)/DATA.length)))
+  const[intWidth, setIntWidth] = useState(widths)
+ 
+  const [DATAstuff, setDatastuff] = useState(DATA)
+  
+  const new_width = (index ) => {
+    
+      const k = widths.slice()
+      k[index] = 300
+      
+      setWidths(k) 
+      
+      
+  }
+  return(
+    
+    <SafeAreaView>
+      <View style = {styles.sliderBar}>
+        {DATAstuff.map((prop,index) => {
+            
+            return (
+              <PanGestureHandler key = {index} activeOffsetX={[-20,20]} onGestureEvent={(k) => 
+                {
+                  if (k.nativeEvent.state == State.ACTIVE)
+                  {
+                      // 1 left, 1 right
+                      const move_dir =1
+                     // k.nativeEvent.
+                      const j = widths.slice()
+                      j[index] = k.nativeEvent.x
+                      j[index+1] = j[index+move_dir] - move_dir*(j[index] -widths[index])
+                      
+                      setWidths(j) 
+
+                      if (widths[index+move_dir] < 10)
+                      {
+                        
+                        const newList = DATAstuff.slice()
+                        newList.splice(index+move_dir,1)
+
+                        setDatastuff(newList)
+                        const newList2 = widths.slice()
+                        newList2.splice(index+move_dir,1)
+                        newList2[index] += widths[index+move_dir]
+                        setWidths(newList2)
+                        console.log(newList)
+                        
+                        
+                      }
+                      
+                    
+                  }
+                }}
+                >
+                
+                <View style={{ width: widths[index], height: 100, backgroundColor: prop.color }}>
+                  <Text style = {styles.tagSectionText}>{prop.name}</Text>
+                </View>
+                
+                
+              </PanGestureHandler>
+              //<SafeAreaView>TagSection name = {prop.name}  color = {prop.color} width = {widths[prop.index]} ></TagSection>
+            //   <Pressable
+            //   key = {index}
+            //   style = {{...styles.tagSection, backgroundColor: prop.color, width: widths[index]  , justifyContent: 'center', alignItems: 'center'}}
+            //   onPress = {() => new_width(index)}
+            // >
+            //   <Text
+            //     style = {styles.tagSectionText}
+            //   >{prop.name}</Text>
+            // </Pressable>
+            
+              );
+          })}
+      </View>
+        
+      
+    </SafeAreaView>
+    
+    
+    
+        // <SafeAreaView>
+          // <PanGestureHandler activeOffsetX={[-60,60]} onGestureEvent={(k) => 
+          //   {
+          //     if (k.nativeEvent.state == State.ACTIVE)
+          //     {
+          //       setWidth(k.nativeEvent.x)
+          //     }
+          //   }}
+          //   >
+            
+          //   <View style={{ width: width, height: 100, backgroundColor: "red" }}>
+          //     <Text>HEY!</Text>
+          //   </View>
+            
+            
+          // </PanGestureHandler>
+        //   </SafeAreaView>
+      
+      
+     
+      
+    
+    
+  )
+  
+}
+const styles = StyleSheet.create({
+
+  tagSection: {
+    height: 100,
+  },
+  tagSectionText: {
+    fontSize: 30,
+    color: 'white'
+  },
+  sliderBar: {
+    flexDirection: 'row',
+    
+    borderWidth: 3,
+    borderRadius: 40,
+    overflow: 'hidden',
+    margin: sliderBarMargin
+  }
+})
+export default App;
