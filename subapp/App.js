@@ -114,70 +114,185 @@ function App() {
       
       
   }
-  return(
+
+  const [startPos, setStartPos] = useState(0)
+  const [bars,setBars] = useState([
+    {
+        name: '1',
+        color: 'red',
+        index: 0,
+        start: 0,
+        end: 400
+    },
     
+    {
+        name: '2',
+        color: 'purple',
+        index: 1,
+        start: 700,
+        end: 800
+    }]
+  
+  
+  
+  )
+  
+console.log(bars)
+ 
+newBars = bars.splice()
+
+  //Testing fill gaps code
+  var arrayLength = bars.length 
+  var toatal_added = 0
+  for(var i = 0; i< arrayLength; i++) 
+  {
+    //Check if last item if so close out list
+    if(i == arrayLength-1)
+    {
+      if (bars[i].end != windowWidth)
+      {
+        newBars.push({
+          name: 'Empty',
+          color: 'white',
+          index: 0,
+          start: bars[i].end+1,
+          end: windowWidth
+      })
+        
+      }
+    }
+    //General check for gaps - note addition of 1 to account for gap
+    else if((bars[i].start +1) != bars[i+1].end)
+    {
+      toatal_added += 1
+      //Append new item
+      newBars.splice(i+toatal_added,0,{
+        name: 'Empty',
+        color: 'white',
+        index: 0,
+        start: newBars[i].end+1,
+        end: newBars[i+1].start-1
+    })
+    
+    }
+    
+    
+  }
+
+  setBars(newBars)
+
+  
+  
+
+  
+
+  
+
+  return(
     <SafeAreaView>
-      <View style = {styles.sliderBar}>
-        {DATAstuff.map((prop,index) => {
+      <PanGestureHandler activeOffsetX={[-20,20]}  
+        
+        onActivated = {
+          (k) => {
+            setStartPos(k.nativeEvent.x)
+          }}
+        onEnded={
+          (k) => {
             
+          }}
+        onGestureEvent ={
+          (k) => {
+            if (k.nativeEvent.x < startPos)
+            {
+              //Left
+            }
+            else 
+            {
+              //Right
+            }
+            const newNewBars = bars.splice()
+            newNewBars.forEach(item => console.log(item)).
+            setBars(newNewBars)
+           
+          }
+        }
+        >
+        <View style = {styles.sliderBar}>
+
+          {bars.map((prop,index) => {
             return (
-              <PanGestureHandler key = {index} activeOffsetX={[-20,20]} onGestureEvent={(k) => 
-                {
-                  if (k.nativeEvent.state == State.ACTIVE)
-                  {
-                      // 1 left, 1 right
-                      const move_dir =1
-                     // k.nativeEvent.
-                      const j = widths.slice()
-                      j[index] = k.nativeEvent.x
-                      j[index+1] = j[index+move_dir] - move_dir*(j[index] -widths[index])
+              <View key = {prop.index} style={{ width: (prop.end-prop.start), height: 100, backgroundColor: prop.color }}>
+                <Text style = {styles.tagSectionText}>{prop.name}</Text>
+              </View> 
+            )
+          
+          })}
+        </View>
+      </PanGestureHandler>
+    </SafeAreaView>
+    
+    // <SafeAreaView>
+    //   <View style = {styles.sliderBar}>
+    //     {DATAstuff.map((prop,index) => {
+            
+    //         return (
+    //           <PanGestureHandler key = {index} activeOffsetX={[-20,20]} onGestureEvent={(k) => 
+    //             {
+    //               if (k.nativeEvent.state == State.ACTIVE)
+    //               {
+    //                   // 1 left, 1 right
+    //                   const move_dir =1
+    //                  // k.nativeEvent.
+    //                   const j = widths.slice()
+    //                   j[index] = k.nativeEvent.x
+    //                   j[index+1] = j[index+move_dir] - move_dir*(j[index] -widths[index])
                       
-                      setWidths(j) 
+    //                   setWidths(j) 
 
-                      if (widths[index+move_dir] < 10)
-                      {
+    //                   if (widths[index+move_dir] < 10)
+    //                   {
                         
-                        const newList = DATAstuff.slice()
-                        newList.splice(index+move_dir,1)
+    //                     const newList = DATAstuff.slice()
+    //                     newList.splice(index+move_dir,1)
 
-                        setDatastuff(newList)
-                        const newList2 = widths.slice()
-                        newList2.splice(index+move_dir,1)
-                        newList2[index] += widths[index+move_dir]
-                        setWidths(newList2)
-                        console.log(newList)
+    //                     setDatastuff(newList)
+    //                     const newList2 = widths.slice()
+    //                     newList2.splice(index+move_dir,1)
+    //                     newList2[index] += widths[index+move_dir]
+    //                     setWidths(newList2)
+    //                     console.log(newList)
                         
                         
-                      }
+    //                   }
                       
                     
-                  }
-                }}
-                >
+    //               }
+    //             }}
+    //             >
                 
-                <View style={{ width: widths[index], height: 100, backgroundColor: prop.color }}>
-                  <Text style = {styles.tagSectionText}>{prop.name}</Text>
-                </View>
+    //             <View style={{ width: widths[index], height: 100, backgroundColor: prop.color }}>
+    //               <Text style = {styles.tagSectionText}>{prop.name}</Text>
+    //             </View>
                 
                 
-              </PanGestureHandler>
-              //<SafeAreaView>TagSection name = {prop.name}  color = {prop.color} width = {widths[prop.index]} ></TagSection>
-            //   <Pressable
-            //   key = {index}
-            //   style = {{...styles.tagSection, backgroundColor: prop.color, width: widths[index]  , justifyContent: 'center', alignItems: 'center'}}
-            //   onPress = {() => new_width(index)}
-            // >
-            //   <Text
-            //     style = {styles.tagSectionText}
-            //   >{prop.name}</Text>
-            // </Pressable>
+    //           </PanGestureHandler>
+    //           //<SafeAreaView>TagSection name = {prop.name}  color = {prop.color} width = {widths[prop.index]} ></TagSection>
+    //         //   <Pressable
+    //         //   key = {index}
+    //         //   style = {{...styles.tagSection, backgroundColor: prop.color, width: widths[index]  , justifyContent: 'center', alignItems: 'center'}}
+    //         //   onPress = {() => new_width(index)}
+    //         // >
+    //         //   <Text
+    //         //     style = {styles.tagSectionText}
+    //         //   >{prop.name}</Text>
+    //         // </Pressable>
             
-              );
-          })}
-      </View>
+    //           );
+    //       })}
+    //   </View>
         
       
-    </SafeAreaView>
+    // </SafeAreaView>
     
     
     
@@ -222,7 +337,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 40,
     overflow: 'hidden',
-    margin: sliderBarMargin
+    margin: sliderBarMargin,
+    height:100,
+    backgroundColor: 'red'
   }
 })
 export default App;
