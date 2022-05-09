@@ -4,342 +4,585 @@
 
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {Pressable, Text,View,StyleSheet, Animated} from 'react-native'
+import {Pressable, Text,View,StyleSheet, Animated, Image, Slider} from 'react-native'
 import { FlatList, GestureHandlerRootView, PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler';
-import { shadow } from 'react-native-paper';
+import { Button, shadow } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dimensions } from 'react-native';
 
-//import { createStore } from 'redux';
-//import { Provider } from 'react-redux';
-
-//import PlayerView from './src/PlayerView';
-
-
-
-//Intalize Array that contains data of all players and then set it to list hook
-const players = [
-
-];
-
-const initalState = {
-  players: []
-}
-
-//Reducer function
-/*const reducer =(state = initalState,action) => {
-  switch (action.type) {
-    //switch in here
-  }
-  return state;
-}*/
-
-//const store = createStore(reducer)
-
-const DATA = [
-  {
-      name: '1',
-      color: 'red',
-      index: 0
-  },
-  {
-      name: '2',
-      color: 'purple',
-      index: 1
-  },
-  {
-      name: '3',
-      color: 'orange',
-      index: 2
-  },
-  {
-      name: '4',
-      color: 'black',
-      index: 3
-  },
-  {
-    name: '5',
-    color: 'yellow',
-    index: 4
-  }
-
-
-
-]
+import RNPickerSelect from 'react-native-picker-select';
+import PlayerView from './src/PlayerView';
+import InGame from './src/in_game/InGame';
 const sliderBarMargin = 20
 
-const TagSection = (props) =>
-{
-  
-  
-  return(
-    <Pressable
-      
-      style = {{...styles.tagSection, backgroundColor: props.color, width: props.width  , justifyContent: 'center', alignItems: 'center'}}
-      
-    >
-      <Text
-        style = {styles.tagSectionText}
-      >{props.name}</Text>
-    </Pressable>
-    
-  )
-
-}
 
 
 
-function App() {
+
+const PlayerSlider = (props) => {
  
   
   
   
   
-  const [width, setWidth] = useState(100)
   
-
 
   const windowWidth = Dimensions.get('window').width;
-  const [widths, setWidths] = useState((new Array(DATA.length).fill((windowWidth-2*sliderBarMargin)/DATA.length)))
-  const[intWidth, setIntWidth] = useState(widths)
- 
-  const [DATAstuff, setDatastuff] = useState(DATA)
+  const totalIntervals = 15;
+  const intervalWidth = (windowWidth-2*sliderBarMargin)/15;
   
-  const new_width = (index ) => {
-    
-      const k = widths.slice()
-      k[index] = 300
-      
-      setWidths(k) 
-      
-      
-  }
 
-  const [startPos, setStartPos] = useState(0)
-  const [bars,setBars] = useState([
+  
+
+  const initalPlayerData = [
+    
     {
-        name: '1',
+        name: 'Tom Edwards',
         color: 'red',
         index: 0,
         start: 0,
-        end: 400
+        end: 60
     },
     
     {
-        name: '2',
+        name: 'Toby Harvie',
         color: 'purple',
-        index: 1,
-        start: 700,
+        index: 0,
+        start: 600,
         end: 800
     }]
   
+  const [playerData, setPlayerData] = useState(initalPlayerData)
   
-  
-  )
-  
-console.log(bars)
- 
-newBars = bars.splice()
+  const fillSpace = () => {
+    const snapGaps = []
+    //Snap all items to list
+    var arrayLength = playerData.length 
 
-  //Testing fill gaps code
-  var arrayLength = bars.length 
-  var toatal_added = 0
-  for(var i = 0; i< arrayLength; i++) 
-  {
-    //Check if last item if so close out list
-    if(i == arrayLength-1)
+    for(var i = 0; i< arrayLength; i++) 
     {
-      if (bars[i].end != windowWidth)
+      //Remove any covered up slots
+      if ((playerData[i].end - playerData[i].start) > 0)
       {
-        newBars.push({
-          name: 'Empty',
-          color: 'white',
-          index: 0,
-          start: bars[i].end+1,
-          end: windowWidth
-      })
+        //Snap item and add it to the list
+        const roundedStart = Math.round(Math.round(((playerData[i].start)) / intervalWidth)*intervalWidth)
+        const roundedEnd = Math.round(Math.round(((playerData[i].end)) / intervalWidth)*intervalWidth)
+        if ((roundedEnd - roundedStart) > 0)
+
+     {     snapGaps.push({
+            name: playerData[i].name,
+            color: playerData[i].color,
+            index: playerData[i].index,
+            start: roundedStart,
+            end: roundedEnd
+          })}
+      }
+
+    }
+    
+    
+
+    const fillGaps = snapGaps.slice()
+    
+    //Testing fill gaps code
+    var arrayLengthGaps = snapGaps.length 
+    var toatal_added = 0
+    for(var i = 0; i< arrayLengthGaps; i++) 
+    {
+      
+
+      //Check if last item if so close out list
+      if(i == arrayLengthGaps-1)
+      {
+        
+        const gapToFill = Math.round(((windowWidth-(2*sliderBarMargin)-playerData[i].end)) / intervalWidth)
+        
+        for(var k = 0; k< gapToFill; k++) 
+        {
+        
+          fillGaps.push({
+            name: 'Empty',
+            color: 'white',
+            index: 0,
+            start: snapGaps[i].end+k*Math.round(intervalWidth),
+            end: snapGaps[i].end+(k+1)*Math.round(intervalWidth)
+           })
+        
+        }
+        
         
       }
+      //General check for gaps - note addition of 1 to account for gap
+      else if((snapGaps[i].end) != snapGaps[i+1].start)
+      {
+        
+        //Append new items with a thing in each slot
+        
+        const gapToFill = Math.round((playerData[i+1].start) / intervalWidth) - Math.round((playerData[i].end) / intervalWidth)
+        
+        for(var k = 0; k< gapToFill; k++) 
+        {
+          toatal_added += 1
+          fillGaps.splice(i+toatal_added,0,{
+            name: 'Empty',
+            color: 'white',
+            index: 0,
+            start: snapGaps[i].end+k*Math.round(intervalWidth),
+            end: snapGaps[i].end+(k+1)*Math.round(intervalWidth)
+           })
+        
+        }
+      }
+
+
+      
+      
     }
-    //General check for gaps - note addition of 1 to account for gap
-    else if((bars[i].start +1) != bars[i+1].end)
-    {
-      toatal_added += 1
-      //Append new item
-      newBars.splice(i+toatal_added,0,{
-        name: 'Empty',
-        color: 'white',
-        index: 0,
-        start: newBars[i].end+1,
-        end: newBars[i+1].start-1
-    })
+
+    //Cut
+    const cutGaps = fillGaps.slice()
     
+    //Testing fill gaps code
+    var arrayLengthGaps = fillGaps.length 
+    var toatal_added = 0
+
+    for(var i = 0; i <arrayLengthGaps; i++)
+    {
+    
+      if(fillGaps[i].name == 'Empty' && (fillGaps[i].end-fillGaps[i].start) > Math.round(intervalWidth))
+      {
+        
+        //Determine amount of gaps to fill up
+        const gapToFill = Math.round(((fillGaps[i].end) -(fillGaps[i].start)) / intervalWidth);
+        
+        
+        
+        
+        for(var k = 0; k< gapToFill; k++) 
+        {
+          toatal_added += 1
+          cutGaps.splice(i+toatal_added,0,{
+            name: 'Empty',
+            color: 'pink',
+            index: 0,
+            start: fillGaps[i-1].end+k*Math.round(intervalWidth),
+            end: fillGaps[i-1].end+(k+1)*Math.round(intervalWidth)
+          })
+        }
+        cutGaps.splice(i,1);
+      }
+      
+    }
+    //Add in a buffer
+    cutGaps.splice(0, 0, {
+      name: 'Buffer',
+      color: 'pink',
+      index: 0,
+      start: 60,
+      end: 0
+  })
+    
+    
+    //Fix up indexing
+    var arrayLengthGaps = cutGaps.length 
+    var toatal_added = 0
+    for(var i = 0; i< arrayLengthGaps; i++) 
+    {
+      cutGaps[i].index = i
+    }
+
+    //Update the state
+    setPlayerData(cutGaps)
+    
+    
+  }
+  
+  const [moveDir,setMoveDir] = useState('null');
+  const [amountDeleted, setAmountDeleted] = useState(0);
+  const [enterPos, setEnterPos] = useState(0)
+  const [ haveEnter, setHaveEnter] = useState(false)
+
+  const handleAmountDeleted = () => 
+  {
+    setAmountDeleted(amountDeleted+1)
+  }
+
+
+  const dragActive = (drag,prop) => {
+    //Update drag
+    
+    if (drag.nativeEvent.state == State.ACTIVE && prop.name != 'Empty')
+    {
+
+
+     
+
+      //Create new list
+      const updatePlayerData = playerData.slice()
+      
+      if (moveDir == 'right')
+      {
+        
+        if(( updatePlayerData[prop.index+1+amountDeleted].name == 'Empty') /*|| ((drag.nativeEvent.absoluteX-sliderBarMargin >= updatePlayerData[prop.index+1+amountDeleted].start))*/ )
+        {
+          //Update x pos of dragged bar
+          updatePlayerData[prop.index].end = drag.nativeEvent.absoluteX-sliderBarMargin
+          //Reduce size of bar next to
+          updatePlayerData[prop.index+1+amountDeleted].start = (drag.nativeEvent.absoluteX-sliderBarMargin)
+
+        
+          // //Remove items from slider bar
+          if ((updatePlayerData[prop.index+1+amountDeleted].end - updatePlayerData[prop.index+1+amountDeleted].start) <= 0)
+          {
+            setAmountDeleted(amountDeleted+1)
+            //updatePlayerData.splice(prop.index+1,1)
+            
+          }
+        }
+        //For 
+        else
+        {
+          //Pulling back drag following the entering of another 'bar'
+          if(haveEnter == false)
+          {
+            
+            
+            setHaveEnter(true)
+            setEnterPos(updatePlayerData[prop.index+1+amountDeleted].start)
+            
+            
+          }
+          updatePlayerData[prop.index].end = drag.nativeEvent.absoluteX-sliderBarMargin
+          updatePlayerData[prop.index+1+amountDeleted].start = (drag.nativeEvent.absoluteX-sliderBarMargin)
+
+        
+        if (drag.nativeEvent.absoluteX-sliderBarMargin <= enterPos)
+        {
+            
+            //Snap the bar segmetn
+            updatePlayerData[prop.index+1+amountDeleted].start = Math.round(Math.round(((enterPos)) / intervalWidth)*intervalWidth)
+            
+            //If outside add new empty
+            updatePlayerData.splice(prop.index+1+amountDeleted,0,{
+              name: 'Empty',
+              color: 'yellow',
+              index: 0,
+              start: drag.nativeEvent.absoluteX-sliderBarMargin,
+              end: enterPos
+            })
+
+            var arrayLengthGaps = updatePlayerData.length 
+            
+            for(var i = 0; i< arrayLengthGaps; i++) 
+            {
+              updatePlayerData[i].index = i
+            }
+            setHaveEnter(false)
+            setEnterPos(0)
+          }
+        } 
+        
+        
+      }
+      else if (moveDir == 'left' && prop.index-1-amountDeleted >= 0)
+      {
+        
+        if(( updatePlayerData[prop.index-1-amountDeleted].name == 'Empty') /*|| ((drag.nativeEvent.absoluteX-sliderBarMargin >= updatePlayerData[prop.index+1+amountDeleted].start))*/ )
+        {
+         
+          //Update x pos of dragged bar
+          updatePlayerData[prop.index].start = drag.nativeEvent.absoluteX-sliderBarMargin
+          //Reduce size of bar next to
+          updatePlayerData[prop.index-1-amountDeleted].end = (drag.nativeEvent.absoluteX-sliderBarMargin)
+
+        
+          // //Remove items from slider bar
+          if ((updatePlayerData[prop.index-1-amountDeleted].end - updatePlayerData[prop.index-1-amountDeleted].start) <= 0)
+          {
+            console.log(amountDeleted)
+            setAmountDeleted(amountDeleted+1)
+            console.log(amountDeleted)
+            
+          }
+        }
+        else
+        {
+          //Pulling back drag following the entering of another 'bar'
+          if(haveEnter == false)
+          {
+            //console.log(updatePlayerData[prop.index-1-amountDeleted].end)      
+            
+            setHaveEnter(true)
+            setEnterPos(updatePlayerData[prop.index-1-amountDeleted].end)
+            
+            
+          }
+
+          updatePlayerData[prop.index].start = drag.nativeEvent.absoluteX-sliderBarMargin
+          updatePlayerData[prop.index-1-amountDeleted].end = (drag.nativeEvent.absoluteX-sliderBarMargin)
+
+
+        if (((drag.nativeEvent.absoluteX-sliderBarMargin) > enterPos) && (enterPos != 0))
+        {
+            
+          
+            // //Snap the bar segmetn
+          updatePlayerData[prop.index-1-amountDeleted].end = Math.round(Math.round(((enterPos)) / intervalWidth)*intervalWidth)
+          
+          console.log('kk')
+      
+          
+          //setAmountDeleted(amountDeleted)
+          
+        
+            // //If outside add new empty
+         
+          updatePlayerData.splice(prop.index-amountDeleted,0,{
+            name: 'Empty',
+            color: 'yellow',
+            index: 0,
+            start: enterPos,
+            end: drag.nativeEvent.absoluteX-sliderBarMargin
+          })
+          //Kill the buffer
+          updatePlayerData.splice(0,1)
+          
+          console.log(updatePlayerData)
+           
+            // console.log(updatePlayerData)
+            // console.log('k')
+            var arrayLengthGaps = updatePlayerData.length 
+            
+            for(var i = 0; i< arrayLengthGaps; i++) 
+            {
+              updatePlayerData[i].index = i
+            }
+         
+            setHaveEnter(false)
+            setEnterPos(0)
+          }
+         
+        } 
+        
+        
+        
+      }
+
+     
+      setPlayerData(updatePlayerData)
+      
+      
     }
     
     
   }
 
-  setBars(newBars)
-
+  const dragEnd = (drag,prop) => {
+    //Snap the location of items to a grid
+    fillSpace()
+    console.log('f')
+  }
   
-  
+  const dragStart = (drag,prop) => {
+    //Get width of the bar
+    const barWidth = playerData[prop.index].end - playerData[prop.index].start
 
-  
+    //Determine what way drag is
+    if (drag.nativeEvent.x > barWidth/2)
+    {
+      setMoveDir('right')
+    }
+    else if (drag.nativeEvent.x <=  barWidth/2)
+    {
+      setMoveDir('left')
+    }
 
-  
+    
+    //Set amount deleted as a var to prevent indexing errors
+    setAmountDeleted(0)
+    setHaveEnter(false)
 
+  }
+    
+  const addNewPlayer = (value) => {
+    //Create a new version of the player data list adjust name in color before updating it again
+    const updatePlayerData = playerData.slice();
+    
+    updatePlayerData[prop.index].name = value; 
+    updatePlayerData[prop.index].color = 'green'; 
+    
+    setPlayerData(updatePlayerData)
+  }
+  
   return(
     <SafeAreaView>
-      <PanGestureHandler activeOffsetX={[-20,20]}  
-        
-        onActivated = {
-          (k) => {
-            setStartPos(k.nativeEvent.x)
-          }}
-        onEnded={
-          (k) => {
-            
-          }}
-        onGestureEvent ={
-          (k) => {
-            if (k.nativeEvent.x < startPos)
+     
+      <GestureHandlerRootView>
+        {/*General encompassing view of whole slider bar*/}
+        <View style = {{... styles.sliderBar}} > 
+          {/*Map each data value in the playerdata list to a componenet*/}
+          {playerData.map((prop,index) => {
+            {/*Dont render any players who have been squished - this is done as opposed to removing at pull time to prevent indexing errors*/}
+            if (((playerData[prop.index].end - playerData[prop.index].start) > 0))
             {
-              //Left
-            }
-            else 
-            {
-              //Right
-            }
-            const newNewBars = bars.splice()
-            newNewBars.forEach(item => console.log(item)).
-            setBars(newNewBars)
-           
-          }
-        }
-        >
-        <View style = {styles.sliderBar}>
+              return (
+                
+                //Pan gesture handler controls the drag motion
+                <PanGestureHandler key = {index}
+                  onGestureEvent = {(drag) => dragActive(drag,prop)}
+                  onActivated = {(drag) => dragStart(drag,prop)}
+                  onEnded = {(drag) => dragEnd(drag,prop)}
+                >
 
-          {bars.map((prop,index) => {
-            return (
-              <View key = {prop.index} style={{ width: (prop.end-prop.start), height: 100, backgroundColor: prop.color }}>
-                <Text style = {styles.tagSectionText}>{prop.name}</Text>
-              </View> 
-            )
+                  {/* Outer view that sets the width of each item */}
+                  <View style = {{width: (prop.end-prop.start)}}>
+
+                   {/* Inner view that sets the realted styling of the item  */}
+                    <View  style={{...styles.tagSection ,  backgroundColor:prop.color }}>
+                    
+                      {/* Check if item is empty if empty put in a picker select to add new item or if player in just render normalyl */}
+                      {(prop.name != 'Empty') ? 
+                        <Text numberOfLines={1}  style = {{...styles.tagSectionText} }>{prop.name}</Text>:
+                        
+                        <RNPickerSelect 
+                          onValueChange={(value) => {addNewPlayer}}
+                          placeholder={{ label: '+', value: null }}
+                          style = {pickerSelectStyles}
+                          
+                          items={[
+                              { label: 'Alex Ying', value: 'Alex ying'},
+                              { label: 'Jerry Chang', value: 'Jerry Chang' },
+                              { label: 'Callum Lockhart', value: 'callum lockhart' },
+                              
+                          ]}
+                          useNativeAndroidPickerStyle={false}
+                          fixAndroidTouchableBug={true}
+                        />
+                      }
+                          
+                    </View> 
+                  </View>
+                </PanGestureHandler>
+                
+              )
+            }
+          
+           
+            
           
           })}
         </View>
-      </PanGestureHandler>
+        </GestureHandlerRootView>
+        <Button style={{backgroundColor: 'red', width: 100}} onPress = {fillSpace}>Hello</Button>
+        
     </SafeAreaView>
     
-    // <SafeAreaView>
-    //   <View style = {styles.sliderBar}>
-    //     {DATAstuff.map((prop,index) => {
-            
-    //         return (
-    //           <PanGestureHandler key = {index} activeOffsetX={[-20,20]} onGestureEvent={(k) => 
-    //             {
-    //               if (k.nativeEvent.state == State.ACTIVE)
-    //               {
-    //                   // 1 left, 1 right
-    //                   const move_dir =1
-    //                  // k.nativeEvent.
-    //                   const j = widths.slice()
-    //                   j[index] = k.nativeEvent.x
-    //                   j[index+1] = j[index+move_dir] - move_dir*(j[index] -widths[index])
-                      
-    //                   setWidths(j) 
-
-    //                   if (widths[index+move_dir] < 10)
-    //                   {
-                        
-    //                     const newList = DATAstuff.slice()
-    //                     newList.splice(index+move_dir,1)
-
-    //                     setDatastuff(newList)
-    //                     const newList2 = widths.slice()
-    //                     newList2.splice(index+move_dir,1)
-    //                     newList2[index] += widths[index+move_dir]
-    //                     setWidths(newList2)
-    //                     console.log(newList)
-                        
-                        
-    //                   }
-                      
-                    
-    //               }
-    //             }}
-    //             >
-                
-    //             <View style={{ width: widths[index], height: 100, backgroundColor: prop.color }}>
-    //               <Text style = {styles.tagSectionText}>{prop.name}</Text>
-    //             </View>
-                
-                
-    //           </PanGestureHandler>
-    //           //<SafeAreaView>TagSection name = {prop.name}  color = {prop.color} width = {widths[prop.index]} ></TagSection>
-    //         //   <Pressable
-    //         //   key = {index}
-    //         //   style = {{...styles.tagSection, backgroundColor: prop.color, width: widths[index]  , justifyContent: 'center', alignItems: 'center'}}
-    //         //   onPress = {() => new_width(index)}
-    //         // >
-    //         //   <Text
-    //         //     style = {styles.tagSectionText}
-    //         //   >{prop.name}</Text>
-    //         // </Pressable>
-            
-    //           );
-    //       })}
-    //   </View>
-        
-      
-    // </SafeAreaView>
-    
-    
-    
-        // <SafeAreaView>
-          // <PanGestureHandler activeOffsetX={[-60,60]} onGestureEvent={(k) => 
-          //   {
-          //     if (k.nativeEvent.state == State.ACTIVE)
-          //     {
-          //       setWidth(k.nativeEvent.x)
-          //     }
-          //   }}
-          //   >
-            
-          //   <View style={{ width: width, height: 100, backgroundColor: "red" }}>
-          //     <Text>HEY!</Text>
-          //   </View>
-            
-            
-          // </PanGestureHandler>
-        //   </SafeAreaView>
-      
-      
-     
+   
       
     
     
   )
   
 }
+const initialState = {
+  value: 0
+}
+// Create a "reducer" function that determines what the new state
+// should be when something happens in the app
+function counterReducer(state = initialState, action) {
+  // Reducers usually look at the type of action that happened
+  // to decide how to update the state
+  switch (action.type) {
+    case 'counter/incremented':
+      return { ...state, value: state.value + 1 }
+    case 'counter/decremented':
+      return { ...state, value: state.value - 1 }
+    default:
+      // If the reducer doesn't care about this action type,
+      // return the existing state unchanged
+      return state
+  }
+}
+function App() {
+  
+  return(
+    <InGame></InGame>
+  )
+  
+}
+export default App
 const styles = StyleSheet.create({
 
   tagSection: {
-    height: 100,
+
+		textAlign: "center",
+		position: "relative",
+	
+    
+		borderRightColor: "white",
+  
+
+		borderLeftColor: "white",
+    overflow: 'hidden',
+   
+    margin: 0,
+    padding: 0,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+    
   },
   tagSectionText: {
-    fontSize: 30,
-    color: 'white'
+    
+		color: "white",
+		fontSize: 20,
+    
+    
+    
+
+		
+	
+	
+
   },
   sliderBar: {
     flexDirection: 'row',
     
-    borderWidth: 3,
-    borderRadius: 40,
-    overflow: 'hidden',
+    borderWidth: 0,
+    borderRadius: 1,
+    height: 75,
     margin: sliderBarMargin,
-    height:100,
-    backgroundColor: 'red'
+    fontSize: 59,
+    backgroundColor: 'yellow',
+    overflow:'hidden',
+    borderColor: 'black',
+    borderWidth: 2,
+    borderRadius: 6
   }
 })
-export default App;
+const pickerSelectStyles = StyleSheet.create({
+ 
+  inputAndroid: {
+    
+    color: 'black',
+    //fontSize: 20,
+    //backgroundColor: 'red',
+    //height: '100%',
+    //width: '100%'
+    
+  },
+  inputIOS: {
+    fontSize: 16,
+    color: 'black',
+    fontSize: 20,
+    backgroundColor: '#ebebeb',
+    height: '100%',
+    borderRadius: 4
+  
+
+  
+},
+  placeholder: {
+    color: 'grey'
+  }
+});

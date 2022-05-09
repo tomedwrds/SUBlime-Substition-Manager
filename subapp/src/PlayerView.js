@@ -11,7 +11,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 
 
-function mapStateToProps(state) {
+/*function mapStateToProps(state) {
   return{
     players: state.players
   }
@@ -21,7 +21,7 @@ function mapDispatchToProps(dispatch) {
   return {
     addPlayer : () => dispatch({type:'ADD PLAYER', payload: { id: newPlayerId, name: null, positionData: null}})
   }
-}
+}*/
 
 
 const PlayerTab = (props) => {
@@ -79,24 +79,27 @@ const PlayerTab = (props) => {
     //Reset the list variable with a new value
     setList(newList);
   }
-  function addPosition() {
-
+  function addPosition(props) {
+    
     //Function that checks list for certain postion to alreadt exist
     const doesPosExist = list => list.position === selectedPos; 
 
     if (selectedPos != null && !list.some(doesPosExist)) 
     {
       //Create new list with added items
-      const newList = list.concat({ position: `${selectedPos}` });
-      setList(newList);
+      console.log(props)
+      //setList(newList);
+      //setPlayersList()
     }
     
     //Update the main list
-    console.debug(props.id);
+    
     
   }
 
+  console.log(props.ds)
   
+  setPlayersList()
   
   return (
 
@@ -139,7 +142,7 @@ const PlayerTab = (props) => {
       {/*Add position chip button*/}
       <Pressable 
         style = {styles.positions} 
-        onPress = {addPosition}>
+        onPress = {() =>addPosition(props.id)}>
           <Icon 
             name='plus' 
             size = {30} 
@@ -152,7 +155,7 @@ const PlayerTab = (props) => {
         <FlatList
           //itemDimension={70}
           //spacing = {4}
-          data={list}
+          data={props.pos}
           renderItem={renderPositionChips}
           horizontal
           keyExtractor={item => list.indexOf(item)}
@@ -177,26 +180,35 @@ const PlayerTab = (props) => {
 function PlayerView() {
    
 
-  //const [playersList, setPlayersList] = useState(players);
+  const [playersList, setPlayersList] = useState([]);
   const [newPlayerId, setNewPlayerId] = useState(0);
 
   function addPosition() {
 
     //Create new list with added items
-    addPlayer()
+    playersList.push({
+      id: newPlayerId,
+      name: '',
+      positions: []
+    })
 
     setNewPlayerId(newPlayerId + 1)
     
     
   }
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => {
+    console.log(item)
+    return(
+      
     <PlayerTab 
       id = {item.id}
-      
+      pos = {item.position}
+      ds = {playersList}
     >
     </PlayerTab>
-  )
+    )
+  }
   
 
   return(
@@ -213,7 +225,7 @@ function PlayerView() {
 
 
       <FlatList
-        data={state.players}
+        data={playersList}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
@@ -308,4 +320,4 @@ const pickerSelectStyles = StyleSheet.create({
     color: 'grey'
   }
 });
-export default connect(mapStateToProps)(PlayerView);
+export default (PlayerView);

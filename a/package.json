@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "expo": "^45.0.0",
+    "react-redux": "^8.0.1",
+    "redux": "^4.2.0"
+  }
+}
