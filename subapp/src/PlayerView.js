@@ -99,7 +99,7 @@ const PlayerTab = (props) => {
 
   console.log(props.ds)
   
-  setPlayersList()
+  
   
   return (
 
@@ -189,7 +189,7 @@ function PlayerView() {
     playersList.push({
       id: newPlayerId,
       name: '',
-      positions: []
+      positions: ['']
     })
 
     setNewPlayerId(newPlayerId + 1)

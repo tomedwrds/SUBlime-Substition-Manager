@@ -1,9 +1,31 @@
-import React from 'react'
-import {Text,StyleSheet,View, Image} from 'react-native'
+import React, { useState } from 'react'
+import {Text,StyleSheet,View, Image,ImageBackground, Pressable} from 'react-native'
+import { FlatList,SectionList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatGrid } from 'react-native-super-grid';
+import PlayerIcon from './PlayerIcon.js'
+
+import UpcomingSub from './UpcomingSub.js'
+
+
+const totalColumns = 7;
+const totalRows = 11;
 
 function InGame()
 {
+    function renderIcon({item}) {
+        return <PlayerIcon width = {iconWidth} height = {iconHeight} name = {item}/>
+    }
+    
+    const layoutCalcs = (k) => {
+        //Find width of icons
+        setIconWidth(k.nativeEvent.layout.width / totalColumns)
+        setIconHeight(k.nativeEvent.layout.height / totalRows)
+    }
+
+    const DATA = new Array(totalRows*totalColumns).fill('TE');
+    const [iconWidth, setIconWidth] = useState(10)
+    const [iconHeight, setIconHeight] = useState(10)
     return(
         <SafeAreaView style = {styles.body}>
             <View style = {styles.infoSide}>
@@ -15,17 +37,25 @@ function InGame()
 
                 </View>
                 <View style = {styles.subInfo}>
-                    <View style = {styles.subBar}>
-                        <Text style = {styles.sideText}>-00:12</Text>
-                        <Text style = {styles.nameText}>Tom ➜ Toby</Text>
-                        <Text style = {styles.sideText}>LB</Text>
-                    </View>
+                    <UpcomingSub subPos = 'LB' playerOn = 'Tom' playerOff = 'Toby' time = '1'></UpcomingSub>
                 </View>
             </View>
             <View style = {styles.pitchSide}>
-            <Image source = {require('/b.jpg')}></Image>
-                <View style ={styles.gamePitch}>
+            
+                <View style ={styles.gamePitch} >
+                
+                <ImageBackground onLayout = {layoutCalcs} source={require('./b.jpg')} style = {{width: '100%', height: '100%'}}>
+                <FlatList
+                        data = {DATA}
+                        renderItem = {renderIcon}
+                       
+                        numColumns = {totalColumns}
+                        key = {4}
+                />
                     
+                
+                </ImageBackground>
+
 
                 </View>
             </View>
@@ -52,12 +82,13 @@ const styles = StyleSheet.create({
         flex: 2,
         color:'red'
     },
+    
+    titleText: {
+        fontSize: 20
+    },
     subInfo: {
         backgroundColor: 'yellow',
         flex: 3
-    },
-    titleText: {
-        fontSize: 20
     },
     subBar: {
         flexDirection: 'row',

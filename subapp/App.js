@@ -4,15 +4,20 @@
 
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {Pressable, Text,View,StyleSheet, Animated, Image, Slider} from 'react-native'
+import {Pressable, Text,View,StyleSheet, Animated, Image} from 'react-native'
 import { FlatList, GestureHandlerRootView, PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler';
 import { Button, shadow } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dimensions } from 'react-native';
-
+import { useSelector, useDispatch } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import PlayerView from './src/PlayerView';
 import InGame from './src/in_game/InGame';
+import { Provider } from 'react-redux';
+import { store } from './src/store.js';
+
+import {add} from './src/actions.js';
+import { applyMiddleware } from 'redux';
 const sliderBarMargin = 20
 
 
@@ -484,33 +489,34 @@ const PlayerSlider = (props) => {
   )
   
 }
-const initialState = {
-  value: 0
-}
-// Create a "reducer" function that determines what the new state
-// should be when something happens in the app
-function counterReducer(state = initialState, action) {
-  // Reducers usually look at the type of action that happened
-  // to decide how to update the state
-  switch (action.type) {
-    case 'counter/incremented':
-      return { ...state, value: state.value + 1 }
-    case 'counter/decremented':
-      return { ...state, value: state.value - 1 }
-    default:
-      // If the reducer doesn't care about this action type,
-      // return the existing state unchanged
-      return state
-  }
-}
-function App() {
+
+const App = () => {
+  const numberData = useSelector(state => state.numberReducer);
+  const dispatch = useDispatch()
+  const addNumber = amount => dispatch(add(amount))
+
   
   return(
-    <InGame></InGame>
+    <Provider store = {store}>
+      <Text style = {{fontSize: 30, padding: 30}}>{numberData.number}</Text>
+      <Button onPress ={()=>addNumber(20)}>Add</Button>
+    </Provider>
   )
   
 }
-export default App
+
+const AppWrapper = () => {
+
+
+  return (
+    <Provider store={store}>
+      <App /> 
+    </Provider>
+  )
+}
+
+
+export default AppWrapper
 const styles = StyleSheet.create({
 
   tagSection: {
