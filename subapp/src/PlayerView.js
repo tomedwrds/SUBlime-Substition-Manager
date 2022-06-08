@@ -9,7 +9,7 @@ import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, Fla
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux'
 
 /*function mapStateToProps(state) {
   return{
@@ -60,7 +60,9 @@ const PlayerTab = (props) => {
     <Chip 
       style = {styles.positions} 
       onPress = {() => {deletePosition(item)}} 
-      onClose = {() => {}} >{item.position}
+      onClose = {() => {}} >
+        {item}
+
     </Chip>
     
   );
@@ -97,7 +99,7 @@ const PlayerTab = (props) => {
     
   }
 
-  console.log(props.ds)
+  
   
   
   
@@ -155,6 +157,7 @@ const PlayerTab = (props) => {
         <FlatList
           //itemDimension={70}
           //spacing = {4}
+          
           data={props.pos}
           renderItem={renderPositionChips}
           horizontal
@@ -180,9 +183,10 @@ const PlayerTab = (props) => {
 function PlayerView() {
    
 
-  const [playersList, setPlayersList] = useState([]);
+  //const [playersList, setPlayersList] = useState([]);
   const [newPlayerId, setNewPlayerId] = useState(0);
-
+  
+  const playersList = useSelector(state => state.numberReducer);
   function addPosition() {
 
     //Create new list with added items
@@ -198,13 +202,13 @@ function PlayerView() {
   }
 
   const renderItem = ({ item }) => {
-    console.log(item)
+    console.log(item.positions)
     return(
       
     <PlayerTab 
       id = {item.id}
-      pos = {item.position}
-      ds = {playersList}
+      pos = {item.positions}
+      ds = {playersList.player_data}
     >
     </PlayerTab>
     )
@@ -213,9 +217,9 @@ function PlayerView() {
 
   return(
    <SafeAreaView style={styles.body}>
-     <Pressable 
+    <Pressable 
         style = {styles.positions}
-        onPress = {addPosition}>
+        >
           <Icon 
             name='plus' 
             size = {30} 
@@ -225,7 +229,7 @@ function PlayerView() {
 
 
       <FlatList
-        data={playersList}
+        data={playersList.player_data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />

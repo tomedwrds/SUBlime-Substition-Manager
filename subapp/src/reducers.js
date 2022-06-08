@@ -1,16 +1,28 @@
-import {ADD} from './actions.js';
+
+import {CREATE_PLAYER,ADD_POSITION} from './actions.js';
 
 const iniitalState = {
-    number: 20
+    
+    player_data: [{id:0,name:'Tom', positions: ['CB',]},{id:1,name:'Toby', positions: ['LB']}]
 }
 
 function numberReducer(state = iniitalState, action)
 {
     switch (action.type)
     {
-        case ADD:
-            return {...state,number: state.number + action.payload}
-        default:
+    
+        case CREATE_PLAYER:
+            return {...state,player_data: [...state.player_data, action.payload]};
+        case ADD_POSITION:
+            return {...state,player_data: 
+                state.player_data.map(
+                (content, i) => i === action.payload[0] ? {...content, positions: [...state.player_data[i].positions, action.payload[1]]}
+                                        : content
+            )}
+        
+          
+        
+            default:
             return state;
     }
 }

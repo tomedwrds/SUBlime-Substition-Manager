@@ -16,7 +16,8 @@ import InGame from './src/in_game/InGame';
 import { Provider } from 'react-redux';
 import { store } from './src/store.js';
 
-import {add} from './src/actions.js';
+import {add,create_player,add_position} from './src/actions.js';
+
 import { applyMiddleware } from 'redux';
 const sliderBarMargin = 20
 
@@ -489,22 +490,6 @@ const PlayerSlider = (props) => {
   )
   
 }
-
-const App = () => {
-  const numberData = useSelector(state => state.numberReducer);
-  const dispatch = useDispatch()
-  const addNumber = amount => dispatch(add(amount))
-
-  
-  return(
-    <Provider store = {store}>
-      <Text style = {{fontSize: 30, padding: 30}}>{numberData.number}</Text>
-      <Button onPress ={()=>addNumber(20)}>Add</Button>
-    </Provider>
-  )
-  
-}
-
 const AppWrapper = () => {
 
 
@@ -515,8 +500,25 @@ const AppWrapper = () => {
   )
 }
 
+const App = () => {
+  
+  const dispatch = useDispatch()
+  const addNumber = amount => dispatch(add(amount))
+  const createPlayer = player_data => dispatch(create_player(player_data))
+  const addPosition = position_and_index => dispatch(add_position(position_and_index))
+  return(
+    
+      <PlayerView></PlayerView>
+    
+  )
+  
+}
+
+
+
 
 export default AppWrapper
+
 const styles = StyleSheet.create({
 
   tagSection: {
