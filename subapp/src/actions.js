@@ -9,11 +9,11 @@ export const create_player = new_player_data => dispatch => {
   });
 };
 
-export const REMOVE_PlAYER = 'REMOVE_PlAYER';
+export const REMOVE_PLAYER = 'REMOVE_PLAYER';
 
 export const remove_player = player_index => dispatch => {
   dispatch({
-    type: REMOVE_PlAYER,
+    type: REMOVE_PLAYER,
     payload: player_index,
   });
 };
@@ -33,5 +33,14 @@ export const remove_position = position_and_index => dispatch => {
   dispatch({
     type: REMOVE_POSITION,
     payload: position_and_index,
+  });
+};
+
+export const UPDATE_NAME = 'UPDATE_NAME';
+
+export const update_name = index_and_name => dispatch => {
+  dispatch({
+    type: UPDATE_NAME,
+    payload: index_and_name,
   });
 };

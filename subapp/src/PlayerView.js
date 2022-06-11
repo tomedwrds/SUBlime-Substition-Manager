@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name} from './actions.js';
 /*function mapStateToProps(state) {
   return{
     players: state.players
@@ -25,10 +25,12 @@ function mapDispatchToProps(dispatch) {
 
 
 const PlayerTab = (props) => {
-  const dispatch = useDispatch()
-  const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
-  const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
-  const removePlayer = player_index => dispatch(remove_player(player_index))
+  //Redux vars
+  const addPositionToPlayer = position_and_index => props.dispatch(add_position(position_and_index))
+  const removePositionFromPlayer = position_and_index => props.dispatch(remove_position(position_and_index))
+  const removePlayer = player_index => props.dispatch(remove_player(player_index))
+  const updateName = index_and_name => props.dispatch(update_name(index_and_name))
+  
   //Function that deletes players from the list
   const deletePlayer = () => {
     //Create alert to show to player
@@ -43,22 +45,14 @@ const PlayerTab = (props) => {
         },
         { 
           text: "Confirm", 
-          onPress: () => deletePlayer2()
+          onPress: () => removePlayer(props.id)
          
         }
       ]
     )
   }
 
- 
 
- 
-  
-  function deletePlayer2()
-  {
-    console.log(props)
-    removePlayer(props.id)
-  }
   //Render a position chip for each position in the list
   const renderPositionChips = ({ item }) => (
     
@@ -92,6 +86,7 @@ const PlayerTab = (props) => {
     }
 
   }
+  
 
   
   
@@ -107,6 +102,7 @@ const PlayerTab = (props) => {
         style = {styles.playerTextInput}
         placeholder='Player Name'
         placeholderTextColor="grey"
+        onEndEditing={(k)=>(updateName([props.id,k.nativeEvent.text]))}
       />
 
       {/*Select postion bar*/}
@@ -149,9 +145,7 @@ const PlayerTab = (props) => {
       {/*Displays all the position chips in a grid format*/}
       <View style = {styles.playerPositionChips}>
         <FlatList
-          //itemDimension={70}
-          //spacing = {4}
-          
+        
           data={props.pos}
           renderItem={renderPositionChips}
           horizontal
@@ -175,47 +169,47 @@ const PlayerTab = (props) => {
 
 
 function PlayerView() {
-   
-
-  //const [playersList, setPlayersList] = useState([]);
-  const [newPlayerId, setNewPlayerId] = useState(0);
-  
+  //Setupredux vars
+  const dispatch = useDispatch()
+  const createPlayer = player_data => dispatch(create_player(player_data))
   const playersList = useSelector(state => state.numberReducer);
+
+  //Indexing vars
+  const [newPlayerId, setNewPlayerId] = useState(0);
   
 
   function addPosition() {
-
-    //Create new list with added items
-    playersList.push({
+    //Add new player object to player data then increment id counter
+    createPlayer({
       id: newPlayerId,
       name: '',
-      positions: ['']
+      positions: [],
     })
-
     setNewPlayerId(newPlayerId + 1)
     
-    
   }
+  
 
   const renderItem = ({ item }) => {
-    //console.log(item.positions)
     return(
       
     <PlayerTab 
       id = {item.id}
       pos = {item.positions}
       ds = {playersList.player_data}
+      dispatch = {dispatch}
     >
     </PlayerTab>
     )
   }
-  console.log(playersList)
+  
   
 
   return(
    <SafeAreaView style={styles.body}>
     <Pressable 
         style = {styles.positions}
+        onPress = {addPosition}
         >
           <Icon 
             name='plus' 
@@ -232,7 +226,7 @@ function PlayerView() {
       />
       
     
-     </SafeAreaView>
+  </SafeAreaView>
     
     
     
