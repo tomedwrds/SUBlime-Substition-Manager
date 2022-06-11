@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
-
+import {add,create_player,add_position, remove_position, remove_player} from './actions.js';
 /*function mapStateToProps(state) {
   return{
     players: state.players
@@ -25,7 +25,10 @@ function mapDispatchToProps(dispatch) {
 
 
 const PlayerTab = (props) => {
-  
+  const dispatch = useDispatch()
+  const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
+  const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
+  const removePlayer = player_index => dispatch(remove_player(player_index))
   //Function that deletes players from the list
   const deletePlayer = () => {
     //Create alert to show to player
@@ -36,24 +39,26 @@ const PlayerTab = (props) => {
         //Array of selectable buttons
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel"
         },
         { 
           text: "Confirm", 
-          onPress: () => console.log("OK Pressed") 
+          onPress: () => deletePlayer2()
+         
         }
       ]
     )
   }
 
-  //Intalize Array that contains data of all players and then set it to list hook
-  const playerPositions = [
+ 
 
-  ];
-
-  const [list, setList] = useState(playerPositions);
-
+ 
+  
+  function deletePlayer2()
+  {
+    console.log(props)
+    removePlayer(props.id)
+  }
   //Render a position chip for each position in the list
   const renderPositionChips = ({ item }) => (
     
@@ -71,32 +76,21 @@ const PlayerTab = (props) => {
   const[selectedPos, setSelectedPos] = useState(null);
   
 
-  function deletePosition(chip) {
-    //Get the id of the given chip
-    const id = list.indexOf(chip);
-
-    //Make a new list with out the id of the removed chip
-    const newList = list.filter((item) => list.indexOf(item) !== id);
-
-    //Reset the list variable with a new value
-    setList(newList);
+  function deletePosition(chip) 
+  {
+    //Remove the chip from the player
+    removePositionFromPlayer([props.id,chip])
   }
-  function addPosition(props) {
+  
+  
+  function addPosition() {
     
-    //Function that checks list for certain postion to alreadt exist
-    const doesPosExist = list => list.position === selectedPos; 
-
-    if (selectedPos != null && !list.some(doesPosExist)) 
+    if (!props.pos.includes(selectedPos) && selectedPos != null) 
     {
-      //Create new list with added items
-      console.log(props)
-      //setList(newList);
-      //setPlayersList()
+      //Update the main list
+      addPositionToPlayer([props.id,selectedPos])
     }
-    
-    //Update the main list
-    
-    
+
   }
 
   
@@ -144,7 +138,7 @@ const PlayerTab = (props) => {
       {/*Add position chip button*/}
       <Pressable 
         style = {styles.positions} 
-        onPress = {() =>addPosition(props.id)}>
+        onPress = {() =>addPosition()}>
           <Icon 
             name='plus' 
             size = {30} 
@@ -161,7 +155,7 @@ const PlayerTab = (props) => {
           data={props.pos}
           renderItem={renderPositionChips}
           horizontal
-          keyExtractor={item => list.indexOf(item)}
+          keyExtractor={item => props.pos.indexOf(item)}
         />  
       </View>
       
@@ -187,6 +181,8 @@ function PlayerView() {
   const [newPlayerId, setNewPlayerId] = useState(0);
   
   const playersList = useSelector(state => state.numberReducer);
+  
+
   function addPosition() {
 
     //Create new list with added items
@@ -202,7 +198,7 @@ function PlayerView() {
   }
 
   const renderItem = ({ item }) => {
-    console.log(item.positions)
+    //console.log(item.positions)
     return(
       
     <PlayerTab 
@@ -213,6 +209,7 @@ function PlayerView() {
     </PlayerTab>
     )
   }
+  console.log(playersList)
   
 
   return(
