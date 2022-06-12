@@ -133,7 +133,7 @@ const PlayerTab = (props) => {
       
       {/*Add position chip button*/}
       <Pressable 
-        style = {styles.positions} 
+        
         onPress = {() =>addPosition()}>
           <Icon 
             name='plus' 
@@ -168,7 +168,7 @@ const PlayerTab = (props) => {
 }
 
 
-function PlayerView() {
+function PlayerView({navigation }) {
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
@@ -207,7 +207,8 @@ function PlayerView() {
 
   return(
    <SafeAreaView style={styles.body}>
-    <Pressable 
+     <View style={{flexDirection:'row'}}>
+      <Pressable 
         style = {styles.positions}
         onPress = {addPosition}
         >
@@ -217,6 +218,18 @@ function PlayerView() {
             color = 'green'
           />
       </Pressable>
+      <Pressable 
+        style = {styles.positions}
+        onPress = {()=>navigation.navigate('Sliders')}
+        >
+          <Icon 
+            name='check' 
+            size = {30} 
+            color = 'green'
+          />
+      </Pressable>
+     </View>
+    
 
 
       <FlatList
@@ -252,7 +265,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8
   },
-
+  positions: {
+    padding:20
+  },
   playerTextInput : {
     fontSize: 20,
     marginRight: 3,
