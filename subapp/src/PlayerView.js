@@ -175,7 +175,7 @@ function PlayerView({navigation }) {
   const playersList = useSelector(state => state.numberReducer);
 
   //Indexing vars
-  const [newPlayerId, setNewPlayerId] = useState(0);
+  const [newPlayerId, setNewPlayerId] = useState(2);
   
 
   function addPosition() {

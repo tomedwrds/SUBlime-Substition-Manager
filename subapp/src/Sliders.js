@@ -9,7 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dimensions } from 'react-native';
 //import { useSelector, useDispatch } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { update_position } from './actions';
 //import { Provider } from 'react-redux';
 //import { store } from './src/store.js';
 
@@ -491,30 +492,135 @@ const Sliders = () => {
   }
 
 const TestSlider = () => {
-    const player_data= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    
     const screen_width = Dimensions.get('window').width
-    const intervals = 4
+    const intervals = 15
     const interval_width = screen_width/intervals
+    const globalState = useSelector(state => state.numberReducer);
+    const pickerSelectData = globalState.player_data.map(item => ({label: item.name,value:item.name}))
+    const [dragBar, setDragBar] = useState(null)
+    const [moveDir, setMoveDir] = useState(null)
+    const [startTile, setStartTile] = useState(null)
+    const dispatch = useDispatch()
+    const updatePosition = time_name_position => dispatch(update_position(time_name_position))
+    const dragStart = (drag) => {
+        const newStartTile = Math.floor(drag.nativeEvent.x / interval_width)
+        
+
+        if (globalState.position_data[0].position_timeline[newStartTile] != null)
+        {
+        setDragBar([{start: 0, end: newStartTile*interval_width},
+                    {start: newStartTile*interval_width, end: newStartTile*interval_width+interval_width},
+                    {start: newStartTile*interval_width+interval_width,end:screen_width}
+        ])
+
+       
+    
+        //Determine what way drag is
+        if (drag.nativeEvent.x % interval_width > interval_width/2)
+        {
+          setMoveDir('right')
+        }
+        else if (drag.nativeEvent.x % interval_width  <=  interval_width/2)
+        {
+          setMoveDir('left')
+        }
+
+        setStartTile(newStartTile)
+    }
+    
+        
+        // //Set amount deleted as a var to prevent indexing errors
+        // setAmountDeleted(0)
+        // setHaveEnter(false)
+    
+    }
+    const dragEnd = (drag) => {
+        
+        const endTile = Math.round(drag.nativeEvent.x / interval_width)
+        if (moveDir == 'right')
+        {
+            for (let i = startTile; i < endTile; i++)
+            {
+                updatePosition([i,globalState.position_data[0].position_timeline[startTile],'CF'])
+            }
+        }
+        else if (moveDir == 'left')
+        {
+            for (let i = endTile; i < startTile; i++)
+            {
+                updatePosition([i,globalState.position_data[0].position_timeline[startTile],'CF'])
+            }
+        }
+        setDragBar(null)
+        setMoveDir(null)
+        setStartTile(null)
+    }
+    const dragActive = (drag) =>
+    {
+        if (moveDir == 'right')
+        {
+            
+            setDragBar([{start: 0, end: dragBar[0].end},
+                {start: dragBar[1].start, end: drag.nativeEvent.x},
+                {start: drag.nativeEvent.x,end:screen_width}
+    ])
+    
+        }
+        else if (moveDir == 'left')
+        {
+            setDragBar([{start: 0, end: drag.nativeEvent.x},
+                {start: drag.nativeEvent.x, end: dragBar[1].end},
+                {start: dragBar[2].start,end:screen_width}
+    ])
+        }
+    }
     
     return(
         
         <GestureHandlerRootView style = {{height:100,flexDirection:'row'}}>
             <PanGestureHandler 
-                    onActivated = {(drag) => console.log('k')}
-                    //onGestureEvent = {(drag) => dragActive(drag,prop)}
+                    onActivated = {(drag,prop) => dragStart(drag)}
+                    onGestureEvent = {(drag) => dragActive(drag)}
                     //onActivated = {(drag) => dragStart(drag,prop)}
-                    //onEnded = {(drag) => dragEnd(drag,prop)}
+                    onEnded = {(drag) => dragEnd(drag)}
                   >
                 <View style = {{flexDirection:'row',flex:1}}>
-                {player_data.map((prop,index) => {
+                {globalState.position_data[0].position_timeline.map((prop,index) => {
                     return(
-                    <View style = {{flex:1,borderColor:'black',borderWidth: 1}}>
-                        <Text>+</Text>
+                    <View key = {index} style = {{flex:1,borderColor:'black',borderWidth: 1}}>
+                        {(prop == null)  ?
+                        <RNPickerSelect 
+                        onValueChange={(value)=>{updatePosition([index,value,'CF'])}}
+                        placeholder={{ label: '+', value: null }}
+                        style = {pickerSelectStyles}
+                        
+                        items={pickerSelectData}
+                        useNativeAndroidPickerStyle={false}
+                        fixAndroidTouchableBug={true}
+                      /> : 
+                        <Text>{prop}</Text>}
                     </View>
                     )
                 })}
-                <View style = {{width:20,height:20,backgroundColor:'red',position:'absolute'}}></View>
+                {(dragBar != null)?
+                
+                <View style = {{position:'absolute',flexDirection:'row'}}>
+                    <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}>
+
+                    </View>
+                    <View style = {{backgroundColor:'blue', width: dragBar[1].end-dragBar[1].start,opacity:0.8,height:100}}>
+
+                    </View>
+                    <View style = {{width: dragBar[2].end-dragBar[2].start,height:100}}>
+
+                    </View>
+                </View>: null
+}
+               
                 </View>
+                
+                
             </PanGestureHandler>
     
         </GestureHandlerRootView>

@@ -44,3 +44,12 @@ export const update_name = index_and_name => dispatch => {
     payload: index_and_name,
   });
 };
+
+export const UPDATE_POSITION = 'UPDATE_POSITION';
+
+export const update_position = time_name_position => dispatch => {
+  dispatch({
+    type: UPDATE_POSITION,
+    payload: time_name_position,
+  });
+};
