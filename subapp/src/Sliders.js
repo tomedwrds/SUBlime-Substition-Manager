@@ -504,29 +504,77 @@ const TestSlider = () => {
     const dispatch = useDispatch()
     const updatePosition = time_name_position => dispatch(update_position(time_name_position))
     const dragStart = (drag) => {
-        const newStartTile = Math.floor(drag.nativeEvent.x / interval_width)
         
+        
+      const newStartTile = Math.floor(drag.nativeEvent.x / interval_width)
 
         if (globalState.position_data[0].position_timeline[newStartTile] != null)
         {
-        setDragBar([{start: 0, end: newStartTile*interval_width},
-                    {start: newStartTile*interval_width, end: newStartTile*interval_width+interval_width},
-                    {start: newStartTile*interval_width+interval_width,end:screen_width}
-        ])
+          
+          let prior_name =  globalState.position_data[0].position_timeline[0]
+        let blob_length = 0
+        let found_blob = false
+        for( let i =0; i < intervals; i++)
+        {
+          
+          
+          //Check if name has changed and name changed from 
+          if (globalState.position_data[0].position_timeline[i] != prior_name)
+          {
+            console.log(i)
+            prior_name = globalState.position_data[0].position_timeline[i]
+            
+            if (found_blob == true)
+            {
+              console.log("start" + (i-blob_length))
+              console.log('finish' + i)
+
+              const blob_width = (i-blob_length)*interval_width + blob_length*interval_width/2
+              //Determine what way drag is
+              if (drag.nativeEvent.x  > blob_width)
+              {
+                
+                setMoveDir('right')
+                setDragBar([{start: 0, end: (i-blob_length)*interval_width},
+                  {start: (i-blob_length)*interval_width, end: drag.nativeEvent.x},
+                  {start: drag.nativeEvent.x,end:screen_width}])
+                
+              }
+              else if (drag.nativeEvent.x <=  blob_width)
+              {
+                setMoveDir('left')
+                
+                  setDragBar([{start: 0, end: drag.nativeEvent.x},
+                    {start: drag.nativeEvent.x, end: i*interval_width},
+                    {start: i*interval_width,end:screen_width}
+                  ])
+              }
+              
+            
+            
+            }
+            found_blob = false
+            //Reset the vars and blob length
+            blob_length = 0
+            
+          }
+          if (i==newStartTile)
+          {
+            
+            found_blob = true
+          }
+
+          blob_length += 1
+    
+        }
+
+        
 
        
-    
-        //Determine what way drag is
-        if (drag.nativeEvent.x % interval_width > interval_width/2)
-        {
-          setMoveDir('right')
-        }
-        else if (drag.nativeEvent.x % interval_width  <=  interval_width/2)
-        {
-          setMoveDir('left')
-        }
+        
 
         setStartTile(newStartTile)
+        
     }
     
         
