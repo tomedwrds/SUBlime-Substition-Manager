@@ -521,13 +521,12 @@ const TestSlider = () => {
           //Check if name has changed and name changed from 
           if (globalState.position_data[0].position_timeline[i] != prior_name)
           {
-            console.log(i)
+            
             prior_name = globalState.position_data[0].position_timeline[i]
             
             if (found_blob == true)
             {
-              console.log("start" + (i-blob_length))
-              console.log('finish' + i)
+              
 
               const blob_width = (i-blob_length)*interval_width + blob_length*interval_width/2
               //Determine what way drag is
@@ -623,6 +622,27 @@ const TestSlider = () => {
     ])
         }
     }
+
+    
+    const transformed_data_for_visual = () =>
+    {
+      //Get a transformed version of teh data to play witth
+      let transformed_data = []
+      let current_length = 0;
+      let totalSlack = 0;
+      for(let i = 0; i < globalState.position_data[0].position_timeline.length; i++)
+      {
+        current_length += 1
+        if (current_length > 1) totalSlack ++
+        if (globalState.position_data[0].position_timeline[i] == null || (globalState.position_data[0].position_timeline[i] != globalState.position_data[0].position_timeline[i+1] && globalState.position_data[0].position_timeline[i] != null))
+        {
+          transformed_data.push({name: globalState.position_data[0].position_timeline[i], length: current_length,index_slack:  totalSlack})
+          current_length = 0
+        }  
+      }
+      console.log(transformed_data)
+      return transformed_data
+    }
     
     return(
         
@@ -634,7 +654,10 @@ const TestSlider = () => {
                     onEnded = {(drag) => dragEnd(drag)}
                   >
                 <View style = {{flexDirection:'row',flex:1}}>
-                {globalState.position_data[0].position_timeline.map((prop,index) => {
+                  
+                {
+               
+                    globalState.position_data[0].position_timeline.map((prop,index) => {
                     return(
                     <View key = {index} style = {{flex:1,borderColor:'black',borderWidth: 1}}>
                         {(prop == null)  ?
@@ -646,11 +669,21 @@ const TestSlider = () => {
                         items={pickerSelectData}
                         useNativeAndroidPickerStyle={false}
                         fixAndroidTouchableBug={true}
-                      /> : 
-                        <Text>{prop}</Text>}
+                      /> : <View></View>
+                        }
                     </View>
                     )
                 })}
+                <View style = {{position:'absolute',flexDirection:'row'}}>
+
+                {transformed_data_for_visual().map((prop,index) => {
+                    return(
+                      <View key = {index} style = {{width: interval_width*prop.length,backgroundColor:'red'}}>
+                        <Text>{prop.name}</Text>
+                      </View>
+                    )})}
+                </View>
+             
                 {(dragBar != null)?
                 
                 <View style = {{position:'absolute',flexDirection:'row'}}>
