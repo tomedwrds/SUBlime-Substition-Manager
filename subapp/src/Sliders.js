@@ -537,6 +537,8 @@ const TestSlider = () => {
                 setDragBar([{start: 0, end: (i-blob_length)*interval_width},
                   {start: (i-blob_length)*interval_width, end: drag.nativeEvent.x},
                   {start: drag.nativeEvent.x,end:screen_width}])
+                  console.log(i-1)
+                  setStartTile(i-1)
                 
               }
               else if (drag.nativeEvent.x <=  blob_width)
@@ -547,6 +549,7 @@ const TestSlider = () => {
                     {start: drag.nativeEvent.x, end: i*interval_width},
                     {start: i*interval_width,end:screen_width}
                   ])
+                  setStartTile(i-blob_length)
               }
               
             
@@ -572,7 +575,7 @@ const TestSlider = () => {
        
         
 
-        setStartTile(newStartTile)
+        
         
     }
     
@@ -587,17 +590,38 @@ const TestSlider = () => {
         const endTile = Math.round(drag.nativeEvent.x / interval_width)
         if (moveDir == 'right')
         {
-            for (let i = startTile; i < endTile; i++)
+            if(endTile <= startTile)
             {
-                updatePosition([i,globalState.position_data[0].position_timeline[startTile],'CF'])
+              
+              for (let i = endTile; i <= startTile; i++)
+              {
+                updatePosition([i,null,'CF'])
+              }
             }
+            else {
+              
+            for (let k = startTile; k < endTile; k++)
+            {
+                updatePosition([k,globalState.position_data[0].position_timeline[startTile],'CF'])
+            }
+          }
         }
         else if (moveDir == 'left')
         {
-            for (let i = endTile; i < startTile; i++)
+          if(endTile >= startTile)
+          {
+            for (let i = startTile; i < endTile; i++)
+              {
+                updatePosition([i,null,'CF'])
+              }
+          }
+          else
+          {
+            for (let k = endTile; k < startTile; k++)
             {
-                updatePosition([i,globalState.position_data[0].position_timeline[startTile],'CF'])
+                updatePosition([k,globalState.position_data[0].position_timeline[startTile],'CF'])
             }
+          }
         }
         setDragBar(null)
         setMoveDir(null)
@@ -629,18 +653,18 @@ const TestSlider = () => {
       //Get a transformed version of teh data to play witth
       let transformed_data = []
       let current_length = 0;
-      let totalSlack = 0;
+  
       for(let i = 0; i < globalState.position_data[0].position_timeline.length; i++)
       {
         current_length += 1
-        if (current_length > 1) totalSlack ++
+        
         if (globalState.position_data[0].position_timeline[i] == null || (globalState.position_data[0].position_timeline[i] != globalState.position_data[0].position_timeline[i+1] && globalState.position_data[0].position_timeline[i] != null))
         {
-          transformed_data.push({name: globalState.position_data[0].position_timeline[i], length: current_length,index_slack:  totalSlack})
+          transformed_data.push({name: globalState.position_data[0].position_timeline[i], length: current_length})
           current_length = 0
         }  
       }
-      console.log(transformed_data)
+     
       return transformed_data
     }
     
@@ -654,35 +678,37 @@ const TestSlider = () => {
                     onEnded = {(drag) => dragEnd(drag)}
                   >
                 <View style = {{flexDirection:'row',flex:1}}>
-                  
+                <View style = {{position:'absolute',flexDirection:'row'}}>
+
+                {transformed_data_for_visual().map((prop,index) => {
+                    return(
+                      <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:100), width: interval_width*prop.length, backgroundColor:(prop.name == null? 'transparent':'red')}}>
+                        <Text style = {styles.sliderText}>{prop.name}</Text>
+                      </View>
+                    )})}
+                </View>
                 {
                
                     globalState.position_data[0].position_timeline.map((prop,index) => {
                     return(
-                    <View key = {index} style = {{flex:1,borderColor:'black',borderWidth: 1}}>
+                    <View key = {index} style = {{flex:1,borderColor:'black'}}>
                         {(prop == null)  ?
+                        <View style = {{alignItems:'center',justifyContent:'center'}}>
                         <RNPickerSelect 
                         onValueChange={(value)=>{updatePosition([index,value,'CF'])}}
-                        placeholder={{ label: '+', value: null }}
+                        placeholder={{ label: (index+1).toString(), value: null }}
                         style = {pickerSelectStyles}
                         
                         items={pickerSelectData}
                         useNativeAndroidPickerStyle={false}
                         fixAndroidTouchableBug={true}
-                      /> : <View></View>
+
+                      /></View> : <View></View>
                         }
                     </View>
                     )
                 })}
-                <View style = {{position:'absolute',flexDirection:'row'}}>
-
-                {transformed_data_for_visual().map((prop,index) => {
-                    return(
-                      <View key = {index} style = {{width: interval_width*prop.length,backgroundColor:'red'}}>
-                        <Text>{prop.name}</Text>
-                      </View>
-                    )})}
-                </View>
+                
              
                 {(dragBar != null)?
                 
@@ -690,8 +716,8 @@ const TestSlider = () => {
                     <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}>
 
                     </View>
-                    <View style = {{backgroundColor:'blue', width: dragBar[1].end-dragBar[1].start,opacity:0.8,height:100}}>
-
+                    <View style = {{...styles.dragBar,backgroundColor:'red', width: dragBar[1].end-dragBar[1].start}}>
+                      
                     </View>
                     <View style = {{width: dragBar[2].end-dragBar[2].start,height:100}}>
 
@@ -717,7 +743,21 @@ const PlayerSlider = () =>
     )
 }
   const styles = StyleSheet.create({
-
+    sliderText: {
+      fontSize: 20,
+      textAlign:'center',
+      textAlignVertical:'center'
+    },
+    sliderBox: {
+      
+      borderRadius: 9,
+      justifyContent: 'center'
+    },
+    dragBar: {
+      opacity:0.6,
+      height:100,
+      borderRadius: 9
+    },
     tagSection: {
   
           textAlign: "center",
@@ -760,13 +800,12 @@ const PlayerSlider = () =>
       fontSize: 59,
       backgroundColor: 'yellow',
       overflow:'hidden',
-      borderColor: 'black',
-      borderWidth: 2,
+     
       borderRadius: 6
     }
   })
   const pickerSelectStyles = StyleSheet.create({
-   
+  
     inputAndroid: {
       
       color: 'black',
@@ -777,12 +816,16 @@ const PlayerSlider = () =>
       
     },
     inputIOS: {
+     
       fontSize: 16,
       color: 'black',
       fontSize: 20,
       backgroundColor: '#ebebeb',
       height: '100%',
-      borderRadius: 4
+      textAlign: 'center',
+      borderLeftWidth:1
+  
+   
     
   
     
