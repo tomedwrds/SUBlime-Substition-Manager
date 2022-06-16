@@ -502,8 +502,23 @@ const TestSlider = () => {
     const [moveDir, setMoveDir] = useState(null)
     const [startTile, setStartTile] = useState(null)
     const dispatch = useDispatch()
+    const barColors = ['#DFFF00','#FFBF00','#FF7F50','#DE3163','#9FE2BF','#40E0D0','#6495ED','#CCCCFF']
     const [dragBarColor, setDragBarColor] = useState(null)
     const updatePosition = time_name_position_color => dispatch(update_position(time_name_position_color))
+    
+    const assignColor = (name) =>
+    {
+      var color =barColors[Math.floor(Math.random() * barColors.length)]
+      for(let i =0; i < globalState.position_data[0].position_timeline.length;  i++)
+      {
+        if (name == globalState.position_data[0].position_timeline[i].name)
+        {
+          color = globalState.position_data[0].position_timeline[i].color
+        }
+      }
+      return color
+
+    }
     const dragStart = (drag) => {
         
         
@@ -648,18 +663,19 @@ const TestSlider = () => {
         }
     }
 
-    
+    console.log(Math.max(100,10))
     const transformed_data_for_visual = () =>
     {
       //Get a transformed version of teh data to play witth
       let transformed_data = []
       let current_length = 0;
       
+      //loop through whole list
       for(let i = 0; i < globalState.position_data[0].position_timeline.length; i++)
       {
         current_length += 1
         
-        if (globalState.position_data[0].position_timeline[i].name == null || (globalState.position_data[0].position_timeline[i].name != globalState.position_data[0].position_timeline[i+1].name && globalState.position_data[0].position_timeline[i].name != null))
+        if (globalState.position_data[0].position_timeline[i].name == null || (globalState.position_data[0].position_timeline[i].name != globalState.position_data[0].position_timeline[ i+1].name && globalState.position_data[0].position_timeline[i].name != null))
         {
       
           transformed_data.push({name: globalState.position_data[0].position_timeline[i].name, length: current_length,color: globalState.position_data[0].position_timeline[i].color})
@@ -669,7 +685,7 @@ const TestSlider = () => {
      
       return transformed_data
     }
-    
+  
     return(
         
         <GestureHandlerRootView style = {{height:100,flexDirection:'row'}}>
@@ -697,7 +713,7 @@ const TestSlider = () => {
                         {(prop.name == null)  ?
                         <View style = {{alignItems:'center',justifyContent:'center'}}>
                         <RNPickerSelect 
-                        onValueChange={(value)=>{updatePosition([index,value,'CF','yellow'])}}
+                        onValueChange={(value)=>{updatePosition([index,value,'CF',assignColor(value)])}}
                         placeholder={{ label: (index+1).toString(), value: null }}
                         style = {pickerSelectStyles}
                         
@@ -718,7 +734,7 @@ const TestSlider = () => {
                     <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}>
 
                     </View>
-                    <View style = {{...styles.dragBar,backgroundColor: dragBarColor, width: dragBar[1].end-dragBar[1].start}}>
+                    <View style = {{...styles.dragBar,backgroundColor: globalState.position_data[0].position_timeline[startTile].color, width: dragBar[1].end-dragBar[1].start}}>
                       
                     </View>
                     <View style = {{width: dragBar[2].end-dragBar[2].start,height:100}}>
