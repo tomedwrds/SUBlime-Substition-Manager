@@ -502,63 +502,67 @@ const TestSlider = () => {
     const [moveDir, setMoveDir] = useState(null)
     const [startTile, setStartTile] = useState(null)
     const dispatch = useDispatch()
-    const barColors = ['#DFFF00','#FFBF00','#FF7F50','#DE3163','#9FE2BF','#40E0D0','#6495ED','#CCCCFF']
-    const [dragBarColor, setDragBarColor] = useState(null)
+    
     const updatePosition = time_name_position_color => dispatch(update_position(time_name_position_color))
     
     const assignColor = (name) =>
     {
-      var color =barColors[Math.floor(Math.random() * barColors.length)]
-      for(let i =0; i < globalState.position_data[0].position_timeline.length;  i++)
+      //Prevent place holder values slipping through and causing erros
+      if (name != null)
       {
-        if (name == globalState.position_data[0].position_timeline[i].name)
-        {
-          color = globalState.position_data[0].position_timeline[i].color
-        }
+        //Join on the name of the two lists and return the color
+        var join = globalState.player_data.find(player => player.name == name)
+        return join.color
       }
-      return color
 
     }
     const dragStart = (drag) => {
         
-        
+      //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
       const newStartTile = Math.floor(drag.nativeEvent.x / interval_width)
 
-        if (globalState.position_data[0].position_timeline[newStartTile].name != null)
-        {
-          setDragBarColor('green')
-          let prior_name =  globalState.position_data[0].position_timeline[0].name
+      //Check if tile has something in it as null tiles cannot be dragged
+      if (globalState.position_data[0].position_timeline[newStartTile].name != null)
+      {
+        //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
+        let prior_name =  globalState.position_data[0].position_timeline[0].name
         let blob_length = 0
         let found_blob = false
+        console.log(globalState.position_data[0].position_timeline)
+        //Loop through all of the invervals
         for( let i =0; i < intervals; i++)
         {
           
           
-          //Check if name has changed and name changed from 
-          if (globalState.position_data[0].position_timeline[i].name != prior_name)
+
+
+          //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
+          if (globalState.position_data[0].position_timeline[i].name != prior_name )
           {
-            
             prior_name = globalState.position_data[0].position_timeline[i].name
-            
+            //Check to see if iterated over blob is the relavent one
             if (found_blob == true)
             {
               
-
-              const blob_width = (i-blob_length)*interval_width + blob_length*interval_width/2
-              //Determine what way drag is
-              if (drag.nativeEvent.x  > blob_width)
+              //if (i==(intervals-1)) blob_length = 1
+              //Determine x pos of half of the blob this is done for determing drag direction
+              const half_blob_x = (i-blob_length)*interval_width + blob_length*interval_width/2
+              
+              //Determine what way drag is using drag pos and halfway
+              if (drag.nativeEvent.x  > half_blob_x)
               {
                 
                 setMoveDir('right')
                 setDragBar([{start: 0, end: (i-blob_length)*interval_width},
                   {start: (i-blob_length)*interval_width, end: drag.nativeEvent.x},
                   {start: drag.nativeEvent.x,end:screen_width}])
-                  console.log(i-1)
+                  
                   setStartTile(i-1)
                 
               }
-              else if (drag.nativeEvent.x <=  blob_width)
+              else if (drag.nativeEvent.x <=  half_blob_x)
               {
+                
                 setMoveDir('left')
                 
                   setDragBar([{start: 0, end: drag.nativeEvent.x},
@@ -575,12 +579,16 @@ const TestSlider = () => {
             //Reset the vars and blob length
             blob_length = 0
             
-          }
-          if (i==newStartTile)
-          {
             
+          }
+          //Check to see if the invterval has been reached that the start tile was in. 
+          //Once found it means the drag bar can be created with the drag bar on that blob
+          if (i==newStartTile)
+          { 
             found_blob = true
           }
+          
+          
 
           blob_length += 1
     
@@ -663,19 +671,24 @@ const TestSlider = () => {
         }
     }
 
-    console.log(Math.max(100,10))
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
     const transformed_data_for_visual = () =>
     {
       //Get a transformed version of teh data to play witth
       let transformed_data = []
       let current_length = 0;
+      let game_length = globalState.position_data[0].position_timeline.length
       
       //loop through whole list
-      for(let i = 0; i < globalState.position_data[0].position_timeline.length; i++)
+      for(let i = 0; i < game_length; i++)
       {
         current_length += 1
-        
-        if (globalState.position_data[0].position_timeline[i].name == null || (globalState.position_data[0].position_timeline[i].name != globalState.position_data[0].position_timeline[ i+1].name && globalState.position_data[0].position_timeline[i].name != null))
+        var isTileEmpty = globalState.position_data[0].position_timeline[i].name == null;
+        if( i < game_length-1)
+        {var isNextTileSame = globalState.position_data[0].position_timeline[i].name != globalState.position_data[0].position_timeline[ i+1].name;}
+        else var isNextTileSame = true
+        if (isTileEmpty || (isNextTileSame && !isTileEmpty))
         {
       
           transformed_data.push({name: globalState.position_data[0].position_timeline[i].name, length: current_length,color: globalState.position_data[0].position_timeline[i].color})

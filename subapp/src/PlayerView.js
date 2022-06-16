@@ -173,17 +173,19 @@ function PlayerView({navigation }) {
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
   const playersList = useSelector(state => state.numberReducer);
-
+  
   //Indexing vars
   const [newPlayerId, setNewPlayerId] = useState(2);
   
 
   function addPosition() {
     //Add new player object to player data then increment id counter
+    //The color code generates a random color
     createPlayer({
       id: newPlayerId,
       name: '',
       positions: [],
+      color: '#' + Math.floor(Math.random()*16777215).toString(16)
     })
     setNewPlayerId(newPlayerId + 1)
     
