@@ -502,16 +502,17 @@ const TestSlider = () => {
     const [moveDir, setMoveDir] = useState(null)
     const [startTile, setStartTile] = useState(null)
     const dispatch = useDispatch()
-    const updatePosition = time_name_position => dispatch(update_position(time_name_position))
+    const [dragBarColor, setDragBarColor] = useState(null)
+    const updatePosition = time_name_position_color => dispatch(update_position(time_name_position_color))
     const dragStart = (drag) => {
         
         
       const newStartTile = Math.floor(drag.nativeEvent.x / interval_width)
 
-        if (globalState.position_data[0].position_timeline[newStartTile] != null)
+        if (globalState.position_data[0].position_timeline[newStartTile].name != null)
         {
-          
-          let prior_name =  globalState.position_data[0].position_timeline[0]
+          setDragBarColor('green')
+          let prior_name =  globalState.position_data[0].position_timeline[0].name
         let blob_length = 0
         let found_blob = false
         for( let i =0; i < intervals; i++)
@@ -519,10 +520,10 @@ const TestSlider = () => {
           
           
           //Check if name has changed and name changed from 
-          if (globalState.position_data[0].position_timeline[i] != prior_name)
+          if (globalState.position_data[0].position_timeline[i].name != prior_name)
           {
             
-            prior_name = globalState.position_data[0].position_timeline[i]
+            prior_name = globalState.position_data[0].position_timeline[i].name
             
             if (found_blob == true)
             {
@@ -602,7 +603,7 @@ const TestSlider = () => {
               
             for (let k = startTile; k < endTile; k++)
             {
-                updatePosition([k,globalState.position_data[0].position_timeline[startTile],'CF'])
+                updatePosition([k,globalState.position_data[0].position_timeline[startTile].name,'CF',globalState.position_data[0].position_timeline[startTile].color])
             }
           }
         }
@@ -619,7 +620,7 @@ const TestSlider = () => {
           {
             for (let k = endTile; k < startTile; k++)
             {
-                updatePosition([k,globalState.position_data[0].position_timeline[startTile],'CF'])
+                updatePosition([k,globalState.position_data[0].position_timeline[startTile].name,'CF',globalState.position_data[0].position_timeline[startTile].color])
             }
           }
         }
@@ -653,14 +654,15 @@ const TestSlider = () => {
       //Get a transformed version of teh data to play witth
       let transformed_data = []
       let current_length = 0;
-  
+      
       for(let i = 0; i < globalState.position_data[0].position_timeline.length; i++)
       {
         current_length += 1
         
-        if (globalState.position_data[0].position_timeline[i] == null || (globalState.position_data[0].position_timeline[i] != globalState.position_data[0].position_timeline[i+1] && globalState.position_data[0].position_timeline[i] != null))
+        if (globalState.position_data[0].position_timeline[i].name == null || (globalState.position_data[0].position_timeline[i].name != globalState.position_data[0].position_timeline[i+1].name && globalState.position_data[0].position_timeline[i].name != null))
         {
-          transformed_data.push({name: globalState.position_data[0].position_timeline[i], length: current_length})
+      
+          transformed_data.push({name: globalState.position_data[0].position_timeline[i].name, length: current_length,color: globalState.position_data[0].position_timeline[i].color})
           current_length = 0
         }  
       }
@@ -682,7 +684,7 @@ const TestSlider = () => {
 
                 {transformed_data_for_visual().map((prop,index) => {
                     return(
-                      <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:100), width: interval_width*prop.length, backgroundColor:(prop.name == null? 'transparent':'red')}}>
+                      <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:100), width: interval_width*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
                         <Text style = {styles.sliderText}>{prop.name}</Text>
                       </View>
                     )})}
@@ -692,10 +694,10 @@ const TestSlider = () => {
                     globalState.position_data[0].position_timeline.map((prop,index) => {
                     return(
                     <View key = {index} style = {{flex:1,borderColor:'black'}}>
-                        {(prop == null)  ?
+                        {(prop.name == null)  ?
                         <View style = {{alignItems:'center',justifyContent:'center'}}>
                         <RNPickerSelect 
-                        onValueChange={(value)=>{updatePosition([index,value,'CF'])}}
+                        onValueChange={(value)=>{updatePosition([index,value,'CF','yellow'])}}
                         placeholder={{ label: (index+1).toString(), value: null }}
                         style = {pickerSelectStyles}
                         
@@ -716,7 +718,7 @@ const TestSlider = () => {
                     <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}>
 
                     </View>
-                    <View style = {{...styles.dragBar,backgroundColor:'red', width: dragBar[1].end-dragBar[1].start}}>
+                    <View style = {{...styles.dragBar,backgroundColor: dragBarColor, width: dragBar[1].end-dragBar[1].start}}>
                       
                     </View>
                     <View style = {{width: dragBar[2].end-dragBar[2].start,height:100}}>

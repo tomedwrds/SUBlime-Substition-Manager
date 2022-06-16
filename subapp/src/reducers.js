@@ -4,7 +4,7 @@ import {CREATE_PLAYER,REMOVE_PLAYER,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPD
 const iniitalState = {
     
     player_data: [],
-    position_data: [{position_name: 'CF', position_timeline: new Array(15).fill(null)}]
+    position_data: [{position_name: 'CF', position_timeline: new Array(15).fill({name:null, color:null})}]
 }
 
 function numberReducer(state = iniitalState, action)
@@ -38,14 +38,15 @@ function numberReducer(state = iniitalState, action)
                                         : content
             )}
         case UPDATE_POSITION:
+            
             return{...state, position_data: state.position_data.map(
                 (content, i) => content.position_name === action.payload[2] ?
                     {...content, 
                         position_timeline: state.position_data[i].position_timeline.map((content,i)=> i===action.payload[0] ?
-                        action.payload[1] : content)}
+                        {...content, name: action.payload[1], color: action.payload[3]}  : content)}
                                     : content)}
             //change 0 to i
-            console.log()
+            
             //return {...state, position_data:}
         default:
             return state;
