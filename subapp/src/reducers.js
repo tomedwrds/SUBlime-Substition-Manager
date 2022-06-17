@@ -4,7 +4,7 @@ import {CREATE_PLAYER,REMOVE_PLAYER,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPD
 const iniitalState = {
     
     player_data: [],
-    position_data: [{position_name: 'CF', position_timeline: new Array(15).fill({name:null, color:null})}]
+    position_data: [{position_id: 0, position_name: 'CF', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 1, position_name: 'LF', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 2, position_name: 'RF', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 3, position_name: 'LM', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 4, position_name: 'CM', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 5, position_name: 'RM', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 6, position_name: 'LB', position_timeline: new Array(15).fill({name:null, color:null})},{position_id: 7, position_name: 'CB', position_timeline: new Array(15).fill({name:null, color:null})}]
 }
 
 function numberReducer(state = iniitalState, action)
@@ -38,7 +38,7 @@ function numberReducer(state = iniitalState, action)
                                         : content
             )}
         case UPDATE_POSITION:
-            
+           
             return{...state, position_data: state.position_data.map(
                 (content, i) => content.position_name === action.payload[2] ?
                     {...content, 
