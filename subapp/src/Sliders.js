@@ -52,10 +52,9 @@ const TestSlider = () => {
         const [moveDir, setMoveDir] = useState(null)
         const [startTile, setStartTile] = useState(null)
         const [intervalWidth, setIntervalWidth] = useState(0)
-        const [dragBar, setDragBar] = useState([null,-1])
+        const [dragBar, setDragBar] = useState(null)
         const positionName = prop.position_name
-        
-        console.log(dragBar)
+
         
          const assignColor = (name) =>
          {
@@ -107,7 +106,7 @@ const TestSlider = () => {
                      setMoveDir('right')
                      setDragBar([{start: 0, end: (i-blob_length)*intervalWidth},
                        {start: (i-blob_length)*intervalWidth, end: drag.nativeEvent.x},
-                       {start: drag.nativeEvent.x,end:screen_width},prop.position_id])
+                       {start: drag.nativeEvent.x,end:screen_width}])
                        
                        setStartTile(i-1)
                      
@@ -119,7 +118,7 @@ const TestSlider = () => {
                      
                        setDragBar([{start: 0, end: drag.nativeEvent.x},
                          {start: drag.nativeEvent.x, end: i*intervalWidth},
-                         {start: i*intervalWidth,end:screen_width},prop.position_id
+                         {start: i*intervalWidth,end:screen_width}
                        ])
                        setStartTile(i-blob_length)
                    }
@@ -203,7 +202,7 @@ const TestSlider = () => {
                  
                  setDragBar([{start: 0, end: dragBar[0].end},
                      {start: dragBar[1].start, end: drag.nativeEvent.x},
-                     {start: drag.nativeEvent.x,end:screen_width},prop.position_id
+                     {start: drag.nativeEvent.x,end:screen_width}
          ])
          
              }
@@ -211,7 +210,7 @@ const TestSlider = () => {
              {
                  setDragBar([{start: 0, end: drag.nativeEvent.x},
                      {start: drag.nativeEvent.x, end: dragBar[1].end},
-                     {start: dragBar[2].start,end:screen_width},prop.position_id
+                     {start: dragBar[2].start,end:screen_width}
          ])
              }
          }
@@ -258,16 +257,16 @@ const TestSlider = () => {
                 <View onLayout={(k) => setIntervalWidth(k.nativeEvent.layout.width/intervals)} style = {{flexDirection:'row',flex:1}}>
                 <View style = {{position:'absolute',flexDirection:'row'}}>
 
-                {transformed_data_for_visual().map((prop,index) => {
+                {/*transformed_data_for_visual().map((prop,index) => {
                     return(
                       <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:100), width: intervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
                         <Text style = {styles.sliderText}>{prop.name}</Text>
                       </View>
-                    )})}
+                    )})*/}
                 </View>
                 {
                   
-                    globalState.position_data[prop.position_id].position_timeline.map((prop,index) => {
+                   globalState.position_data[prop.position_id].position_timeline.map((prop,index) => {
                       
                       return(
                       
@@ -290,7 +289,7 @@ const TestSlider = () => {
                 })}
                 
              
-                {(dragBar != null && dragBar[3] == prop.position_id)?
+                {(dragBar != null )?
                 
                 <View style = {{position:'absolute',flexDirection:'row'}}>
                     <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}>
