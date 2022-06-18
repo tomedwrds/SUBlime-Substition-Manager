@@ -53,3 +53,12 @@ export const update_position = time_name_position_color => dispatch => {
     payload: time_name_position_color,
   });
 };
+
+export const UPDATE_INTERVAL_WIDTH = 'UPDATE_INTERVAL_WIDTH';
+
+export const update_interval_width = id_interval_width => dispatch => {
+  dispatch({
+    type: UPDATE_INTERVAL_WIDTH,
+    payload: id_interval_width,
+  });
+};
