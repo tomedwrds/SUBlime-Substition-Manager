@@ -23,11 +23,11 @@ import { memo } from "react";
 //import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //import { NavigationContainer } from '@react-navigation/native';
 const sliderBarMargin = 20
-
-
-
-
-
+const sliderBarRightMargin =20
+const sliderBarTopMargin = 20
+const sliderBorderWidth = 1
+const sliderBodyHeight = 100 
+const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 
 
 const TestSlider = () => {
@@ -47,7 +47,7 @@ const TestSlider = () => {
     const [moveDir, setMoveDir] = useState(null)
     const [startTile, setStartTile] = useState(null)
     const [dragBar, setDragBar] = useState([null,null,null,null])
-    const [hello,setHello] = useState(1)
+    
 
 
     const SliderBar = ({item}) =>
@@ -61,9 +61,9 @@ const TestSlider = () => {
 
 
   const intervals = 15
-    const rightMargin =20
-    const screen_width = Dimensions.get('window').width-rightMargin
-    const pickerSelectData = globalState.player_data.map(item => ({label: item.name,value:item.name}))
+    
+    const screen_width = Dimensions.get('window').width-sliderBarRightMargin
+    const pickerSelectData = globalState.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
    const assignColor = (name) =>
    {
      //Prevent place holder values slipping through and causing erros
@@ -77,40 +77,41 @@ const TestSlider = () => {
    }
    const dragStart = (drag) => {
        
-     //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
-     const newStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth)
+    //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
+    const dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth)
 
-     //Check if tile has something in it as null tiles cannot be dragged
-     if (positionTimeline[newStartTile].name != null)
-     {
+    //Check if tile has something in it as null tiles cannot be dragged
+    if (positionTimeline[dragStartTile].name != null)
+    {
        //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
        let prior_name =  positionTimeline[0].name
        let blob_length = 0
        let found_blob = false
       
        //Loop through all of the invervals
-       for( let i =0; i < intervals; i++)
+       for( let i =0; i <= intervals; i++)
        {
-         
-         
-
-
-         //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
-         if (positionTimeline[i].name != prior_name )
-         {
-           prior_name = positionTimeline[i].name
-           //Check to see if iterated over blob is the relavent one
-           if (found_blob == true)
-           {
+        if (i < intervals)
+         {console.log(i); var tileChanged = positionTimeline[i].name != prior_name}
+        //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
+        if (tileChanged || i==15 )
+        {
+          
+          
+          //Check to see if iterated over blob is the relavent one
+          if (found_blob == true)
+          {
+            //Set found blob to false so a 2nd drag bar isnt created
+            found_blob = false
              
              //if (i==(intervals-1)) blob_length = 1
-             //Determine x pos of half of the blob this is done for determing drag direction
-             const half_blob_x = (i-blob_length)*positionIntervalWidth + blob_length*positionIntervalWidth/2
+            //Determine x pos of half of the blob this is done for determing drag direction
+            const half_blob_x = (i-blob_length)*positionIntervalWidth + blob_length*positionIntervalWidth/2
              
              //Determine what way drag is using drag pos and halfway
              if (drag.nativeEvent.x  > half_blob_x)
              {
-               
+               console.log(i)
                setMoveDir('right')
                setDragBar([{start: 0, end: (i-blob_length)*positionIntervalWidth},
                  {start: (i-blob_length)*positionIntervalWidth, end: drag.nativeEvent.x},
@@ -132,9 +133,12 @@ const TestSlider = () => {
              }
              
            
-           
            }
-           found_blob = false
+           if (i < intervals)
+         {
+           prior_name = positionTimeline[i].name
+         }
+           
            //Reset the vars and blob length
            blob_length = 0
            
@@ -142,7 +146,7 @@ const TestSlider = () => {
          }
          //Check to see if the invterval has been reached that the start tile was in. 
          //Once found it means the drag bar can be created with the drag bar on that blob
-         if (i==newStartTile)
+         if (i==dragStartTile)
          { 
            found_blob = true
          }
@@ -155,7 +159,7 @@ const TestSlider = () => {
 
        
        
-   }
+    }
    
        
      
@@ -166,30 +170,42 @@ const TestSlider = () => {
        const endTile = Math.round(drag.nativeEvent.x / positionIntervalWidth)
        if (moveDir == 'right')
        {
-           if(endTile <= startTile)
-           {
-             
-             for (let i = endTile; i <= startTile; i++)
-             {
-               updatePosition([i,null,positionName])
-             }
-           }
+          //Check if ended behind the start tile and thus delete 
+          if(endTile <= startTile)
+          {
+            
+            for (let i = endTile; i <= startTile; i++)
+            {
+              //Check to make sure that tile being iterated over is the same as draged tile
+              if (positionTimeline[i].name == positionTimeline[startTile].name)
+              {
+                updatePosition([i,null,positionName])
+              }
+            }
+          }
+          //If moved beyond start tile
            else {
              
            for (let k = startTile; k < endTile; k++)
            {
+            console.log('f')
                updatePosition([k,positionTimeline[startTile].name,positionName,positionTimeline[startTile].color])
            }
          }
        }
        else if (moveDir == 'left')
        {
+        //Deletion
          if(endTile >= startTile)
          {
+
            for (let i = startTile; i < endTile; i++)
-             {
-               updatePosition([i,null,positionName])
-             }
+            {
+              if (positionTimeline[i].name == positionTimeline[startTile].name)
+              {
+                updatePosition([i,null,positionName])
+              }
+            }
          }
          else
          {
@@ -205,8 +221,8 @@ const TestSlider = () => {
    }
    const dragActive = (drag) =>
    {
-   
-       /*if (moveDir == 'right')
+    //setDragBar([null,null,null,null])
+       if (moveDir == 'right')
        {
            
            setDragBar([{start: 0, end: dragBar[0].end},
@@ -221,7 +237,7 @@ const TestSlider = () => {
                {start: drag.nativeEvent.x, end: dragBar[1].end},
                {start: dragBar[2].start,end:screen_width},positionId
    ])
-       }*/
+       }
    }
 
  
@@ -251,15 +267,16 @@ const TestSlider = () => {
     
      return transformed_data
    }
+  
 
-
+   
 
   return(
-  <GestureHandlerRootView    style = {{height:100,flexDirection:'row',marginRight: rightMargin}}>
+  <GestureHandlerRootView    style = {styles.sliderBarContainer}>
     {/* Text for position */}
-    <Pressable onPress = {() => setHello('hello')}>
+    <View style = {{justifyContent:'center',width:70,textAlign:'center',alignItems:'center'}}>
     <Text style = {styles.position_font}>{positionName}</Text>
-    </Pressable>
+    </View>
     {/* Pan gesture handler handles drag event */}
     <PanGestureHandler 
       onActivated = {(drag) => dragStart(drag)}
@@ -268,15 +285,15 @@ const TestSlider = () => {
       
       {/* First view is the primary view all the other views are stacked on top of this. Onlayout is used to setup calculations*/}
       <View 
-        onLayout={(k) => {updateIntervalWidth([positionId,k.nativeEvent.layout.width/intervals])}} 
-        style = {{flexDirection:'row',flex:1}}>
+        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervals])}} 
+        style = {styles.sliderBarBody}>
 
         {/* Top layer that displays transformed data */}
         <View style = {{position:'absolute',flexDirection:'row'}}>
           
           {transformed_data_for_visual().map((prop,index) => {
             return(
-              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:100), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
+              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
                 <Text style = {styles.sliderText}>{prop.name}</Text>
               </View>
             )
@@ -294,14 +311,14 @@ const TestSlider = () => {
         })}
           
         {/* Drag bar later that is placed on top */}
-        {/*(dragBar[3] == positionId )?
+        {(dragBar[3] == positionId )?
           
           <View style = {{position:'absolute',flexDirection:'row'}}>
-            <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:100}}/>
+            <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:sliderContentHeight}}/>
             <View style = {{...styles.dragBar,backgroundColor: positionTimeline[startTile].color, width: dragBar[1].end-dragBar[1].start}}/>
-            <View style = {{width: dragBar[2].end-dragBar[2].start,height:100}}/>   
+            <View style = {{width: dragBar[2].end-dragBar[2].start,height:sliderContentHeight}}/>   
           </View>: null
-      */}
+      }
          
       </View>
           
@@ -318,7 +335,7 @@ const TestSlider = () => {
      
     
         
-        <FlatList numColumns={1} data = {globalState.position_data} renderItem={SliderBar} keyExtractor ={item => item.position_id}></FlatList>
+        <FlatList scrollEnabled maxToRenderPerBatch={1} data = {globalState.position_data} renderItem={SliderBar} keyExtractor ={item => item.position_id}></FlatList>
         </View>
     )
 }
@@ -339,13 +356,19 @@ const PlayerSlider = () =>
     },
     sliderBox: {
       
-      borderRadius: 9,
+      borderRadius: 5,
       justifyContent: 'center'
     },
     dragBar: {
       opacity:0.6,
-      height:100,
-      borderRadius: 9
+      height:sliderContentHeight,
+      borderRadius: 5
+    },
+    sliderBarContainer: {
+      height:sliderBodyHeight,
+      flexDirection:'row',
+      marginRight: sliderBarRightMargin,
+      marginTop: sliderBarTopMargin,
     },
     tagSection: {
   
@@ -366,6 +389,12 @@ const PlayerSlider = () =>
       alignItems: 'center'
       
     },
+    sliderBarBody: {
+      flexDirection:'row',
+      flex:1,
+      borderWidth: 1,
+      borderRadius:5
+    },
     tagSectionText: {
       
           color: "white",
@@ -379,52 +408,12 @@ const PlayerSlider = () =>
       
   
     },
-    sliderBar: {
-      flexDirection: 'row',
-      
-      borderWidth: 0,
-      borderRadius: 1,
-      height: 75,
-      margin: sliderBarMargin,
-      fontSize: 59,
-      backgroundColor: 'yellow',
-      overflow:'hidden',
-     
-      borderRadius: 6
-    },
+    
     position_font: {
-      fontSize: 30
+      fontSize: 30,
+      
     }
   })
-  const pickerSelectStyles = StyleSheet.create({
   
-    inputAndroid: {
-      
-      color: 'black',
-      //fontSize: 20,
-      //backgroundColor: 'red',
-      //height: '100%',
-      //width: '100%'
-      
-    },
-    inputIOS: {
-     
-      fontSize: 16,
-      color: 'black',
-      fontSize: 20,
-      backgroundColor: '#ebebeb',
-      height: '100%',
-      textAlign: 'center',
-      borderLeftWidth:1
-  
-   
-    
-  
-    
-  },
-    placeholder: {
-      color: 'grey'
-    }
-  });
   
   export default (PlayerSlider);
