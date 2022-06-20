@@ -11,7 +11,7 @@ import InGame from './src/in_game/InGame';
 import { Provider } from 'react-redux';
 import { store } from './src/store.js';
 
-
+import FormationSelection from './src/FormationSelection';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -36,7 +36,7 @@ const App = () => {
   
   
   return(
-    <InGame></InGame>
+    <FormationSelection></FormationSelection>
     // <NavigationContainer>
     //   <Stack.Navigator>
     //     <Stack.Screen name= 'Selection' component={PlayerView}/>

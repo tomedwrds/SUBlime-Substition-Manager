@@ -5,30 +5,26 @@ import { useState } from "react"
 import PlayerIcon from './PlayerIcon.js'
 
 
-const GameField = (props) => {
-    const [iconWidth, setIconWidth] = useState(50)
-    const [iconHeight, setIconHeight] = useState(50)
-    const totalColumns = 7;
-    const totalRows = 11;
+const GameField = ({item}) => {
 
-    const DATA =   [
-                    [0,0,0,'CF',0,0,0],
-                    [0,0,'LF',0,'RF',0,0],
-                    [0,'RI',0,0,0,'LI',0],
-                    [0,0,0,'CH',0,0,0],
-                    ['LH',0,0,0,0,0,'RH'],
-                    [0,0,'CB',0,'CB',0,0],
-                    [0,0,0,'GK',0,0,0]]
+
+    
   
     
  
     return(
-        <View style ={styles.gamePitch} onLayout = {(k) =>{setIconWidth(k.nativeEvent.layout.width/totalColumns); setIconHeight(k.nativeEvent.layout.height/totalRows)}} >
+        <View style = {styles.gamePitchContainer}>
+        <View style = {{flex: 1}}>
+            <Text style = {styles.nameText}>{item.layoutName}</Text>
+            
+        </View>
+        <View style ={styles.gamePitch}  >
+        
         <View style = {{position: 'absolute',height: '100%',width:'100%',borderWidth:2,borderColor:'white',borderRadius:20,overflow:'hidden'}}>
           <View style = {{flex: 1,flexDirection:'row', backgroundColor: 'green',borderBottomWidth:2,borderColor:'white'}}>
             <View style = {{flex:1, backgroundColor:'green'}}></View>
             <View style = {{flex:4}}>
-                <View style = {{flex:17,borderWidth:2,borderColor:'white', borderBottomEndRadius:150,borderBottomStartRadius:150}}></View>
+                <View style = {{flex:17,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:2,borderColor:'white', borderBottomEndRadius:150,borderBottomStartRadius:150}}></View>
                 <View style ={{flex:3}}></View>
             </View>
             
@@ -40,14 +36,14 @@ const GameField = (props) => {
             <View style = {{flex:1, backgroundColor:'green'}}></View>
             <View style = {{flex:4}}>
                 <View style = {{flex:3}}></View>
-                <View style = {{flex:17,borderWidth:2,borderColor:'white', borderTopLeftRadius:150,borderTopRightRadius:150}}></View>
+                <View style = {{flex:17,borderRightWidth:2,borderLeftWidth:2,borderTopWidth:2,borderColor:'white', borderTopLeftRadius:150,borderTopRightRadius:150}}></View>
             </View>
             <View style = {{flex:1, backgroundColor:'green'}}></View>
           </View>
         </View>    
           
                              
-                {DATA.map((prop,index) =>
+                {item.layoutData.map((prop,index) =>
                 {
                     return(
                         <View key = {index} style = {{flex: 1,flexDirection:'row'}}>
@@ -74,15 +70,30 @@ const GameField = (props) => {
 
 
                 </View>
+                </View>
     )
 }
 
 const styles = StyleSheet.create({
+    gamePitchContainer: {
+        flex:1,
+        backgroundColor:'#D3D3D3',
+        paddingBottom:20,
+        paddingLeft:20,
+        paddingRight:20,
+        borderRadius:20,
+        margin:20
+    },
     gamePitch: {
-       
-        flex: 1,
-        marginHorizontal:30,
-        marginVertical: 10
+        
+        flex: 9,
+        
+        
+    },
+    nameText: {
+        fontSize:20,
+        textAlign:'center',
+
     },
     iconBodyStyle: {
         flex:1,
