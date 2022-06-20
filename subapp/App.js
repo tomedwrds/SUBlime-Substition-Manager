@@ -36,12 +36,13 @@ const App = () => {
   
   
   return(
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name= 'Selection' component={PlayerView}/>
-        <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <InGame></InGame>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen name= 'Selection' component={PlayerView}/>
+    //     <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   )
   
 }

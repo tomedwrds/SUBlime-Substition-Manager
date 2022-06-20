@@ -3,29 +3,22 @@ import {Text,StyleSheet,View, Image,ImageBackground, Pressable} from 'react-nati
 import { FlatList,SectionList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatGrid } from 'react-native-super-grid';
-import PlayerIcon from './PlayerIcon.js'
+
 
 import UpcomingSub from './UpcomingSub.js'
-
+import GameField from './GameField.js';
 
 const totalColumns = 7;
 const totalRows = 11;
 
 function InGame()
 {
-    function renderIcon({item}) {
-        return <PlayerIcon width = {iconWidth} height = {iconHeight} name = {item}/>
-    }
     
-    const layoutCalcs = (k) => {
-        //Find width of icons
-        setIconWidth(k.nativeEvent.layout.width / totalColumns)
-        setIconHeight(k.nativeEvent.layout.height / totalRows)
-    }
+    
+    
 
     const DATA = new Array(totalRows*totalColumns).fill('TE');
-    const [iconWidth, setIconWidth] = useState(10)
-    const [iconHeight, setIconHeight] = useState(10)
+    
     return(
         <SafeAreaView style = {styles.body}>
             <View style = {styles.infoSide}>
@@ -42,22 +35,7 @@ function InGame()
             </View>
             <View style = {styles.pitchSide}>
             
-                <View style ={styles.gamePitch} >
-                
-                <ImageBackground onLayout = {layoutCalcs} source={require('./b.jpg')} style = {{width: '100%', height: '100%'}}>
-                <FlatList
-                        data = {DATA}
-                        renderItem = {renderIcon}
-                       
-                        numColumns = {totalColumns}
-                        key = {4}
-                />
-                    
-                
-                </ImageBackground>
-
-
-                </View>
+                <GameField data = {DATA}></GameField>
             </View>
         </SafeAreaView>
     )
@@ -116,11 +94,6 @@ const styles = StyleSheet.create({
         fontSize:20,
         color: 'white'
     },
-    gamePitch: {
-        backgroundColor: 'green',
-        flex: 1,
-        marginHorizontal:30,
-        marginVertical: 10
-    }
+    
 })
 export default (InGame);
