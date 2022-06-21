@@ -1,19 +1,22 @@
 import React from "react"
-import { View,FlatList,StyleSheet,Text } from "react-native"
+import { View,FlatList,StyleSheet,Text, Pressable } from "react-native"
 import { useState } from "react"
 
 import PlayerIcon from './PlayerIcon.js'
 
 
-const GameField = ({item}) => {
+const GameField = ({item},setSelectedLayout,selectedLayout) => {
 
 
     
   
-    
+    let selectedColor = '#D3D3D3'
+    if (item.layoutId ==selectedLayout) {selectedColor = '#6ba1c4'}
  
     return(
-        <View style = {styles.gamePitchContainer}>
+        <View style = {{flex:1}}>
+        <Pressable onPress = {()=>setSelectedLayout(item.layoutId)}>
+        <View style = {{...styles.gamePitchContainer,backgroundColor:selectedColor}}>
         <View style = {{flex: 1}}>
             <Text style = {styles.nameText}>{item.layoutName}</Text>
             
@@ -71,18 +74,21 @@ const GameField = ({item}) => {
 
                 </View>
                 </View>
+                </Pressable></View>
     )
 }
 
 const styles = StyleSheet.create({
     gamePitchContainer: {
         flex:1,
-        backgroundColor:'#D3D3D3',
+        
         paddingBottom:20,
         paddingLeft:20,
         paddingRight:20,
         borderRadius:20,
-        margin:20
+        marginLeft: 40,
+        marginRight:40,
+        marginVertical: 20
     },
     gamePitch: {
         
