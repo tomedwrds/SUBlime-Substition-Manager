@@ -11,17 +11,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
 import {add,create_player,add_position, remove_position, remove_player, update_name} from './actions.js';
-/*function mapStateToProps(state) {
-  return{
-    players: state.players
-  }
-}
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addPlayer : () => dispatch({type:'ADD PLAYER', payload: { id: newPlayerId, name: null, positionData: null}})
-  }
-}*/
 
 
 const PlayerTab = (props) => {
@@ -100,7 +90,7 @@ const PlayerTab = (props) => {
       {/*Text input for player name*/}
       <TextInput 
         style = {styles.playerTextInput}
-        placeholder='Player Name'
+        placeholder={props.name != '' ? props.name:'Player Name'}
         placeholderTextColor="grey"
         onEndEditing={(k)=>(updateName([props.id,k.nativeEvent.text]))}
       />
@@ -109,23 +99,11 @@ const PlayerTab = (props) => {
       <View style ={styles.playerPositionSelector}>
         
         <RNPickerSelect 
-          onValueChange={(value) => setSelectedPos(value)}
+          onValueChange={(value) => {console.log(value); setSelectedPos(value)}}
           placeholder={{ label: 'Add positions', value: null }}
           style = {pickerSelectStyles}
-          
-          items={[
-              { label: 'Left Foward', value: 'LF'},
-              { label: 'Center Foward', value: 'CF' },
-              { label: 'Right Foward', value: 'RF' },
-              { label: 'Left Midfield', value: 'LM' },
-              { label: 'Center Midfield', value: 'CM'},
-              { label: 'Right Midfield', value: 'RM' },
-              { label: 'Left Half', value: 'LH' },
-              { label: 'Right Half', value: 'RH'},
-              { label: 'Left Back', value: 'LB' },
-              { label: 'Right Back', value: 'RB'},
-              { label: 'Goal Keeper', value: 'GK' },
-          ]}
+          items = {props.positionData}
+         
           useNativeAndroidPickerStyle={false}
         />
 
@@ -174,6 +152,23 @@ function PlayerView({navigation }) {
   const createPlayer = player_data => dispatch(create_player(player_data))
   const playersList = useSelector(state => state.numberReducer);
   
+
+  const positionSelectionData = []
+  for(let i = 0; i < playersList.position_data.length; i++)
+  {
+    let formattedData = {label: playersList.position_data[i].position_name, value: playersList.position_data[i].position_inititals}
+
+    //Check if element of same name already exists to allow it to be removed
+    if(!positionSelectionData.some(formattedData => formattedData.label == playersList.position_data[i].position_name ))
+    {
+      
+      positionSelectionData.push(formattedData)
+    }
+
+  }
+  
+   
+
   //Indexing vars
   const [newPlayerId, setNewPlayerId] = useState(0);
   
@@ -200,6 +195,8 @@ function PlayerView({navigation }) {
       pos = {item.positions}
       ds = {playersList.player_data}
       dispatch = {dispatch}
+      name = {item.name}
+      positionData = {positionSelectionData}
     >
     </PlayerTab>
     )

@@ -36,7 +36,7 @@ const TestSlider = () => {
 
     
     const globalState = useSelector(state => state.numberReducer);
-  
+
     
     
     
@@ -54,11 +54,11 @@ const TestSlider = () => {
 {
  
   //Set up vars for ease of use
-  const positionName = item.position_name
+  const positionName = item.position_inititals
   const positionId = item.position_id
   const positionTimeline = item.position_timeline
   const positionIntervalWidth = item.position_interval_width
-
+ 
 
   const intervals = 15
     
@@ -179,7 +179,7 @@ const TestSlider = () => {
               //Check to make sure that tile being iterated over is the same as draged tile
               if (positionTimeline[i].name == positionTimeline[startTile].name)
               {
-                updatePosition([i,null,positionName])
+                updatePosition([i,null,positionId])
               }
             }
           }
@@ -188,8 +188,8 @@ const TestSlider = () => {
              
            for (let k = startTile; k < endTile; k++)
            {
-            console.log('f')
-               updatePosition([k,positionTimeline[startTile].name,positionName,positionTimeline[startTile].color])
+            
+               updatePosition([k,positionTimeline[startTile].name,positionId,positionTimeline[startTile].color])
            }
          }
        }
@@ -203,7 +203,7 @@ const TestSlider = () => {
             {
               if (positionTimeline[i].name == positionTimeline[startTile].name)
               {
-                updatePosition([i,null,positionName])
+                updatePosition([i,null,positionId])
               }
             }
          }
@@ -211,7 +211,7 @@ const TestSlider = () => {
          {
            for (let k = endTile; k < startTile; k++)
            {
-               updatePosition([k,positionTimeline[startTile].name,positionName,positionTimeline[startTile].color])
+               updatePosition([k,positionTimeline[startTile].name,positionId,positionTimeline[startTile].color])
            }
          }
        }
@@ -305,7 +305,7 @@ const TestSlider = () => {
         {positionTimeline.map((prop,i) => {      
           
           return(
-              <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionName,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name} index = {i} ></AddPlayer>
+              <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name} index = {i} ></AddPlayer>
             
           )
         })}
@@ -335,7 +335,7 @@ const TestSlider = () => {
      
     
         
-        <FlatList scrollEnabled maxToRenderPerBatch={1} data = {globalState.position_data} renderItem={SliderBar} keyExtractor ={item => item.position_id}></FlatList>
+        <FlatList scrollEnabled initialNumToRender={globalState.position_data.length} data = {globalState.position_data} renderItem={SliderBar} keyExtractor ={item => item.position_id}></FlatList>
         </View>
     )
 }

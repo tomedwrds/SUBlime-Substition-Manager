@@ -62,3 +62,12 @@ export const update_interval_width = id_interval_width => dispatch => {
     payload: id_interval_width,
   });
 };
+
+export const UPLOAD_LAYOUT = 'UPLOAD_LAYOUT';
+
+export const update_layout = layout_data => dispatch => {
+  dispatch({
+    type: UPLOAD_LAYOUT,
+    payload: layout_data,
+  });
+};

@@ -11,10 +11,24 @@ const GameField = ({item},setSelectedLayout,selectedLayout) => {
     {
         selectedColor = '#6ba1c4'
     }
+
+    function updateSelection ()
+    {
+        
+        //If not already selected, select. If selected unselect
+        if (item.layoutId != selectedLayout)
+        {
+            setSelectedLayout(item.layoutId)
+        }
+        else
+        {
+            setSelectedLayout(null)
+        }
+    }
  
     return(
         //Pressable wrap is used for determing when elements have been pressed
-        <Pressable style = {{flex:1}} onPress = {()=>setSelectedLayout(item.layoutId)}>
+        <Pressable style = {{flex:1}} onPress = {()=>{(updateSelection())}}>
 
             {/* gamePitchContainer is the wrapping view of all elemenets all formating of background color, border, margin etc is in this */}
             <View style = {{...styles.gamePitchContainer,backgroundColor:selectedColor}}>
@@ -69,7 +83,7 @@ const GameField = ({item},setSelectedLayout,selectedLayout) => {
                                     return(
                                         
                                         <View key = {index} style ={{...styles.iconBodyStyle, opacity: opacity_}}>
-                                            <Text style = {styles.iconText}>{prop != 0 ? prop:''}</Text>
+                                            <Text style = {styles.iconText}>{prop != 0 ? prop[1]:''}</Text>
                                         </View>
                                         
                                     )
