@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { update_interval_width, update_position } from './actions';
 import AddPlayer from './AddPlayer';
 import { render } from 'react-dom';
+import Icon from 'react-native-vector-icons/FontAwesome';
 //import { Provider } from 'react-redux';
 //import { store } from './src/store.js';
 import { memo } from "react";
@@ -333,16 +334,27 @@ const TestSlider = () => {
       
       <View>
      
-    
+     
+     
         
         <FlatList scrollEnabled initialNumToRender={globalState.position_data.length} data = {globalState.position_data} renderItem={SliderBar} keyExtractor ={item => item.position_id}></FlatList>
         </View>
     )
 }
-const PlayerSlider = () =>
+const PlayerSlider = ({navigation}) =>
 {
     return(
         <View>
+           <Pressable 
+        
+        onPress = {()=>navigation.navigate('Game')}
+        >
+          <Icon 
+            name='check' 
+            size = {30} 
+            color = 'green'
+          />
+      </Pressable>
     <TestSlider/>
     
     </View>

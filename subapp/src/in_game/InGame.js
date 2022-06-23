@@ -18,7 +18,48 @@ function InGame()
     
 
     const DATA = new Array(totalRows*totalColumns).fill('TE');
+
+    //Set up vars that handle the timer
+    const [min,setMin] = useState(15)
+    const [second, setSecond] = useState(0)
+    const [timerActive,setTimerActive] = useState(true)
+
+    //Set interval fires every 1000 milliseconds 
+    setInterval(() => {
+        //Check if the timer is activley going and is not paused
+        if(timerActive)
+        {
+            //Hooks are assync so we can immediatley use the second var
+            setSecond(second-1)
+
+            //Decrease minute if second < 0
+            if((second-1) < 0)
+            {
+                //Check if clock has ended
+                if(min == 0)
+                {
+                    //Ended code shit
+                }
+                else
+                {
+                    setMin(min-1)
+                    setSecond(59)
+                }
+                
+            }
+        }
+    }, 1000);
+
     
+
+
+
+
+    let formattedTime = min+':'+second.toString().padStart(2,'0')
+    
+
+
+
     return(
         <SafeAreaView style = {styles.body}>
             <View style = {styles.infoSide}>
@@ -27,6 +68,8 @@ function InGame()
                     <Text style = {styles.generalText}>Game Information</Text>
                     <Text style = {styles.generalText}>Game Information</Text>
                     <Text style = {styles.generalText}>Game Information</Text>
+                    <Text style = {styles.titleText}>{formattedTime}</Text>
+                    
 
                 </View>
                 <View style = {styles.subInfo}>
@@ -35,7 +78,7 @@ function InGame()
             </View>
             <View style = {styles.pitchSide}>
             
-                <GameField data = {DATA}></GameField>
+                
             </View>
         </SafeAreaView>
     )

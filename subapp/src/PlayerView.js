@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Chip } from 'react-native-paper';
 import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,6 +16,8 @@ import {add,create_player,add_position, remove_position, remove_player, update_n
 
 
 const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos) => {
+  
+
   
   //Fetch the vars relavent to the player
   const playerId = item.id;
@@ -87,7 +90,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
       <TextInput 
         style = {styles.playerTextInput}
         placeholder={playerName != '' ? playerName:'Player Name'}
-        placeholderTextColor="grey"
+        placeholderTextColor= {playerName != '' ? 'black':"grey"} 
         onEndEditing={(data)=>(updateName([playerId,data.nativeEvent.text]))}
       />
 
@@ -153,6 +156,7 @@ function PlayerView({navigation }) {
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
 
+  
   
 
   const positionSelectionData = []
