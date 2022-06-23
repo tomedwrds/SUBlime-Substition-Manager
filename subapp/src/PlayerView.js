@@ -10,32 +10,33 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player, update_name} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos} from './actions.js';
 
 
 
-const PlayerTab = (props) => {
-  //Redux vars
-  const addPositionToPlayer = position_and_index => props.dispatch(add_position(position_and_index))
-  const removePositionFromPlayer = position_and_index => props.dispatch(remove_position(position_and_index))
-  const removePlayer = player_index => props.dispatch(remove_player(player_index))
-  const updateName = index_and_name => props.dispatch(update_name(index_and_name))
+const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos) => {
   
-  //Function that deletes players from the list
+  //Fetch the vars relavent to the player
+  const playerId = item.id;
+  const playerName = item.name;
+  const playerPositions = item.positions;
+  const playerSelectedPos = item.selectedPos;
+  
+  //Creates a modal that then prompts the ability to delete a player
   const deletePlayer = () => {
     //Create alert to show to player
     Alert.alert(
       "Do you wish to delete this player?",
       '',
       [
-        //Array of selectable buttons
+        //Creates an array of selectable player
         {
           text: "Cancel",
           style: "cancel"
         },
         { 
           text: "Confirm", 
-          onPress: () => removePlayer(props.id)
+          onPress: () => removePlayer(playerId)
          
         }
       ]
@@ -56,30 +57,25 @@ const PlayerTab = (props) => {
     
   );
   
-  //Intalize var that holds current selected position
-  const[selectedPos, setSelectedPos] = useState(null);
-  
 
-  function deletePosition(chip) 
+  //Add a position to a player
+  function addPosition() 
   {
-    //Remove the chip from the player
-    removePositionFromPlayer([props.id,chip])
-  }
-  
-  
-  function addPosition() {
-    
-    if (!props.pos.includes(selectedPos) && selectedPos != null) 
+    //Check if position isnt already in list or the selected pos is null
+    if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
     {
-      //Update the main list
-      addPositionToPlayer([props.id,selectedPos])
+      //Add the position to the player in the store
+      addPositionToPlayer([playerId,playerSelectedPos])
     }
 
   }
-  
 
-  
-  
+  //Delete the postion
+  function deletePosition(chip) 
+  {
+    //Remove the chip from the player
+    removePositionFromPlayer([playerId,chip])
+  }
   
   
   return (
@@ -90,19 +86,19 @@ const PlayerTab = (props) => {
       {/*Text input for player name*/}
       <TextInput 
         style = {styles.playerTextInput}
-        placeholder={props.name != '' ? props.name:'Player Name'}
+        placeholder={playerName != '' ? playerName:'Player Name'}
         placeholderTextColor="grey"
-        onEndEditing={(k)=>(updateName([props.id,k.nativeEvent.text]))}
+        onEndEditing={(data)=>(updateName([playerId,data.nativeEvent.text]))}
       />
 
       {/*Select postion bar*/}
       <View style ={styles.playerPositionSelector}>
         
         <RNPickerSelect 
-          onValueChange={(value) => {console.log(value); setSelectedPos(value)}}
+          onValueChange={(value) => { updateSelectedPos([playerId,value])}}
           placeholder={{ label: 'Add positions', value: null }}
           style = {pickerSelectStyles}
-          items = {props.positionData}
+          items = {positionSelectionData}
          
           useNativeAndroidPickerStyle={false}
         />
@@ -124,10 +120,10 @@ const PlayerTab = (props) => {
       <View style = {styles.playerPositionChips}>
         <FlatList
         
-          data={props.pos}
+          data={playerPositions}
           renderItem={renderPositionChips}
           horizontal
-          keyExtractor={item => props.pos.indexOf(item)}
+          keyExtractor={item => playerPositions.indexOf(item)}
         />  
       </View>
       
@@ -150,16 +146,22 @@ function PlayerView({navigation }) {
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
-  const playersList = useSelector(state => state.numberReducer);
+  const globalState = useSelector(state => state.numberReducer);
+  const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
+  const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
+  const removePlayer = player_index => dispatch(remove_player(player_index))
+  const updateName = index_and_name => dispatch(update_name(index_and_name))
+  const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
+
   
 
   const positionSelectionData = []
-  for(let i = 0; i < playersList.position_data.length; i++)
+  for(let i = 0; i < globalState.position_data.length; i++)
   {
-    let formattedData = {label: playersList.position_data[i].position_name, value: playersList.position_data[i].position_inititals}
+    let formattedData = {label: globalState.position_data[i].position_name, value: globalState.position_data[i].position_inititals}
 
     //Check if element of same name already exists to allow it to be removed
-    if(!positionSelectionData.some(formattedData => formattedData.label == playersList.position_data[i].position_name ))
+    if(!positionSelectionData.some(formattedData => formattedData.label == globalState.position_data[i].position_name ))
     {
       
       positionSelectionData.push(formattedData)
@@ -173,34 +175,21 @@ function PlayerView({navigation }) {
   const [newPlayerId, setNewPlayerId] = useState(0);
   
 
-  function addPosition() {
+  function addPlayer() {
     //Add new player object to player data then increment id counter
     //The color code generates a random color
     createPlayer({
       id: newPlayerId,
       name: '',
       positions: [],
-      color: '#' + Math.floor(Math.random()*16777215).toString(16)
+      color: '#' + Math.floor(Math.random()*16777215).toString(16),
+      selectedPos: null
     })
     setNewPlayerId(newPlayerId + 1)
     
   }
   
 
-  const renderItem = ({ item }) => {
-    return(
-      
-    <PlayerTab 
-      id = {item.id}
-      pos = {item.positions}
-      ds = {playersList.player_data}
-      dispatch = {dispatch}
-      name = {item.name}
-      positionData = {positionSelectionData}
-    >
-    </PlayerTab>
-    )
-  }
   
   
 
@@ -209,7 +198,7 @@ function PlayerView({navigation }) {
      <View style={{flexDirection:'row'}}>
       <Pressable 
         style = {styles.positions}
-        onPress = {addPosition}
+        onPress = {addPlayer}
         >
           <Icon 
             name='plus' 
@@ -232,8 +221,8 @@ function PlayerView({navigation }) {
 
 
       <FlatList
-        data={playersList.player_data}
-        renderItem={renderItem}
+        data={globalState.player_data}
+        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos)}
         keyExtractor={item => item.id}
       />
       

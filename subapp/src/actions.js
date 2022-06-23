@@ -54,6 +54,16 @@ export const update_position = time_name_position_color => dispatch => {
   });
 };
 
+
+export const UPDATE_SELECTED_POS = 'UPDATE_SELECTED_POS';
+
+export const update_selected_pos = index_pos => dispatch => {
+  dispatch({
+    type: UPDATE_SELECTED_POS,
+    payload: index_pos,
+  });
+};
+
 export const UPDATE_INTERVAL_WIDTH = 'UPDATE_INTERVAL_WIDTH';
 
 export const update_interval_width = id_interval_width => dispatch => {

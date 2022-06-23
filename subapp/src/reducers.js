@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS} from './actions.js';
 
 const iniitalState = {
     
@@ -15,6 +15,14 @@ function numberReducer(state = iniitalState, action)
     
         case CREATE_PLAYER:
             return {...state,player_data: [...state.player_data, action.payload]};
+            
+        case UPDATE_SELECTED_POS:
+            return {...state,player_data: 
+                state.player_data.map(
+                (content, i) => content.id === action.payload[0] ? {...content, selectedPos: action.payload[1]}
+                                        : content
+            )}
+        
         case REMOVE_PLAYER:
             
             return {...state,player_data: state.player_data.filter(item => item.id !== action.payload)};
