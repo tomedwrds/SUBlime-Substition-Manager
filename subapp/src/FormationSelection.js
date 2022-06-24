@@ -89,6 +89,18 @@ const FormationSelection = ({navigation}) =>
                 [0,0,0,0,0,0,0],
                 [0,0,0,['Goal Keeper','GK'],0,0,0]]
     },
+    {
+        layoutId:6,
+        layoutName: 'The test', 
+        layoutData: [
+                [0,0,0,0,0,0,0],
+                [0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,['Left Back','LB'],0,0,0,['Right Back','RB'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0]]
+    },
 
 ]
     //Hook used to store what the current selected layout is

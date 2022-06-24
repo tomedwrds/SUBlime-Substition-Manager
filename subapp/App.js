@@ -37,16 +37,16 @@ const App = () => {
   
   
   return(
-    <InGame></InGame>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name= 'Formation' component={FormationSelection}/>
-    //     <Stack.Screen name= 'Selection' component={PlayerView}/>
-    //     <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
-    //     <Stack.Screen name= 'Game' component={InGame}/>
+    
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name= 'Formation' component={FormationSelection}/>
+        <Stack.Screen name= 'Selection' component={PlayerView}/>
+        <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
+        <Stack.Screen name= 'Game' component={InGame}/>
         
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+      </Stack.Navigator>
+    </NavigationContainer>
   )
   
 }

@@ -3,13 +3,39 @@
 import React from 'react'
 import {Text,StyleSheet,View} from 'react-native'
 
-function UpcomingSub(props)
+function UpcomingSub({item},minute,second)
 {
+    let subMin = item.subMin
+    let subPlayerOn = item.subPlayerOn
+    let subPlayerOff = item.subPlayerOff
+    let subPosition = item.subPos
+
+    
+    //Determine the diffrence in time between the game time and the given time for the sub
+    let minToSub = subMin - minute
+    let secToSub = 60-second
+    
+    //If the secs are 60 make it equal to 0 if not minus 1 from min to sub as you are cutting down
+    if (secToSub == 60)
+    {
+        secToSub = 0
+    }
+    else
+    {
+        minToSub -=1
+    }
+    
+
+    let formattedSubTime = minToSub+':'+secToSub.toString().padStart(2,'0')
+    
+
     return(
         <View style = {styles.subBar}>
-            <Text style = {styles.sideText}>{props.time}</Text>
-            <Text style = {styles.nameText}>{props.playerOn} ➜ {props.playerOn}</Text>
-            <Text style = {styles.sideText}>{props.subPos}</Text>
+            <Text style = {styles.sideText}>{formattedSubTime}</Text>
+            <View style = {styles.nameBorder}>
+                <Text style = {styles.nameText}>{subPlayerOn} ➜ {subPlayerOff}</Text>
+            </View> 
+            <Text style = {styles.sideText}>{subPosition}</Text>
         </View>
     )
 
@@ -25,7 +51,8 @@ const styles = StyleSheet.create({
         margin:20,
         borderRadius: 4,
         height: 60,
-        alignItems: 'center'
+        alignItems: 'center',
+       
     },
     sideText:
     {
@@ -37,13 +64,22 @@ const styles = StyleSheet.create({
     nameText:{
         flex: 1,
         fontSize:20,
-        textAlign:'center',
+        textAlign: 'center',
         color: 'white',
-        borderWidth: 2,
-        borderBottomColor: 'rgba(0,0,0,0)',
-        borderTopColor: 'rgba(0,0,0,0)',
-        borderLeftColor: 'white',
-        borderRightColor: 'white'
+        
+       
+        
+    },
+    nameBorder:
+    {
+        
+        flex:1,
+        height:'50%',
+        borderLeftWidth:2,
+        borderRightWidth:2,
+        borderColor:'white',
+        justifyContent:'center',
+        alignItems:'center'
     }
     
 })

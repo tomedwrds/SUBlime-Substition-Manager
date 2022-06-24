@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import {Text,StyleSheet,View, Image,ImageBackground, Pressable} from 'react-native'
 import { FlatList,SectionList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,43 +20,48 @@ function InGame()
     const DATA = new Array(totalRows*totalColumns).fill('TE');
 
     //Set up vars that handle the timer
-    const [min,setMin] = useState(15)
+    const [minute,setMinute] = useState(0)
     const [second, setSecond] = useState(0)
     const [timerActive,setTimerActive] = useState(true)
 
-    //Set interval fires every 1000 milliseconds 
-    setInterval(() => {
-        //Check if the timer is activley going and is not paused
-        if(timerActive)
-        {
-            //Hooks are assync so we can immediatley use the second var
-            setSecond(second-1)
 
-            //Decrease minute if second < 0
-            if((second-1) < 0)
-            {
-                //Check if clock has ended
-                if(min == 0)
+    //code ripped from a website and it works
+    //https://upmostly.com/tutorials/setinterval-in-react-components-using-hooks
+    useEffect(() => {
+        const interval = setInterval(() => 
+        {
+
+            let updateMin = false
+            setSecond(seconds => {
+                if(seconds == 59)
                 {
-                    //Ended code shit
+                    updateMin = true
+                    
+                    return 0
                 }
                 else
                 {
-                    setMin(min-1)
-                    setSecond(59)
+                    
+                    return seconds+1
                 }
+            })
+
+            if(updateMin) setMinute(mins => mins+1)
                 
-            }
-        }
-    }, 1000);
+           
+            
+        }, 1000);
+        
+        //Something about clearing the interval
+        return () => clearInterval(interval);
+      }, []);
 
+
+
+
+    let formattedTime = minute+':'+second.toString().padStart(2,'0')
     
-
-
-
-
-    let formattedTime = min+':'+second.toString().padStart(2,'0')
-    
+    const subData = [{subId: 0, subMin: 5,subPlayerOn:'Tom',subPlayerOff: 'Toby',subPos:'LB'}]
 
 
 
@@ -73,7 +78,12 @@ function InGame()
 
                 </View>
                 <View style = {styles.subInfo}>
-                    <UpcomingSub subPos = 'LB' playerOn = 'Tom' playerOff = 'Toby' time = '1'></UpcomingSub>
+                    <FlatList
+                        renderItem={(item) => UpcomingSub(item,minute,second)}
+                        keyExtractor ={item => item.subId}
+                        data={subData}
+                    />
+                    
                 </View>
             </View>
             <View style = {styles.pitchSide}>

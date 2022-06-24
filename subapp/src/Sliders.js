@@ -343,22 +343,28 @@ const TestSlider = () => {
 }
 const PlayerSlider = ({navigation}) =>
 {
-    return(
-        <View>
-           <Pressable 
-        
-        onPress = {()=>navigation.navigate('Game')}
-        >
-          <Icon 
-            name='check' 
-            size = {30} 
-            color = 'green'
-          />
+
+  function selectionComplete ()
+  {
+    console.log(1)
+    //navigation.navigate('Game')
+  }
+  return(
+    <View>
+      <Pressable 
+      
+      onPress = {()=>selectionComplete()}
+      >
+        <Icon 
+          name='check' 
+          size = {30} 
+          color = 'green'
+        />
       </Pressable>
-    <TestSlider/>
-    
+      <TestSlider/>
+  
     </View>
-    )
+  )
 }
   const styles = StyleSheet.create({
     sliderText: {
