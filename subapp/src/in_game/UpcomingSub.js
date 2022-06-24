@@ -5,18 +5,27 @@ import {Text,StyleSheet,View} from 'react-native'
 
 function UpcomingSub({item},minute,second)
 {
+    //Get vars and make them easy to access
     let subMin = item.subMin
     let subPlayerOn = item.subPlayerOn
     let subPlayerOff = item.subPlayerOff
     let subPosition = item.subPos
-
+    
+    //Set up some consts
+    const lingerTimeMin = 2
+    const lingerTimeSec = 0
     
     //Determine the diffrence in time between the game time and the given time for the sub
     let minToSub = subMin - minute
     let secToSub = 60-second
     
-    if (minToSub >= 0)
-    {    //If the secs are 60 make it equal to 0 if not minus 1 from min to sub as you are cutting down
+    let formattedSubTime = 'a'
+    
+    //Used for counting down
+    if (minToSub > 0)
+    {    
+        
+        //If the secs are 60 make it equal to 0 if not minus 1 from min to sub as you are cutting down
         if (secToSub == 60)
         {
             secToSub = 0
@@ -25,21 +34,32 @@ function UpcomingSub({item},minute,second)
         {
             minToSub -=1
         }
+        formattedSubTime = '-'+(minToSub+':'+secToSub.toString().padStart(2,'0'))
     }
+    //Used for when time has past and their is a lignering period
+    else
+    {
+        //Set it to the actual second as its now counting the time over
+        secToSub = second 
+        formattedSubTime = '+'+( Math.abs(minToSub) +':'+secToSub.toString().padStart(2,'0'))
+    }
+
     
 
-    let formattedSubTime = minToSub+':'+secToSub.toString().padStart(2,'0')
-    
-
-    return(
-        <View style = {styles.subBar}>
-            <Text style = {styles.sideText}>{formattedSubTime}</Text>
-            <View style = {styles.nameBorder}>
-                <Text style = {styles.nameText}>{subPlayerOn} ➜ {subPlayerOff}</Text>
-            </View> 
-            <Text style = {styles.sideText}>{subPosition}</Text>
-        </View>
-    )
+   
+    //Conditinal rendering to make old subs disappear
+    if (!(Math.abs(minToSub) >= lingerTimeMin && second >= lingerTimeSec))
+    {
+        return(
+            <View style = {styles.subBar}>
+                <Text style = {styles.sideText}>{formattedSubTime}</Text>
+                <View style = {styles.nameBorder}>
+                    <Text style = {styles.nameText}>{subPlayerOn} ➜ {subPlayerOff}</Text>
+                </View> 
+                <Text style = {styles.sideText}>{subPosition}</Text>
+            </View>
+        )
+    }
 
 }
 

@@ -2,7 +2,7 @@
 
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import {Pressable,View,FlatList,Alert} from 'react-native'
+import {Pressable,View,FlatList,Alert,StyleSheet} from 'react-native'
 
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -104,17 +104,28 @@ const PlayerSlider = ({navigation}) =>
   return(
       
       
-    <View>
+    <View >
      
-     <Pressable 
-      onPress = {()=>selectionComplete()}
-      >
-        <Icon 
-          name='check' 
-          size = {30} 
-          color = 'green'
-        />
-      </Pressable>
+      <View styles = {styles.header}>
+        <View styles = {styles.intervalSelection}>
+          {/* {
+            for(let i =0; i < globalState.total_intervals; i++)
+            {
+
+            }
+          } */}
+        </View>
+        <Pressable 
+          onPress = {()=>selectionComplete()}
+          >
+            <Icon 
+              name='check' 
+              size = {30} 
+              color = 'green'
+            />
+        </Pressable>
+      </View>
+
         
       <FlatList scrollEnabled initialNumToRender={globalState.position_data.length} data = {globalState.position_data} renderItem={(item)=>SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState)} keyExtractor ={item => item.position_id}></FlatList>
     </View>
@@ -122,6 +133,15 @@ const PlayerSlider = ({navigation}) =>
 }
 
   
+const styles = StyleSheet.create({
+  header:{
+
+  },
+  intervalSelection:
+  {
+
+  }
+})
   
   
   export default (PlayerSlider);

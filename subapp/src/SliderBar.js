@@ -4,7 +4,7 @@ import { GestureHandlerRootView, PanGestureHandler } from "react-native-gesture-
 import AddPlayer from "./AddPlayer";
 
 //General setup vars
-const intervals = 15
+
 const sliderBarRightMargin =20
 const sliderBarTopMargin = 20
 const sliderBorderWidth = 1
@@ -21,7 +21,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionTimeline = item.position_timeline
     const positionIntervalWidth = item.position_interval_width
     const pickerSelectData = globalState.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
-    
+    const interval_length = globalState.interval_length
+   
     //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
     const assignColor = (name) =>
     {
@@ -49,13 +50,14 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
             let found_blob = false
             
             //Loop through all of the invervals
-            for( let i =0; i <= intervals; i++)
+            for( let i =0; i <= interval_length; i++)
             {
+                
                 //This is used to check if tile has changed without causing an indesxing error
-                if (i < intervals) {var tileChanged = positionTimeline[i].name != prior_name}
+                if (i < interval_length) {var tileChanged = positionTimeline[i].name != prior_name}
                 
                 //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
-                if (tileChanged || i==15 )
+                if (tileChanged || i==interval_length )
                 {
                 
                 
@@ -96,7 +98,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 
                     }
                     //Set prior name check exists to prevent indexing error
-                    if (i < intervals)
+                    if (i < interval_length)
                     {
                         prior_name = positionTimeline[i].name
                     }
@@ -208,14 +210,14 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      //Get a transformed version of teh data to play witth
      let transformed_data = []
      let current_length = 0;
-     let game_length = positionTimeline.length
+     
      
      //loop through whole list
-     for(let i = 0; i < game_length; i++)
+     for(let i = 0; i < interval_length; i++)
      {
        current_length += 1
        var isTileEmpty = positionTimeline[i].name == null;
-       if( i < game_length-1)
+       if( i < interval_length-1)
        {var isNextTileSame = positionTimeline[i].name != positionTimeline[ i+1].name;}
        else var isNextTileSame = true
        if (isTileEmpty || (isNextTileSame && !isTileEmpty))
@@ -246,7 +248,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       {/* First view is the primary view all the other views are stacked on top of this. Onlayout is used to setup calculations*/}
       <View 
-        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervals])}} 
+        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/interval_length])}} 
         style = {styles.sliderBarBody}>
 
         {/* Top layer that displays transformed data */}

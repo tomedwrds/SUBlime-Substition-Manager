@@ -37,7 +37,7 @@ const App = () => {
   
   
   return(
-    
+    //<InGame></InGame>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name= 'Formation' component={FormationSelection}/>

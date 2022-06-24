@@ -1,32 +1,36 @@
 import React, { useState,useEffect } from 'react'
-import {Text,StyleSheet,View, Image,ImageBackground, Pressable} from 'react-native'
-import { FlatList,SectionList } from 'react-native-gesture-handler';
+import {Text,StyleSheet,View,FlatList} from 'react-native'
+
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatGrid } from 'react-native-super-grid';
+
 import { useSelector } from 'react-redux';
-
 import UpcomingSub from './UpcomingSub.js'
-import GameField from './GameField.js';
+import GamePitch from './GamePitch.js';
 
+
+//Note not globalized
 const totalColumns = 7;
-const totalRows = 11;
+const totalRows = 7;
+
+
+
 
 function InGame()
 {
     
     
+    const positionData = useSelector(state => state.numberReducer).position_data
+    const subData =useSelector(state => state.numberReducer).game_data;
     
-    const subData = useSelector(state => state.numberReducer).game_data;
-    const DATA = new Array(totalRows*totalColumns).fill('TE');
 
     //Set up vars that handle the timer
-    const [minute,setMinute] = useState(1)
-    const [second, setSecond] = useState(50)
+    const [minute,setMinute] = useState(0)
+    const [second, setSecond] = useState(55)
     const [timerActive,setTimerActive] = useState(true)
+    const [pitchData,setPitchData] = useState(updatePitchData(0))
 
 
     //code ripped from a website and it works
-    //https://upmostly.com/tutorials/setinterval-in-react-components-using-hooks
     useEffect(() => {
         const interval = setInterval(() => 
         {
@@ -46,7 +50,12 @@ function InGame()
                 }
             })
 
-            if(updateMin) setMinute(mins => mins+1)
+            if(updateMin) 
+            {
+               
+                setPitchData(() => updatePitchData(minute+1))
+                setMinute(mins => mins+1)
+            }
                 
            
             
@@ -56,14 +65,38 @@ function InGame()
         return () => clearInterval(interval);
       }, []);
 
-
+      
 
 
     let formattedTime = minute+':'+second.toString().padStart(2,'0')
     
+    function updatePitchData(minute)
+    {
+        
+        let data = [
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0]
+        ]
+
+        //Loop throgh the position data at that given minute 
+        for(let i = 0; i < positionData.length; i++)
+        {
+            //Get the cords and initiisals data easily assecible
+            let cords = positionData[i].position_cords
+            let inititals = positionData[i].position_timeline[minute].name
+            
+            data[cords[0]][cords[1]] = [inititals,inititals]
+        }
+        
+        return data
+    }
+
     
-
-
 
     return(
         <SafeAreaView style = {styles.body}>
@@ -87,7 +120,10 @@ function InGame()
                 </View>
             </View>
             <View style = {styles.pitchSide}>
-            
+                <View style = {{flex:1}}>
+                    <GamePitch layoutData = {pitchData}/>
+                </View>
+                
                 
             </View>
         </SafeAreaView>
@@ -106,7 +142,9 @@ const styles = StyleSheet.create({
     },
     pitchSide: {
         
-        flex: 1
+        flex: 1,
+        backgroundColor:'yellow',
+        margin:20
     },
     gameInfo: {
         backgroundColor: 'pink',

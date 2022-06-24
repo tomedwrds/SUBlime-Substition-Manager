@@ -5,7 +5,9 @@ const iniitalState = {
     
     player_data: [],
     game_data: [],
-    position_data: []
+    position_data: [],
+    interval_length: 3,
+    total_intervals: 4
 }
 
 function numberReducer(state = iniitalState, action)
