@@ -15,14 +15,16 @@ function UpcomingSub({item},minute,second)
     let minToSub = subMin - minute
     let secToSub = 60-second
     
-    //If the secs are 60 make it equal to 0 if not minus 1 from min to sub as you are cutting down
-    if (secToSub == 60)
-    {
-        secToSub = 0
-    }
-    else
-    {
-        minToSub -=1
+    if (minToSub >= 0)
+    {    //If the secs are 60 make it equal to 0 if not minus 1 from min to sub as you are cutting down
+        if (secToSub == 60)
+        {
+            secToSub = 0
+        }
+        else
+        {
+            minToSub -=1
+        }
     }
     
 

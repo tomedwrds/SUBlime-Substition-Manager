@@ -1,10 +1,10 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS} from './actions.js';
 
 const iniitalState = {
     
     player_data: [],
-    layout_data: [],
+    game_data: [],
     position_data: []
 }
 
@@ -60,6 +60,9 @@ function numberReducer(state = iniitalState, action)
         
         case UPLOAD_LAYOUT:
             return{...state,position_data: action.payload}
+        
+        case CREATE_GAME_DATA:
+            return{...state,game_data: action.payload}
 
         default:
             return state;

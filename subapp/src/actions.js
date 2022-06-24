@@ -81,3 +81,12 @@ export const update_layout = layout_data => dispatch => {
     payload: layout_data,
   });
 };
+
+export const CREATE_GAME_DATA = 'CREATE_GAME_DATA';
+
+export const create_game_data = sub_data => dispatch => {
+  dispatch({
+    type: CREATE_GAME_DATA,
+    payload: sub_data,
+  });
+};

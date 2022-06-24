@@ -9,7 +9,7 @@ import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, Fla
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RNPickerSelect from 'react-native-picker-select';
-import { connect } from 'react-redux';
+
 import { useSelector, useDispatch } from 'react-redux'
 import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos} from './actions.js';
 

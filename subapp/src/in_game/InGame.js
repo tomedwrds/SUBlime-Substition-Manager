@@ -3,7 +3,7 @@ import {Text,StyleSheet,View, Image,ImageBackground, Pressable} from 'react-nati
 import { FlatList,SectionList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatGrid } from 'react-native-super-grid';
-
+import { useSelector } from 'react-redux';
 
 import UpcomingSub from './UpcomingSub.js'
 import GameField from './GameField.js';
@@ -16,12 +16,12 @@ function InGame()
     
     
     
-
+    const subData = useSelector(state => state.numberReducer).game_data;
     const DATA = new Array(totalRows*totalColumns).fill('TE');
 
     //Set up vars that handle the timer
-    const [minute,setMinute] = useState(0)
-    const [second, setSecond] = useState(0)
+    const [minute,setMinute] = useState(1)
+    const [second, setSecond] = useState(50)
     const [timerActive,setTimerActive] = useState(true)
 
 
@@ -61,7 +61,7 @@ function InGame()
 
     let formattedTime = minute+':'+second.toString().padStart(2,'0')
     
-    const subData = [{subId: 0, subMin: 5,subPlayerOn:'Tom',subPlayerOff: 'Toby',subPos:'LB'}]
+    
 
 
 
@@ -81,7 +81,7 @@ function InGame()
                     <FlatList
                         renderItem={(item) => UpcomingSub(item,minute,second)}
                         keyExtractor ={item => item.subId}
-                        data={subData}
+                        data={subData.sort(function(a,b) {return a.subMin-b.subMin})}
                     />
                     
                 </View>
