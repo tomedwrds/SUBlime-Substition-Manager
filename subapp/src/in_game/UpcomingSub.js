@@ -3,8 +3,9 @@
 import React from 'react'
 import {Text,StyleSheet,View} from 'react-native'
 
-function UpcomingSub({item},minute,second)
+function UpcomingSub({item},minute,second,currentInterval,intervalLength)
 {
+    
     //Get vars and make them easy to access
     let subMin = item.subMin
     let subPlayerOn = item.subPlayerOn
@@ -45,10 +46,11 @@ function UpcomingSub({item},minute,second)
     }
 
     
+    //Conditinal rendering to make old subs disappear and subs not within current quarter
+    let hasOverLingered =!(Math.abs(minToSub) >= lingerTimeMin && second >= lingerTimeSec && minToSub < 0)
+    let inInterval = (subMin > (currentInterval-1)* intervalLength && subMin <= currentInterval*intervalLength)
 
-   
-    //Conditinal rendering to make old subs disappear
-    if (!(Math.abs(minToSub) >= lingerTimeMin && second >= lingerTimeSec))
+    if (hasOverLingered && inInterval)
     {
         return(
             <View style = {styles.subBar}>

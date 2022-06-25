@@ -1,13 +1,14 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL} from './actions.js';
 
 const iniitalState = {
     
     player_data: [],
     game_data: [],
     position_data: [],
-    interval_length: 3,
-    total_intervals: 4
+    interval_length: 15,
+    total_intervals: 1,
+    current_interval: 1
 }
 
 function numberReducer(state = iniitalState, action)
@@ -65,6 +66,9 @@ function numberReducer(state = iniitalState, action)
         
         case CREATE_GAME_DATA:
             return{...state,game_data: action.payload}
+        
+        case UPDATE_CURRENT_INTERVAL:
+            return{...state, current_interval: action.payload}
 
         default:
             return state;

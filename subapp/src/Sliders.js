@@ -6,7 +6,7 @@ import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
 
 
 import { useSelector, useDispatch } from 'react-redux'
-import { create_game_data, update_interval_width, update_position } from './actions';
+import { create_game_data, update_current_interval, update_interval_width, update_position } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -25,10 +25,11 @@ const PlayerSlider = ({navigation}) =>
   const updatePosition = time_name_position_color => dispatch(update_position(time_name_position_color))
   const createGameData = sub_data => dispatch(create_game_data(sub_data))
   const updateIntervalWidth = id_interval_width => dispatch(update_interval_width(id_interval_width))
+  const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
-  const [currentInterval,setCurrentInterval] = useState(1)
+  
   
   function selectionComplete ()
   {
@@ -84,8 +85,8 @@ const PlayerSlider = ({navigation}) =>
 
         for(let k = 0; k < positionTimeline.length; k++)
         {
-          //Check wether name has changed
-          if(priorPerson != positionTimeline[k].name)
+          //Check wether name has changed and also check to make sure that it is not the start of new interval
+          if(priorPerson != positionTimeline[k].name && k % globalState.interval_length != 0)
           {
             subData.push({subId: subId, subMin: k,subPlayerOn:priorPerson,subPlayerOff: positionTimeline[k].name,subPos:positionInitials,subCords: positionCords})
             subId ++
@@ -96,6 +97,7 @@ const PlayerSlider = ({navigation}) =>
       }
 
       createGameData(subData)
+      updateCurrentInterval(1)
       navigation.navigate('Game')
     }
   }
@@ -113,10 +115,10 @@ const PlayerSlider = ({navigation}) =>
           
           //i+1 is used as current interval doesnt start at 0
           let color = 'transparent'
-          if((i+1) == currentInterval) {color = 'blue'}
+          if((i+1) == globalState.current_interval) {color = 'blue'}
           return(
              
-            <Pressable key = {i} onPress={()=>{setCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
+            <Pressable key = {i} onPress={()=>{updateCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
               <Text  style = {styles.intervalText}>{i+1}</Text>
             </Pressable>
             
@@ -142,7 +144,7 @@ const PlayerSlider = ({navigation}) =>
       <FlatList scrollEnabled 
       initialNumToRender={globalState.position_data.length} 
       data = {globalState.position_data} 
-      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState,currentInterval)} 
+      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState)} 
       keyExtractor ={item => item.position_id}/>
     </View>
   )

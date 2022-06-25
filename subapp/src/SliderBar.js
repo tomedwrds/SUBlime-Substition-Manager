@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState,currentInterval) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState) =>
 {
  
     //Set up vars specific to each variable
@@ -22,6 +22,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionIntervalWidth = item.position_interval_width
     const pickerSelectData = globalState.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
     const intervalLength = globalState.interval_length
+    const currentInterval = globalState.current_interval
   
     const totalIntervals = globalState.total_intervals
     //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
@@ -276,7 +277,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           {
             
             return(
-                <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name} index = {i} ></AddPlayer>
+                <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name } index = {i} offset ={intervalLength*(currentInterval-1)} ></AddPlayer>
               
             )
           }

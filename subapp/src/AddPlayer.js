@@ -13,7 +13,7 @@ const AddPlayer =(props) =>
                     <View style = {{alignItems:'center',justifyContent:'center',}}>
                       <RNPickerSelect 
                         onValueChange={props.updatePosition }
-                        placeholder={{ label: (props.index+1).toString(), value: null }}
+                        placeholder={{ label: ((props.index+1)-props.offset).toString(), value: null }}
                         style = {pickerSelectStyles}
                         items={props.pickerSelectData}
                         useNativeAndroidPickerStyle={false}

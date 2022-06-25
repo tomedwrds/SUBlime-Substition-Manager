@@ -90,3 +90,12 @@ export const create_game_data = sub_data => dispatch => {
     payload: sub_data,
   });
 };
+
+export const UPDATE_CURRENT_INTERVAL = 'UPDATE_CURRENT_INTERVAL';
+
+export const update_current_interval = interval => dispatch => {
+  dispatch({
+    type: UPDATE_CURRENT_INTERVAL,
+    payload: interval,
+  });
+};

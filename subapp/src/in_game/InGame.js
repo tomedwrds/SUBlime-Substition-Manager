@@ -1,11 +1,12 @@
 import React, { useState,useEffect } from 'react'
-import {Text,StyleSheet,View,FlatList} from 'react-native'
-
+import {Text,StyleSheet,View,FlatList,Pressable} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import UpcomingSub from './UpcomingSub.js'
 import GamePitch from './GamePitch.js';
+import { update_current_interval } from '../actions.js';
 
 
 //Note not globalized
@@ -18,25 +19,29 @@ const totalRows = 7;
 function InGame()
 {
     
-    
+    const dispatch = useDispatch()
     const positionData = useSelector(state => state.numberReducer).position_data
     const subData =useSelector(state => state.numberReducer).game_data;
-    
-
+    const currentInterval =useSelector(state => state.numberReducer).current_interval;
+    const intervalLength = useSelector(state => state.numberReducer).interval_length
+    const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
+    const totalInterval = useSelector(state => state.numberReducer).total_intervals
     //Set up vars that handle the timer
-    const [minute,setMinute] = useState(0)
-    const [second, setSecond] = useState(55)
-    const [timerActive,setTimerActive] = useState(true)
+    const [minute,setMinute] = useState(1)
+    const [second, setSecond] = useState(50)
+    const [timerActive,setTimerActive] = useState(false)
     const [pitchData,setPitchData] = useState(updatePitchData(0))
-
-
+    
+    
     //code ripped from a website and it works
     useEffect(() => {
-        const interval = setInterval(() => 
+        if(timerActive)
+        {const interval = setInterval(() => 
         {
-
+            
             let updateMin = false
             setSecond(seconds => {
+            
                 if(seconds == 59)
                 {
                     updateMin = true
@@ -52,23 +57,40 @@ function InGame()
 
             if(updateMin) 
             {
-               
-                setPitchData(() => updatePitchData(minute+1))
+            
+                //Update the pitch data and the displayed time
+            
                 setMinute(mins => mins+1)
+
+                let notReachedEnd = minute+1 != intervalLength*totalInterval
+                //Check to make sure end of game hasnt been reached to prevent indexing errors
+                if(notReachedEnd)
+                {
+                    setPitchData(() => updatePitchData(minute+1))
+                }
+                //If its the end of the interval pause the timer and update the current interval
+                if((minute+1) % intervalLength == 0)
+                {
+                  
+                    setTimerActive(()=> false)
+                    if(notReachedEnd) updateCurrentInterval(currentInterval+1)
+                }
             }
                 
-           
+        
             
-        }, 1000);
+        }, 100);
         
         //Something about clearing the interval
         return () => clearInterval(interval);
-      }, []);
+        }
+    }, [timerActive,minute]);
+
 
       
 
 
-    let formattedTime = minute+':'+second.toString().padStart(2,'0')
+    let formattedTime = minute%intervalLength+':'+second.toString().padStart(2,'0')
     
     function updatePitchData(minute)
     {
@@ -107,14 +129,45 @@ function InGame()
                     <Text style = {styles.generalText}>Game Information</Text>
                     <Text style = {styles.generalText}>Game Information</Text>
                     <Text style = {styles.titleText}>{formattedTime}</Text>
-                    
+                    <View style ={styles.iconBar}>
+                        <Pressable 
+                            onPress = {()=>{setTimerActive(true)}}
+                            style = {styles.icon}
+                            >
+                            <Icon 
+                                name='play' 
+                                size = {30} 
+                                color = 'green'
+                            />
+                        </Pressable>
+                        <Pressable 
+                            onPress = {()=>setTimerActive(false)}
+                            style = {styles.icon}
+                            >
+                            <Icon 
+                                name='pause' 
+                                size = {30} 
+                                color = 'green'
+                            />
+                        </Pressable>
+                        <Pressable 
+                            onPress = {()=>{}}
+                            style = {styles.icon}
+                            >
+                            <Icon 
+                                name='forward' 
+                                size = {30} 
+                                color = 'green'
+                            />
+                        </Pressable>
+                    </View>
 
                 </View>
                 <View style = {styles.subInfo}>
                     <FlatList
-                        renderItem={(item) => UpcomingSub(item,minute,second)}
+                        renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
                         keyExtractor ={item => item.subId}
-                        data={subData.sort(function(a,b) {return a.subMin-b.subMin})}
+                        data={subData/*.sort(function(a,b) {return a.subMin-b.subMin})*/}
                     />
                     
                 </View>
@@ -135,6 +188,12 @@ const styles = StyleSheet.create({
      
         flex: 1,
         flexDirection: 'row'
+    },
+    iconBar: {
+        flexDirection:'row'
+    },
+    icon: {
+        padding:20
     },
     infoSide: {
         backgroundColor: 'blue',
