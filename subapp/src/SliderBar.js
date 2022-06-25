@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState,currentInterval) =>
 {
  
     //Set up vars specific to each variable
@@ -21,8 +21,9 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionTimeline = item.position_timeline
     const positionIntervalWidth = item.position_interval_width
     const pickerSelectData = globalState.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
-    const interval_length = globalState.interval_length
-   
+    const intervalLength = globalState.interval_length
+  
+    const totalIntervals = globalState.total_intervals
     //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
     const assignColor = (name) =>
     {
@@ -39,25 +40,25 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const dragStart = (drag) => {
        
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
-        const dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth)
-
+        const dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        
         //Check if tile has something in it as null tiles cannot be dragged
         if (positionTimeline[dragStartTile].name != null)
         {
             //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
-            let prior_name =  positionTimeline[0].name
+            let prior_name =  positionTimeline[(currentInterval-1)*intervalLength].name
             let blob_length = 0
             let found_blob = false
             
             //Loop through all of the invervals
-            for( let i =0; i <= interval_length; i++)
+            for( let i = (currentInterval-1)*intervalLength; i <= currentInterval*intervalLength; i++)
             {
                 
                 //This is used to check if tile has changed without causing an indesxing error
-                if (i < interval_length) {var tileChanged = positionTimeline[i].name != prior_name}
+                if (i < currentInterval*intervalLength) {var tileChanged = positionTimeline[i].name != prior_name}
                 
                 //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
-                if (tileChanged || i==interval_length )
+                if (tileChanged || i==currentInterval*intervalLength )
                 {
                 
                 
@@ -67,17 +68,19 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                         //Set found blob to false so a 2nd drag bar isnt created
                         found_blob = false
                         
+                        const offsetI = i -(currentInterval-1)*intervalLength
                         
                         //Determine x pos of half of the blob this is done for determing drag direction
-                        const half_blob_x = (i-blob_length)*positionIntervalWidth + blob_length*positionIntervalWidth/2
+                        const half_blob_x = (offsetI-blob_length)*positionIntervalWidth + blob_length*positionIntervalWidth/2 
+                        
                         
                         //Determine what way drag is using drag pos and halfway
                         if (drag.nativeEvent.x  > half_blob_x)
                         {
                         
                             setMoveDir('right')
-                            setDragBar([{start: 0, end: (i-blob_length)*positionIntervalWidth},
-                                {start: (i-blob_length)*positionIntervalWidth, end: drag.nativeEvent.x},
+                            setDragBar([{start: 0, end: (offsetI-blob_length)*positionIntervalWidth},
+                                {start: (offsetI-blob_length)*positionIntervalWidth, end: drag.nativeEvent.x},
                                 {start: drag.nativeEvent.x,end:screen_width},positionId])
                             
                             setStartTile(i-1)
@@ -89,8 +92,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                             setMoveDir('left')
                         
                             setDragBar([{start: 0, end: drag.nativeEvent.x},
-                                {start: drag.nativeEvent.x, end: i*positionIntervalWidth},
-                                {start: i*positionIntervalWidth,end:screen_width},positionId
+                                {start: drag.nativeEvent.x, end: offsetI*positionIntervalWidth},
+                                {start: offsetI*positionIntervalWidth,end:screen_width},positionId
                                 ])
                             setStartTile(i-blob_length)
                         }
@@ -98,7 +101,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 
                     }
                     //Set prior name check exists to prevent indexing error
-                    if (i < interval_length)
+                    if (i < currentInterval*intervalLength)
                     {
                         prior_name = positionTimeline[i].name
                     }
@@ -130,7 +133,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     }
     const dragEnd = (drag) => {
        
-        const endTile = Math.round(drag.nativeEvent.x / positionIntervalWidth)
+        const endTile = Math.round(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        
         if (moveDir == 'right')
         {
             //Check if ended behind the start tile and thus delete 
@@ -213,11 +217,12 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      
      
      //loop through whole list
-     for(let i = 0; i < interval_length; i++)
+     for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
      {
+      
        current_length += 1
        var isTileEmpty = positionTimeline[i].name == null;
-       if( i < interval_length-1)
+       if( i < (currentInterval)*intervalLength-1)
        {var isNextTileSame = positionTimeline[i].name != positionTimeline[ i+1].name;}
        else var isNextTileSame = true
        if (isTileEmpty || (isNextTileSame && !isTileEmpty))
@@ -248,7 +253,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       {/* First view is the primary view all the other views are stacked on top of this. Onlayout is used to setup calculations*/}
       <View 
-        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/interval_length])}} 
+        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])}} 
         style = {styles.sliderBarBody}>
 
         {/* Top layer that displays transformed data */}
@@ -264,13 +269,17 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
 
         </View>
         
+        
         {/* Layer that handles the picker selects */}
         {positionTimeline.map((prop,i) => {      
-          
-          return(
-              <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name} index = {i} ></AddPlayer>
+          if(i >= (currentInterval-1)*intervalLength && i < ((currentInterval)*intervalLength) )
+          {
             
-          )
+            return(
+                <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name} index = {i} ></AddPlayer>
+              
+            )
+          }
         })}
           
         {/* Drag bar later that is placed on top */}

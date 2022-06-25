@@ -2,14 +2,13 @@
 
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import {Pressable,View,FlatList,Alert,StyleSheet} from 'react-native'
+import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
 
 
 import { useSelector, useDispatch } from 'react-redux'
 import { create_game_data, update_interval_width, update_position } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import SliderBar from './SliderBar';
 
 
@@ -29,7 +28,8 @@ const PlayerSlider = ({navigation}) =>
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
-    
+  const [currentInterval,setCurrentInterval] = useState(1)
+  
   function selectionComplete ()
   {
     //Check if there is any gaps in the game schedule
@@ -106,28 +106,44 @@ const PlayerSlider = ({navigation}) =>
       
     <View >
      
-      <View styles = {styles.header}>
-        <View styles = {styles.intervalSelection}>
-          {/* {
-            for(let i =0; i < globalState.total_intervals; i++)
-            {
-
-            }
-          } */}
+      <View style = {styles.header}>
+        <View style = {styles.intervalSelection}>
+        {/* Cheap way to create an element a certain amount of times */}
+        {[...Array(globalState.total_intervals)].map((prop,i) => { 
+          
+          //i+1 is used as current interval doesnt start at 0
+          let color = 'transparent'
+          if((i+1) == currentInterval) {color = 'blue'}
+          return(
+             
+            <Pressable key = {i} onPress={()=>{setCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
+              <Text  style = {styles.intervalText}>{i+1}</Text>
+            </Pressable>
+            
+          )
+        })}
+  
+          
         </View>
-        <Pressable 
-          onPress = {()=>selectionComplete()}
-          >
-            <Icon 
-              name='check' 
-              size = {30} 
-              color = 'green'
-            />
-        </Pressable>
+        <View style = {styles.nextPageIcons}>
+          <Pressable 
+            onPress = {()=>selectionComplete()}
+            >
+              <Icon 
+                name='check' 
+                size = {30} 
+                color = 'green'
+              />
+          </Pressable>
+        </View>
       </View>
 
         
-      <FlatList scrollEnabled initialNumToRender={globalState.position_data.length} data = {globalState.position_data} renderItem={(item)=>SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState)} keyExtractor ={item => item.position_id}></FlatList>
+      <FlatList scrollEnabled 
+      initialNumToRender={globalState.position_data.length} 
+      data = {globalState.position_data} 
+      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState,currentInterval)} 
+      keyExtractor ={item => item.position_id}/>
     </View>
   )
 }
@@ -135,11 +151,35 @@ const PlayerSlider = ({navigation}) =>
   
 const styles = StyleSheet.create({
   header:{
-
+    flexDirection:'row',
+   
+  
   },
-  intervalSelection:
-  {
+  intervalSelection:{
+    
+    flexDirection:"row",
+    borderWidth: 2,
+    borderRadius: 10,
+    marginLeft:70,
+    overflow: 'hidden'
 
+  
+  },
+  intervalButton: {
+   padding:20,
+   
+    
+    
+  },
+  intervalText: {
+    fontSize:22
+  },
+  nextPageIcons: {
+    
+    alignItems:'flex-end',
+    flex:1,
+    marginRight:20
+   
   }
 })
   
