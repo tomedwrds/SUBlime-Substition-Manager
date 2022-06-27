@@ -9,14 +9,14 @@ import PlayerView from './src/PlayerView';
 import PlayerSlider from './src/Sliders.js';
 
 import { Provider } from 'react-redux';
-import { store } from './src/store.js';
+import { store,persistor } from './src/store.js';
 
 import FormationSelection from './src/FormationSelection';
 import InGame from './src/in_game/InGame';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-
+import { PersistGate } from 'redux-persist/integration/react';
 
 
 
@@ -24,10 +24,12 @@ import { NavigationContainer } from '@react-navigation/native';
 
 const AppWrapper = () => {
 
-
+ 
   return (
     <Provider store={store}>
-      <App /> 
+      <PersistGate loading = {null} persistor = {persistor}>
+        <App /> 
+        </PersistGate>
     </Provider>
   )
 }
@@ -37,6 +39,7 @@ const App = () => {
   
   
   return(
+    
     //<InGame></InGame>
     <NavigationContainer>
       <Stack.Navigator>
