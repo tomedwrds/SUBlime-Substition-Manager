@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
-import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, FlatList } from 'react-native';
+import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, FlatList,Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -111,12 +111,12 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
       
       {/*Add position chip button*/}
       <Pressable 
-        
+        style = {{marginHorizontal:10}}
         onPress = {() =>addPosition()}>
           <Icon 
             name='plus' 
             size = {30} 
-            color = 'green'
+            color = '#0BD61F'
           />
       </Pressable>
       
@@ -135,11 +135,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
       <Pressable 
         onPress={deletePlayer} 
         style = {styles.playerDelete}>
-          <Icon 
-            name='trash' 
-            size = {30} 
-            color = '#FF0000'
-          />
+          <Text style = {{fontSize:30}}>🗑️</Text>
       </Pressable>
     </View>
   );
@@ -174,33 +170,31 @@ function PlayerView({navigation }) {
 
   }
   
-  useEffect(() => {
-    
-  });
+  
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-   } else {
+    
        // Your useEffect code here to be run on update
-   
-    createPlayer({
+    if(canAddPlayer)
+
+   { createPlayer({
       id: playerState.player_index,
       name: '',
       positions: [],
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null
     })
+    setCanAddPlayer(false)
   }
-    
-  },[playerState.player_index]);
   
+  },[canAddPlayer]);
 
   function addPlayer() {
     //Add new player object to player data then increment id counter
     //The color code generates a random color
    
     incrementPlayerIndex(1)
+    setCanAddPlayer(true)
     
   }
   
@@ -209,40 +203,44 @@ function PlayerView({navigation }) {
   
 
   return(
-   <SafeAreaView style={styles.body}>
+   <View style = {{margin:20}}>
      <View style={{flexDirection:'row'}}>
-      <Pressable 
-        style = {styles.positions}
-        onPress = {addPlayer}
-        >
-          <Icon 
-            name='plus' 
-            size = {30} 
-            color = 'green'
-          />
-      </Pressable>
-      <Pressable 
-        style = {styles.positions}
-        onPress = {()=>navigation.navigate('Sliders')}
-        >
-          <Icon 
-            name='check' 
-            size = {30} 
-            color = 'green'
-          />
-      </Pressable>
+      <Text style = {{fontSize:40}}>Team Overview (👪)</Text>
+      <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end'}}>
+        <Pressable 
+          style = {{paddingHorizontal:10}}
+          onPress = {addPlayer}
+          >
+            <Icon 
+              name='plus' 
+              size = {50} 
+              color = '#0BD61F'
+            />
+        </Pressable>
+        <Pressable 
+          style = {{paddingHorizontal:10}}
+          onPress = {()=>navigation.navigate('Sliders')}
+          >
+            <Icon 
+              name='check' 
+              size = {50} 
+              color = '#0BD61F'
+            />
+        </Pressable>
+      </View>
      </View>
     
 
 
       <FlatList
+     
         data={playerState.player_data}
         renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos)}
         keyExtractor={item => item.id}
       />
       
     
-  </SafeAreaView>
+  </View>
     
     
     
@@ -251,13 +249,13 @@ function PlayerView({navigation }) {
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: 'grey',
+    
     flex: 1,
     flexDirection: 'column',
-    paddingTop: Platform.OS === 'android' ? 25 : 0
+    
   },
   playerBar : {
-    backgroundColor: 'white',
+    backgroundColor: '#ebebeb',
     width: '98%',
     height: 50,
     marginLeft: '1%',
@@ -269,7 +267,8 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   positions: {
-    padding:20
+    
+    backgroundColor:'white'
   },
   playerTextInput : {
     fontSize: 20,
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     borderRadius: 4,
     borderColor: 'grey',
-    backgroundColor: '#ebebeb',
+    backgroundColor: 'white',
     height: '90%',
     flex: 1,
   },
@@ -314,7 +313,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontSize: 20,
-    backgroundColor: '#ebebeb',
+    backgroundColor: 'white',
     height: '100%',
     borderRadius: 4
   },
@@ -322,7 +321,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontSize: 20,
-    backgroundColor: '#ebebeb',
+    backgroundColor: 'white',
     height: '100%',
     borderRadius: 4
   

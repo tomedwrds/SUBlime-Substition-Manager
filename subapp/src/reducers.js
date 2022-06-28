@@ -85,7 +85,7 @@ function positionsReducer(state = positionsState, action)
 
 const generalState = {
     game_data: [],
-    interval_length: 15,
+    interval_length: 8,
     total_intervals: 1,
     current_interval: 1
 }

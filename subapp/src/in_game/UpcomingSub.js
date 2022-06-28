@@ -72,24 +72,27 @@ const styles = StyleSheet.create({
     subBar: {
         flexDirection: 'row',
         backgroundColor:'#00bfff',
-        margin:20,
+        
         borderRadius: 4,
-        height: 60,
+        height: 80,
         alignItems: 'center',
+        
        
     },
     sideText:
     {
         paddingLeft: 10,
         paddingRight: 10,
-        fontSize:20,
-        color: 'white'
+        fontSize:22,
+        color: 'white',
+        textAlignVertical:'center'
     },
     nameText:{
-        flex: 1,
-        fontSize:20,
-        textAlign: 'center',
+       
+        fontSize:22,
+        justifyContent:'center',
         color: 'white',
+        
         
        
         
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
     {
         
         flex:1,
-        height:'50%',
+        height:'70%',
         borderLeftWidth:2,
         borderRightWidth:2,
         borderColor:'white',

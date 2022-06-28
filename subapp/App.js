@@ -43,7 +43,11 @@ const App = () => {
     
     //<InGame></InGame>
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+      >
         <Stack.Screen name= 'HomeScreen' component={HomeScreen}/>
         <Stack.Screen name= 'LoadSave' component={LoadSave}/>
         <Stack.Screen name= 'Formation' component={FormationSelection}/>

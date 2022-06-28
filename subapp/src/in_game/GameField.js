@@ -49,14 +49,15 @@ const styles = StyleSheet.create({
         paddingLeft:20,
         paddingRight:20,
         borderRadius:20,
-        marginLeft: 40,
-        marginRight:40,
+        marginLeft: 20,
+        marginRight:20,
         marginVertical: 20
     },
     
   
     nameText: {
         fontSize:20,
+        padding:10,
         textAlign:'center',
 
     },

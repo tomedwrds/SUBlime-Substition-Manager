@@ -124,11 +124,28 @@ function InGame()
         <SafeAreaView style = {styles.body}>
             <View style = {styles.infoSide}>
                 <View style = {styles.gameInfo}>
-                    <Text style = {styles.titleText}>Game Information</Text>
-                    <Text style = {styles.generalText}>Game Information</Text>
-                    <Text style = {styles.generalText}>Game jInformation</Text>
-                    <Text style = {styles.generalText}>Game Information</Text>
-                    <Text style = {styles.titleText}>{formattedTime}</Text>
+                    <Text style = {styles.titleText}>St Andrews College v St Bedes</Text>
+                    <Text style = {styles.generalText}>Placeholder</Text>
+                    <Text style = {styles.generalText}>Placeholder</Text>
+                    <Text style = {styles.generalText}>Placeholder</Text>
+                    
+
+                </View>
+                <View style = {styles.subInfo}>
+                    <View style = {styles.subInfoHeader}>
+                        <Text style = {{fontSize:24,marginVertical:10}}>Upcoming Subs (🗣️)</Text>
+                    </View>
+                    <FlatList
+                        renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
+                        keyExtractor ={item => item.subId}
+                        data={subData/*.sort(function(a,b) {return a.subMin-b.subMin})*/}
+                    />
+                    
+                </View>
+            </View>
+            <View style = {styles.pitchSide}>
+                <View style = {{flex:1,flexDirection:'row'}}>
+                    <Text style = {{...styles.titleText,flex:1}}>{formattedTime}(🕒)</Text>
                     <View style ={styles.iconBar}>
                         <Pressable 
                             onPress = {()=>{setTimerActive(true)}}
@@ -161,19 +178,8 @@ function InGame()
                             />
                         </Pressable>
                     </View>
-
                 </View>
-                <View style = {styles.subInfo}>
-                    <FlatList
-                        renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
-                        keyExtractor ={item => item.subId}
-                        data={subData/*.sort(function(a,b) {return a.subMin-b.subMin})*/}
-                    />
-                    
-                </View>
-            </View>
-            <View style = {styles.pitchSide}>
-                <View style = {{flex:1}}>
+                <View style = {{flex:6}}>
                     <GamePitch layoutData = {pitchData}/>
                 </View>
                 
@@ -190,60 +196,42 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     iconBar: {
-        flexDirection:'row'
+        flexDirection:'row',
+        borderStartColor:'red'
     },
     icon: {
         padding:20
     },
     infoSide: {
-        backgroundColor: 'blue',
+        margin:20,
         flex:1
     },
     pitchSide: {
         
         flex: 1,
-        backgroundColor:'yellow',
+        
         margin:20
     },
     gameInfo: {
-        backgroundColor: 'pink',
-        flex: 2,
-        color:'red'
+        
+        flex: 1,
+        
     },
     
     titleText: {
-        fontSize: 20
+        fontSize: 30
     },
     subInfo: {
-        backgroundColor: 'yellow',
+        
         flex: 3
     },
-    subBar: {
-        flexDirection: 'row',
-        backgroundColor:'#00bfff',
-        margin:20,
-        borderRadius: 4,
-        height: 60,
-        alignItems: 'center'
-    },
-    nameText:{
-        flex: 1,
-        fontSize:20,
-        textAlign:'center',
-        color: 'white',
-        borderWidth: 2,
-        borderBottomColor: 'rgba(0,0,0,0)',
-        borderTopColor: 'rgba(0,0,0,0)',
-        borderLeftColor: 'white',
-        borderRightColor: 'white'
-    },
-    sideText:
-    {
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize:20,
-        color: 'white'
-    },
+    generalText:{
+        fontSize:16,
+        color:'darkgrey'
+    }
+   
+   
+    
     
 })
 export default (InGame);

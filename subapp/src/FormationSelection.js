@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { Button } from "react-native-paper";
-import { View,Text, Pressable,Alert } from "react-native";
+import { View,Text, Pressable,Alert,StyleSheet } from "react-native";
 
 import GameField from "./in_game/GameField";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -164,11 +164,18 @@ const FormationSelection = ({navigation}) =>
     //Flat list is used that renders a field of the data
     return(
         <SafeAreaView>
-            
-            <Pressable onPress={() => formatPositionData()}>
-                <Text style = {{fontSize:30}}>✔️</Text>
-            </Pressable>
-
+            <View style = {styles.header}>
+                <View>
+                    <Text style = {{fontSize:40}}>Select a Formation</Text>
+                </View>
+             
+                <Pressable style = {{alignItems:'flex-end',flex:1}} onPress={() => formatPositionData()}>
+                    
+                    <Text style = {{fontSize:50}}>{selectedLayout == null? '☑️':'✅'}</Text>
+                    
+                </Pressable>
+               
+            </View>
 
             <FlatList
             renderItem={(item) => GameField(item,setSelectedLayout,selectedLayout)}
@@ -183,5 +190,10 @@ const FormationSelection = ({navigation}) =>
         
     )
 }
-
+const styles = StyleSheet.create({
+    header: {
+        flexDirection:'row',
+        marginHorizontal: 20
+    }
+})
 export default (FormationSelection)

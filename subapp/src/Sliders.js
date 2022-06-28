@@ -10,6 +10,7 @@ import { add_save_data, create_game_data, increment_save_index, update_current_i
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -134,27 +135,34 @@ const PlayerSlider = ({navigation}) =>
   
   return(
       
-      
-    <View >
+    <SafeAreaView>
+    
      
-      <View style = {styles.header}>
+      <View style = {{...styles.header, alignItems:'center'}}>
+      <Text style ={{fontSize:40}}>Game Overview(🏑)</Text>
+      
         <View style = {styles.intervalSelection}>
+          
+        
         {/* Cheap way to create an element a certain amount of times */}
         {[...Array(generalData.total_intervals)].map((prop,i) => { 
           
           //i+1 is used as current interval doesnt start at 0
           let color = 'transparent'
-          if((i+1) == generalData.current_interval) {color = 'blue'}
+          let textColor = 'black'
+          if((i+1) == generalData.current_interval) {color = '#95b7ed'; textColor = 'white'}
+
           return(
              
             <Pressable key = {i} onPress={()=>{updateCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
-              <Text  style = {styles.intervalText}>{i+1}</Text>
+              <Text  style = {{...styles.intervalText,color:textColor}}>{i+1}</Text>
             </Pressable>
             
           )
         })}
       
     
+        
         </View>
         {/* <Pressable 
             onPress = {()=>saveData()}
@@ -169,12 +177,9 @@ const PlayerSlider = ({navigation}) =>
         <View style = {styles.nextPageIcons}>
           <Pressable 
             onPress = {()=>selectionComplete()}
+            
             >
-              <Icon 
-                name='check' 
-                size = {30} 
-                color = 'green'
-              />
+             <Text style = {{fontSize:50}}>✅</Text>
           </Pressable>
         </View>
       </View>
@@ -185,7 +190,7 @@ const PlayerSlider = ({navigation}) =>
       data = {positionsData.position_data} 
       renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData)} 
       keyExtractor ={item => item.position_id}/>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -193,6 +198,8 @@ const PlayerSlider = ({navigation}) =>
 const styles = StyleSheet.create({
   header:{
     flexDirection:'row',
+    marginLeft:70,
+    marginRight:20
    
   
   },
@@ -202,24 +209,26 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     marginLeft:70,
-    overflow: 'hidden'
-
+    overflow: 'hidden',
+   
   
   },
   intervalButton: {
-   padding:20,
+   paddingVertical:10,
+   paddingHorizontal:20
    
     
     
   },
   intervalText: {
-    fontSize:22
+    fontSize:30
   },
   nextPageIcons: {
-    
-    alignItems:'flex-end',
     flex:1,
-    marginRight:20
+  
+    alignItems:'flex-end'
+    
+    
    
   }
 })
