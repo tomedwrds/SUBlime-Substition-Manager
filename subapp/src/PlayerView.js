@@ -184,6 +184,7 @@ function PlayerView({navigation }) {
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null
     })
+    incrementPlayerIndex(amount=>amount+1)
     setCanAddPlayer(false)
   }
   
@@ -193,7 +194,7 @@ function PlayerView({navigation }) {
     //Add new player object to player data then increment id counter
     //The color code generates a random color
    
-    incrementPlayerIndex(1)
+    
     setCanAddPlayer(true)
     
   }

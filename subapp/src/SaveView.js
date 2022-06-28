@@ -2,16 +2,16 @@ import React from "react";
 import { Text,View,StyleSheet,Pressable } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-function SaveView ({item},loadData) 
+function SaveView ({item},loadData,deleteSaveData) 
 {
     
    
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
-                <Text>{item.saveName}</Text>
-                <Text>4-3-2-1</Text>
-                <Text>some date</Text>
+                <Text style = {styles.titleText}>{item.save_name}</Text>
+                <Text style = {styles.subText} >Formation Placeholder</Text>
+                <Text style = {styles.subText} >Data Placeholder</Text>
             </View>
             <View style = {styles.iconContainer}>
                 <Pressable 
@@ -20,17 +20,17 @@ function SaveView ({item},loadData)
                     >
                     <Icon 
                         name='check' 
-                        size = {30} 
+                        size = {40} 
                         color = 'green'
                     />
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{}}
+                    onPress = {()=>{deleteSaveData(item.save_id)}}
                     >
                     <Icon 
                         name='trash' 
-                        size = {30} 
+                        size = {40} 
                         color = 'red'
                     />
                 </Pressable>
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
         borderWidth:2,
         borderRadius:9,
         flexDirection:'row',
-        padding:20
+        padding:20,
+        marginBottom:20
         
     },
     iconContainer: {
@@ -55,7 +56,13 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     icon: {
-        padding: 20
+        padding: 10
+    },
+    titleText: {
+        fontSize:24
+    },
+    subText: {
+        color: 'darkgray'
     }
 })
 

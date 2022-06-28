@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-
+import { Text } from 'react-native-paper';
 import PlayerView from './src/PlayerView';
 import PlayerSlider from './src/Sliders.js';
 
@@ -44,11 +44,11 @@ const App = () => {
     //<InGame></InGame>
     <NavigationContainer>
       <Stack.Navigator
-      screenOptions={{
-        headerShown: false
-      }}
+      
       >
-        <Stack.Screen name= 'HomeScreen' component={HomeScreen}/>
+        <Stack.Screen name= 'HomeScreen' component={HomeScreen} options={({ navigation, route }) => ({
+          headerTitle: props => <Text>asfsg</Text>,
+        })}/>
         <Stack.Screen name= 'LoadSave' component={LoadSave}/>
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
         <Stack.Screen name= 'Selection' component={PlayerView}/>

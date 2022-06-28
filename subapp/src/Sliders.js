@@ -111,27 +111,32 @@ const PlayerSlider = ({navigation}) =>
     }
   }
 
-  // function saveData ()
-  // {
+  function saveData ()
+  {
+    setCanAddPlayer(true)
    
-  //   incrementSaveIndex(1)
    
     
-  //   }
+  }
  
-  //   useEffect(() => {
-  //     console.log('l')
-  //     let savedId =  savedData.save_index
-  //   let savedName = 'Test Schedule'
-  //   //let savedDate = new Date()
-  //   let savedPlayerData =playerData;
-  //   let savedPositionsData =positionsData;
-  //   let savedGeneralData =generalData;
+    useEffect(() => {
+      if(canAddPlayer)
+      {
+        console.log('saved')
+        let savedId =  savedData.save_index
+        let savedName = 'Test Schedule'
+        //let savedDate = new Date()
+        let savedPlayerData =playerData;
+        let savedPositionsData =positionsData;
+        let savedGeneralData =generalData;
 
-  //   addSaveData({saveId: savedId, saveName: savedName, savePlayerData:savedPlayerData, savePositionsData:savedPositionsData,saveGeneralData:savedGeneralData})
+        addSaveData({save_id: savedId, save_name: savedName, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})
+        setCanAddPlayer(false)
+        incrementSaveIndex(1)
+      }
     
       
-  //   },[saveData.save_index]);
+    },[canAddPlayer]);
   
   return(
       
@@ -164,17 +169,14 @@ const PlayerSlider = ({navigation}) =>
     
         
         </View>
-        {/* <Pressable 
-            onPress = {()=>saveData()}
-            >
-              <Icon 
-                name='save' 
-                size = {30} 
-                color = 'green'
-              />
-          </Pressable> */}
+         
 
         <View style = {styles.nextPageIcons}>
+        <Pressable 
+            onPress = {()=>saveData()}
+            >
+              <Text style = {{fontSize:50}}>💾</Text>
+          </Pressable> 
           <Pressable 
             onPress = {()=>selectionComplete()}
             
@@ -186,7 +188,7 @@ const PlayerSlider = ({navigation}) =>
 
         
       <FlatList scrollEnabled 
-      //initialNumToRender={positionsData.position_data.length} 
+      initialNumToRender={positionsData.position_data.length} 
       data = {positionsData.position_data} 
       renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData)} 
       keyExtractor ={item => item.position_id}/>
@@ -225,8 +227,9 @@ const styles = StyleSheet.create({
   },
   nextPageIcons: {
     flex:1,
-  
-    alignItems:'flex-end'
+    flexDirection:'row',
+    
+    justifyContent:'flex-end'
     
     
    
