@@ -17,7 +17,8 @@ import InGame from './src/in_game/InGame';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import HomeScreen from './src/HomeScreen';
+import LoadSave from './src/LoadSave';
 
 
 
@@ -43,6 +44,8 @@ const App = () => {
     //<InGame></InGame>
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name= 'HomeScreen' component={HomeScreen}/>
+        <Stack.Screen name= 'LoadSave' component={LoadSave}/>
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
         <Stack.Screen name= 'Selection' component={PlayerView}/>
         <Stack.Screen name= 'Sliders' component={PlayerSlider}/>

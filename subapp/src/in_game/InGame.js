@@ -20,12 +20,12 @@ function InGame()
 {
     
     const dispatch = useDispatch()
-    const positionData = useSelector(state => state.numberReducer).position_data
-    const subData =useSelector(state => state.numberReducer).game_data;
-    const currentInterval =useSelector(state => state.numberReducer).current_interval;
-    const intervalLength = useSelector(state => state.numberReducer).interval_length
+    const positionData = useSelector(state => state.positionsReducer).position_data
+    const subData =useSelector(state => state.generalReducer).game_data;
+    const currentInterval =useSelector(state => state.generalReducer).current_interval;
+    const intervalLength = useSelector(state => state.generalReducer).interval_length
     const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
-    const totalInterval = useSelector(state => state.numberReducer).total_intervals
+    const totalInterval = useSelector(state => state.generalReducer).total_intervals
     //Set up vars that handle the timer
     const [minute,setMinute] = useState(1)
     const [second, setSecond] = useState(50)
@@ -126,7 +126,7 @@ function InGame()
                 <View style = {styles.gameInfo}>
                     <Text style = {styles.titleText}>Game Information</Text>
                     <Text style = {styles.generalText}>Game Information</Text>
-                    <Text style = {styles.generalText}>Game Information</Text>
+                    <Text style = {styles.generalText}>Game jInformation</Text>
                     <Text style = {styles.generalText}>Game Information</Text>
                     <Text style = {styles.titleText}>{formattedTime}</Text>
                     <View style ={styles.iconBar}>
@@ -135,7 +135,7 @@ function InGame()
                             style = {styles.icon}
                             >
                             <Icon 
-                                name='play' 
+                                name='play'
                                 size = {30} 
                                 color = 'green'
                             />

@@ -99,3 +99,31 @@ export const update_current_interval = interval => dispatch => {
     payload: interval,
   });
 };
+
+export const ADD_SAVE_DATA = 'ADD_SAVE_DATA';
+
+export const add_save_data = data => dispatch => {
+  dispatch({
+    type: ADD_SAVE_DATA,
+    payload: data,
+  });
+};
+
+export const DELETE_SAVE_DATA = 'DELETE_SAVE_DATA';
+
+export const delete_save_data = id => dispatch => {
+  dispatch({
+    type: DELETE_SAVE_DATA,
+    payload: id,
+  });
+};
+
+export const UPLOAD_PLAYER_DATA = 'UPLOAD_PLAYER_DATA';
+
+export const upload_player_data = data => dispatch => {
+  dispatch({
+    type: UPLOAD_PLAYER_DATA,
+    payload: data,
+  });
+};
+

@@ -149,7 +149,8 @@ function PlayerView({navigation }) {
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
-  const globalState = useSelector(state => state.numberReducer);
+  const playerState = useSelector(state => state.playerReducer);
+  const positionState = useSelector(state => state.positionsReducer);
   const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
   const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
   const removePlayer = player_index => dispatch(remove_player(player_index))
@@ -160,12 +161,12 @@ function PlayerView({navigation }) {
   
 
   const positionSelectionData = []
-  for(let i = 0; i < globalState.position_data.length; i++)
+  for(let i = 0; i < positionState.position_data.length; i++)
   {
-    let formattedData = {label: globalState.position_data[i].position_name, value: globalState.position_data[i].position_inititals}
+    let formattedData = {label: positionState.position_data[i].position_name, value: positionState.position_data[i].position_inititals}
 
     //Check if element of same name already exists to allow it to be removed
-    if(!positionSelectionData.some(formattedData => formattedData.label == globalState.position_data[i].position_name ))
+    if(!positionSelectionData.some(formattedData => formattedData.label == positionState.position_data[i].position_name ))
     {
       
       positionSelectionData.push(formattedData)
@@ -225,7 +226,7 @@ function PlayerView({navigation }) {
 
 
       <FlatList
-        data={globalState.player_data}
+        data={playerState.player_data}
         renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos)}
         keyExtractor={item => item.id}
       />

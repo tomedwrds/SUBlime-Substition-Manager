@@ -1,19 +1,17 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import numberReducer from './reducers.js';
+import rootReducer from './reducers.js';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { persistStore, persistReducer } from 'redux-persist'
 
-const rootReducer = combineReducers({
-    numberReducer,
-});
 
 
 const persistConfig = {
-    key: 'authType',
+    key: 'root',
     storage: AsyncStorage,
+    whitelist: ['savedReducer']
    
   };
   const pReducer = persistReducer(persistConfig, rootReducer);

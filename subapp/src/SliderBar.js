@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,globalState) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData) =>
 {
  
     //Set up vars specific to each variable
@@ -20,11 +20,11 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
     const positionIntervalWidth = item.position_interval_width
-    const pickerSelectData = globalState.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
-    const intervalLength = globalState.interval_length
-    const currentInterval = globalState.current_interval
+    const pickerSelectData = playerData.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
+    const intervalLength = generalData.interval_length
+    const currentInterval = generalData.current_interval
   
-    const totalIntervals = globalState.total_intervals
+    const totalIntervals = generalData.total_intervals
     //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
     const assignColor = (name) =>
     {
@@ -32,7 +32,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         if (name != null)
         {
             //Join on the name of the two lists and return the color
-            var join = globalState.player_data.find(player => player.name == name)
+            var join = playerData.player_data.find(player => player.name == name)
             return join.color
         }
 
