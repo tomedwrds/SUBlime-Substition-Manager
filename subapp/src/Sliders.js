@@ -1,12 +1,12 @@
 
 
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
 
 
-import { useSelector, useDispatch } from 'react-redux'
-import { add_save_data, create_game_data, update_current_interval, update_interval_width, update_position, } from './actions';
+import { useSelector, useDispatch, } from 'react-redux'
+import { add_save_data, create_game_data, increment_save_index, update_current_interval, update_interval_width, update_position, } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -30,13 +30,15 @@ const PlayerSlider = ({navigation}) =>
   const updateIntervalWidth = id_interval_width => dispatch(update_interval_width(id_interval_width))
   const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
   const addSaveData = data => dispatch(add_save_data(data))
+  const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
+  
   
   
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
-  console.log(savedData.save_data)
-  
+  const [canAddPlayer,setCanAddPlayer] = useState(false)
+
   function selectionComplete ()
   {
     //Check if there is any gaps in the game schedule
@@ -108,19 +110,27 @@ const PlayerSlider = ({navigation}) =>
     }
   }
 
-  function saveData ()
-  {
-    let savedName = 'Test Schedule'
-    //let savedDate = new Date()
-    let savedPlayerData =playerData;
-    let savedPositionsData =positionsData;
-    let savedGeneralData =generalData;
-
-    addSaveData({saveId: 0, saveName: savedName, savePlayerData:savedPlayerData, savePositionsData:savedPositionsData,saveGeneralData:savedGeneralData})
+  // function saveData ()
+  // {
+   
+  //   incrementSaveIndex(1)
+   
     
+  //   }
+ 
+  //   useEffect(() => {
+  //     console.log('l')
+  //     let savedId =  savedData.save_index
+  //   let savedName = 'Test Schedule'
+  //   //let savedDate = new Date()
+  //   let savedPlayerData =playerData;
+  //   let savedPositionsData =positionsData;
+  //   let savedGeneralData =generalData;
 
-
-  }
+  //   addSaveData({saveId: savedId, saveName: savedName, savePlayerData:savedPlayerData, savePositionsData:savedPositionsData,saveGeneralData:savedGeneralData})
+    
+      
+  //   },[saveData.save_index]);
   
   return(
       
@@ -146,7 +156,7 @@ const PlayerSlider = ({navigation}) =>
       
     
         </View>
-        <Pressable 
+        {/* <Pressable 
             onPress = {()=>saveData()}
             >
               <Icon 
@@ -154,7 +164,7 @@ const PlayerSlider = ({navigation}) =>
                 size = {30} 
                 color = 'green'
               />
-          </Pressable>
+          </Pressable> */}
 
         <View style = {styles.nextPageIcons}>
           <Pressable 
@@ -171,7 +181,7 @@ const PlayerSlider = ({navigation}) =>
 
         
       <FlatList scrollEnabled 
-      initialNumToRender={positionsData.position_data.length} 
+      //initialNumToRender={positionsData.position_data.length} 
       data = {positionsData.position_data} 
       renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData)} 
       keyExtractor ={item => item.position_id}/>

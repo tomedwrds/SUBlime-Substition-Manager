@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SaveView ({item},loadData) 
 {
-    console.log(loadData)
-    //console.log(item)
+    
+   
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>

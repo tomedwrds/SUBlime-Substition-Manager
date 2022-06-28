@@ -3,15 +3,16 @@
 
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
 import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useFocusEffect } from '@react-navigation/native';
 
 import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index} from './actions.js';
 
 
 
@@ -156,10 +157,9 @@ function PlayerView({navigation }) {
   const removePlayer = player_index => dispatch(remove_player(player_index))
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
-
-  
-  
-
+  const incrementPlayerIndex= amount => dispatch(increment_player_index(amount))
+  const [canAddPlayer,setCanAddPlayer] = useState(false)
+  const isInitialMount = useRef(true);
   const positionSelectionData = []
   for(let i = 0; i < positionState.position_data.length; i++)
   {
@@ -174,23 +174,33 @@ function PlayerView({navigation }) {
 
   }
   
+  useEffect(() => {
+    
+  });
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+   } else {
+       // Your useEffect code here to be run on update
    
-
-  //Indexing vars
-  const [newPlayerId, setNewPlayerId] = useState(0);
-  
-
-  function addPlayer() {
-    //Add new player object to player data then increment id counter
-    //The color code generates a random color
     createPlayer({
-      id: newPlayerId,
+      id: playerState.player_index,
       name: '',
       positions: [],
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null
     })
-    setNewPlayerId(newPlayerId + 1)
+  }
+    
+  },[playerState.player_index]);
+  
+
+  function addPlayer() {
+    //Add new player object to player data then increment id counter
+    //The color code generates a random color
+   
+    incrementPlayerIndex(1)
     
   }
   

@@ -11,7 +11,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['savedReducer']
+    whitelist: [/*'savedReducer'*/]
    
   };
   const pReducer = persistReducer(persistConfig, rootReducer);

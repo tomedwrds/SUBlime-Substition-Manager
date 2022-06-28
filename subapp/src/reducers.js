@@ -1,10 +1,11 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX} from './actions.js';
 
 import { combineReducers } from 'redux';
 
 const playerState = {
     player_data: [],
+    player_index: 0
 }
 
 function playerReducer(state = playerState, action)
@@ -45,6 +46,9 @@ function playerReducer(state = playerState, action)
             )}
         case UPLOAD_PLAYER_DATA:
             return{...state, player_data:action.payload}
+
+        case INCREMENT_PLAYER_INDEX:
+            return{...state,player_index: state.player_index+action.payload}
         
 
         default:
@@ -102,7 +106,8 @@ function generalReducer(state = generalState, action)
 }
 
 const savedState = {
-    save_data: []
+    save_data: [],
+    save_index: 0
 
 }
 
@@ -116,6 +121,8 @@ function savedReducer(state = savedState, action)
         case DELETE_SAVE_DATA:
             return{...state,save_data: state.save_data.filter(item => item.save_id !== action.payload)};
         
+        case INCREMENT_SAVE_INDEX:
+            return{...state,save_index: state.save_index+action.payload}
         default:
             return state;
     }

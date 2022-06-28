@@ -127,3 +127,22 @@ export const upload_player_data = data => dispatch => {
   });
 };
 
+export const INCREMENT_SAVE_INDEX = 'INCREMENT_SAVE_INDEX';
+
+export const increment_save_index = amount => dispatch => {
+  dispatch({
+    type: INCREMENT_SAVE_INDEX,
+    payload: amount
+  });
+};
+
+
+export const INCREMENT_PLAYER_INDEX = 'INCREMENT_PLAYER_INDEX';
+
+export const increment_player_index = amount => dispatch => {
+  dispatch({
+    type: INCREMENT_PLAYER_INDEX,
+    payload: amount
+  });
+}
+
