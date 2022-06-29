@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS} from './actions.js';
 
 import { combineReducers } from 'redux';
 
@@ -85,9 +85,10 @@ function positionsReducer(state = positionsState, action)
 
 const generalState = {
     game_data: [],
-    interval_length: 8,
-    total_intervals: 1,
-    current_interval: 1
+    interval_length: 0,
+    total_intervals: 0,
+    current_interval: 1,
+    team_name: ''
 }
 
 function generalReducer(state = generalState, action)
@@ -99,6 +100,12 @@ function generalReducer(state = generalState, action)
         
         case UPDATE_CURRENT_INTERVAL:
             return{...state, current_interval: action.payload}
+        case UPDATE_TEAM_NAME:
+            return{...state,team_name:action.payload}
+        case UPDATE_INTERVAL_LENGTH:
+            return{...state,interval_length:action.payload}
+        case UPDATE_TOTAL_INTERVALS:
+            return{...state,total_intervals:action.payload}
         
         default:
             return state;

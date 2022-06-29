@@ -23,12 +23,13 @@ function InGame()
     const positionData = useSelector(state => state.positionsReducer).position_data
     const subData =useSelector(state => state.generalReducer).game_data;
     const currentInterval =useSelector(state => state.generalReducer).current_interval;
-    const intervalLength = useSelector(state => state.generalReducer).interval_length
+    const intervalLength = useSelector(state => state.generalReducer).interval_length;
+    const teamName = useSelector(state => state.generalReducer).team_name;
     const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
     const totalInterval = useSelector(state => state.generalReducer).total_intervals
     //Set up vars that handle the timer
-    const [minute,setMinute] = useState(1)
-    const [second, setSecond] = useState(50)
+    const [minute,setMinute] = useState(0)
+    const [second, setSecond] = useState(0)
     const [timerActive,setTimerActive] = useState(false)
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
@@ -124,16 +125,25 @@ function InGame()
         <SafeAreaView style = {styles.body}>
             <View style = {styles.infoSide}>
                 <View style = {styles.gameInfo}>
-                    <Text style = {styles.titleText}>St Andrews College v St Bedes</Text>
-                    <Text style = {styles.generalText}>Placeholder</Text>
-                    <Text style = {styles.generalText}>Placeholder</Text>
-                    <Text style = {styles.generalText}>Placeholder</Text>
-                    
+                    <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <Text style = {styles.titleText}>{teamName}</Text>
+                    <Pressable 
+                            onPress = {()=>{if(minute != totalInterval*intervalLength) setTimerActive(!timerActive)}}
+                            style = {styles.icon}
+                            >
+                        <Text style={{fontSize:40}}>⏯️</Text>
+                    </Pressable>
+                    </View>
+                    <Text style = {styles.generalText}>Interval {currentInterval}/{totalInterval}</Text>
+                    <Text style = {styles.generalText}>{formattedTime}</Text>
+                   
+                
 
                 </View>
                 <View style = {styles.subInfo}>
                     <View style = {styles.subInfoHeader}>
                         <Text style = {{fontSize:24,marginVertical:10}}>Upcoming Subs (🗣️)</Text>
+                        
                     </View>
                     <FlatList
                         renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
@@ -144,44 +154,10 @@ function InGame()
                 </View>
             </View>
             <View style = {styles.pitchSide}>
-                <View style = {{flex:1,flexDirection:'row'}}>
-                    <Text style = {{...styles.titleText,flex:1}}>{formattedTime}(🕒)</Text>
-                    <View style ={styles.iconBar}>
-                        <Pressable 
-                            onPress = {()=>{setTimerActive(true)}}
-                            style = {styles.icon}
-                            >
-                            <Icon 
-                                name='play'
-                                size = {30} 
-                                color = 'green'
-                            />
-                        </Pressable>
-                        <Pressable 
-                            onPress = {()=>setTimerActive(false)}
-                            style = {styles.icon}
-                            >
-                            <Icon 
-                                name='pause' 
-                                size = {30} 
-                                color = 'green'
-                            />
-                        </Pressable>
-                        <Pressable 
-                            onPress = {()=>{}}
-                            style = {styles.icon}
-                            >
-                            <Icon 
-                                name='forward' 
-                                size = {30} 
-                                color = 'green'
-                            />
-                        </Pressable>
-                    </View>
-                </View>
-                <View style = {{flex:6}}>
+                
+               
                     <GamePitch layoutData = {pitchData}/>
-                </View>
+                
                 
                 
             </View>
@@ -200,7 +176,9 @@ const styles = StyleSheet.create({
         borderStartColor:'red'
     },
     icon: {
-        padding:20
+        padding:20,
+        flex:1,
+        alignItems:'flex-end'
     },
     infoSide: {
         margin:20,
@@ -210,24 +188,24 @@ const styles = StyleSheet.create({
         
         flex: 1,
         
-        margin:20
+        margin:20,
+        marginVertical:40
     },
     gameInfo: {
-        
-        flex: 1,
+      marginBottom:40
         
     },
     
     titleText: {
-        fontSize: 30
+        fontSize: 40
     },
     subInfo: {
         
         flex: 3
     },
     generalText:{
-        fontSize:16,
-        color:'darkgrey'
+        fontSize:24,
+        
     }
    
    

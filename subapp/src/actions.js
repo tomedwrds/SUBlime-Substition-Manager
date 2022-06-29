@@ -146,3 +146,31 @@ export const increment_player_index = amount => dispatch => {
   });
 }
 
+export const UPDATE_TEAM_NAME = 'UPDATE_TEAM_NAME';
+
+export const update_team_name = name => dispatch => {
+  dispatch({
+    type: UPDATE_TEAM_NAME,
+    payload: name
+  });
+}
+
+export const UPDATE_TOTAL_INTERVALS = 'UPDATE_TOTAL_INTERVALS';
+
+export const update_total_intervals = intervals => dispatch => {
+  dispatch({
+    type: UPDATE_TOTAL_INTERVALS,
+    payload: intervals
+  });
+}
+
+
+export const UPDATE_INTERVAL_LENGTH = 'UPDATE_INTERVAL_LENGTH';
+
+export const update_interval_length = interval_length => dispatch => {
+  dispatch({
+    type: UPDATE_INTERVAL_LENGTH,
+    payload: interval_length
+  });
+}
+

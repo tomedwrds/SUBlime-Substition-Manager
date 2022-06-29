@@ -19,7 +19,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
 import HomeScreen from './src/HomeScreen';
 import LoadSave from './src/LoadSave';
-
+import GameSetup from './src/GameSetup';
 
 
 
@@ -40,16 +40,17 @@ const App = () => {
   
   
   return(
-    
+    //<GameSetup></GameSetup>
     //<InGame></InGame>
     <NavigationContainer>
       <Stack.Navigator
-      
+      screenOptions={{
+        headerShown: false
+      }}
       >
-        <Stack.Screen name= 'HomeScreen' component={HomeScreen} options={({ navigation, route }) => ({
-          headerTitle: props => <Text>asfsg</Text>,
-        })}/>
-        <Stack.Screen name= 'LoadSave' component={LoadSave}/>
+        <Stack.Screen name= 'HomeScreen' component={HomeScreen} />
+        <Stack.Screen name= 'GameSetup' component={GameSetup} />
+        <Stack.Screen name= 'LoadSave' component={LoadSave} />
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
         <Stack.Screen name= 'Selection' component={PlayerView}/>
         <Stack.Screen name= 'Sliders' component={PlayerSlider}/>

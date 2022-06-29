@@ -34,7 +34,7 @@ const PlayerSlider = ({navigation}) =>
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
   
   
-  
+  console.log(generalData.total_intervals)
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
