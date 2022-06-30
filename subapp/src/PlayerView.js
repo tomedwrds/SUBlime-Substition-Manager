@@ -184,7 +184,7 @@ function PlayerView({navigation }) {
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null
     })
-    incrementPlayerIndex(amount=>amount+1)
+    incrementPlayerIndex(1)
     setCanAddPlayer(false)
   }
   

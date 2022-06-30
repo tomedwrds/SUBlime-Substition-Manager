@@ -22,17 +22,21 @@ const GameSetup = ({navigation}) =>
         //Check if names have been changed
         if(name == null || intervals == null || intervalW == null)
         {
-            Alert.alert(
-                "Error",
-                "Selection not complete",
-                [
-                  {
-                    text: "Dismiss",
+            updateTeamName('deez')
+            updateIntervalLength(3)
+            updateTotalIntervals(2)
+            navigation.navigate('Formation')
+            // Alert.alert(
+            //     "Error",
+            //     "Selection not complete",
+            //     [
+            //       {
+            //         text: "Dismiss",
                     
-                  },
+            //       },
                   
-                ]
-              );
+            //     ]
+            //   );
         }
         else
         {

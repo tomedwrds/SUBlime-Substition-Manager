@@ -16,7 +16,7 @@ function SaveView ({item},loadData,deleteSaveData)
             <View style = {styles.iconContainer}>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {loadData}
+                    onPress = {()=>{loadData(item.save_id)}}
                     >
                     <Icon 
                         name='check' 

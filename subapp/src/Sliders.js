@@ -1,7 +1,7 @@
 
 
 import 'react-native-gesture-handler';
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useLayoutEffect } from 'react';
 import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
 
 
@@ -34,7 +34,8 @@ const PlayerSlider = ({navigation}) =>
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
   
   
-  console.log(generalData.total_intervals)
+
+  
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
@@ -124,10 +125,10 @@ const PlayerSlider = ({navigation}) =>
       {
         console.log('saved')
         let savedId =  savedData.save_index
-        let savedName = 'Test Schedule'
+        let savedName = generalData.team_name
         //let savedDate = new Date()
         let savedPlayerData =playerData;
-        let savedPositionsData =positionsData;
+        let savedPositionsData ='k'//positionsData;
         let savedGeneralData =generalData;
 
         addSaveData({save_id: savedId, save_name: savedName, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})
@@ -144,7 +145,7 @@ const PlayerSlider = ({navigation}) =>
     
      
       <View style = {{...styles.header, alignItems:'center'}}>
-      <Text style ={{fontSize:40}}>Game Overview(🏑)</Text>
+      <Text style ={{fontSize:40}}>Game Overview🏑</Text>
       
         <View style = {styles.intervalSelection}>
           

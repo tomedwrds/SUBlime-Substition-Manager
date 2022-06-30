@@ -45,7 +45,8 @@ function playerReducer(state = playerState, action)
                                         : content
             )}
         case UPLOAD_PLAYER_DATA:
-            return{...state, player_data:action.payload}
+           
+            return{...state, player_data:action.payload.player_data, player_index:action.payload.player_index}
 
         case INCREMENT_PLAYER_INDEX:
             return{...state,player_index: state.player_index+action.payload}
