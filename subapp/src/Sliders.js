@@ -126,12 +126,12 @@ const PlayerSlider = ({navigation}) =>
         console.log('saved')
         let savedId =  savedData.save_index
         let savedName = generalData.team_name
-        //let savedDate = new Date()
+        let savedDate = new Date()
         let savedPlayerData =playerData;
         let savedPositionsData =positionsData;
         let savedGeneralData =generalData;
 
-        addSaveData({save_id: savedId, save_name: savedName, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})
+        addSaveData({save_id: savedId, save_name: savedName, save_date: savedDate, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})
         setCanAddPlayer(false)
         incrementSaveIndex(1)
       }

@@ -58,6 +58,7 @@ function playerReducer(state = playerState, action)
 }
 const positionsState = {
     position_data: [],
+    formation_name: ''
 }
 
 
@@ -77,7 +78,7 @@ function positionsReducer(state = positionsState, action)
             return {...state, position_data: state.position_data.map((content) => content.position_id === action.payload[0] ? {...content, position_interval_width:action.payload[1]}:content)}
         
         case UPLOAD_LAYOUT:
-            return{...state,position_data: action.payload}
+            return{...state,position_data: action.payload.position_data, formation_name: action.payload.formation_name}
 
         default:
             return state;

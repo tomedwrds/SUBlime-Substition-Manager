@@ -16,7 +16,6 @@ const LoadSave = ({navigation}) =>
     
     const uploadLayout = layout_data => dispatch(update_layout(layout_data))
     const loadGameData = data => dispatch(load_game_data(data))
-
     
     function loadData(i)
     {

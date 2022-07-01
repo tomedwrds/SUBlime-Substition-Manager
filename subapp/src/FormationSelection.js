@@ -155,7 +155,7 @@ const FormationSelection = ({navigation}) =>
                     }
                 }
             }
-            updateLayout(layoutData)
+            updateLayout({position_data: layoutData,formation_name: positionSelectionData[selectedLayout].layoutName})
             navigation.navigate('Selection')
         }
     }

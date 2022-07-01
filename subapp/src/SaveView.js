@@ -4,14 +4,20 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SaveView ({item},loadData,deleteSaveData) 
 {
-    
+    function format_time()
+    {
+        let time = item.save_date
+        const options = { hour:'numeric',minute:'numeric', year: 'numeric', month: 'long', day: 'numeric' };
+        return time.toLocaleDateString('en-NZ',options)
+    }
+  
    
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
                 <Text style = {styles.titleText}>{item.save_name}</Text>
-                <Text style = {styles.subText} >Formation Placeholder</Text>
-                <Text style = {styles.subText} >Data Placeholder</Text>
+                <Text style = {styles.subText} >Formation: {item.save_positionsData.formation_name}</Text>
+                <Text style = {styles.subText} >{format_time()}</Text>
             </View>
             <View style = {styles.iconContainer}>
                 <Pressable 
