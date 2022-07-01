@@ -22,6 +22,7 @@ function InGame()
     const dispatch = useDispatch()
     const positionData = useSelector(state => state.positionsReducer).position_data
     const subData =useSelector(state => state.generalReducer).game_data;
+    const playerData =useSelector(state => state.playerReducer);
     const currentInterval =useSelector(state => state.generalReducer).current_interval;
     const intervalLength = useSelector(state => state.generalReducer).interval_length;
     const teamName = useSelector(state => state.generalReducer).team_name;
@@ -83,14 +84,27 @@ function InGame()
                 
         
             
-        }, 10);
+        }, 1000);
         
         //Something about clearing the interval
         return () => clearInterval(interval);
         }
     }, [timerActive,minute]);
 
+    function assignNameColor (player_id) 
+  {
 
+      //Prevent place holder values slipping through and causing erros
+      if (player_id != null)
+      {
+          //Join on the name of the two lists and return the color
+          var join = playerData.player_data.find(player => player.id == player_id)
+          //0 for name, 1 for color
+          return [join.name,join.color]
+      }
+      else{return[null,null]}
+
+  }
     
 
 
@@ -124,7 +138,7 @@ function InGame()
         {
             //Get the cords and initiisals data easily assecible
             let cords = positionData[i].position_cords
-            let inititals = positionData[i].position_timeline[minute].name
+            let inititals = assignNameColor(positionData[i].position_timeline[minute])[0]
             
             data[cords[0]][cords[1]] = [inititals,inititals]
         }
@@ -161,7 +175,7 @@ function InGame()
                     <FlatList
                         renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
                         keyExtractor ={item => item.subId}
-                        data={subData/*.sort(function(a,b) {return a.subMin-b.subMin})*/}
+                        data={subData.sort(function(a,b) {return a.subMin-b.subMin})}
                     />
                     
                 </View>

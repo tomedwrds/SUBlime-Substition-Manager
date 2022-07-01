@@ -97,7 +97,7 @@ const FormationSelection = ({navigation}) =>
                 [0,0,0],
                 [0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0],
-                [0,['Left Back','LB'],0,0,0,0,0],
+                [0,['Left Back','LB'],['Right Back','RB'],0,0,0,0],
                 [0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0]]
     },
