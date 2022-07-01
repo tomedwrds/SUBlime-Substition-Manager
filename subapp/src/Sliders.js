@@ -128,7 +128,7 @@ const PlayerSlider = ({navigation}) =>
         let savedName = generalData.team_name
         //let savedDate = new Date()
         let savedPlayerData =playerData;
-        let savedPositionsData ='k'//positionsData;
+        let savedPositionsData =positionsData;
         let savedGeneralData =generalData;
 
         addSaveData({save_id: savedId, save_name: savedName, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})

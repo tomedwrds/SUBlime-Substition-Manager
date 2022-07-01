@@ -174,3 +174,12 @@ export const update_interval_length = interval_length => dispatch => {
   });
 }
 
+
+export const LOAD_GAME_DATA = 'LOAD_GAME_DATA';
+
+export const load_game_data = data => dispatch => {
+  dispatch({
+    type: LOAD_GAME_DATA,
+    payload: data
+  });
+}
