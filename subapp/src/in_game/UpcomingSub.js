@@ -13,8 +13,8 @@ function UpcomingSub({item},minute,second,currentInterval,intervalLength)
     let subPosition = item.subPos
     
     //Set up some consts
-    const lingerTimeMin = 2
-    const lingerTimeSec = 0
+    const lingerTimeMin = 0
+    const lingerTimeSec = 20
     
     //Determine the diffrence in time between the game time and the given time for the sub
     let minToSub = subMin - minute
@@ -45,12 +45,12 @@ function UpcomingSub({item},minute,second,currentInterval,intervalLength)
         formattedSubTime = '+'+( Math.abs(minToSub) +':'+secToSub.toString().padStart(2,'0'))
     }
 
-    
+  
     //Conditinal rendering to make old subs disappear and subs not within current quarter
-    let hasOverLingered =!(Math.abs(minToSub) >= lingerTimeMin && second >= lingerTimeSec && minToSub < 0)
+    let canDisplay = (lingerTimeMin + subMin > minute || (lingerTimeMin + subMin >= minute && lingerTimeSec > second))
     let inInterval = (subMin > (currentInterval-1)* intervalLength && subMin <= currentInterval*intervalLength)
 
-    if (hasOverLingered && inInterval)
+    if (inInterval && canDisplay)
     {
         return(
             <View style = {styles.subBar}>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     subBar: {
         flexDirection: 'row',
         backgroundColor:'#00bfff',
-        
+        marginBottom:10,
         borderRadius: 4,
         height: 80,
         alignItems: 'center',

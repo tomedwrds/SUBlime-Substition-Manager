@@ -27,13 +27,16 @@ function InGame()
     const teamName = useSelector(state => state.generalReducer).team_name;
     const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
     const totalInterval = useSelector(state => state.generalReducer).total_intervals
+    
+    
     //Set up vars that handle the timer
     const [minute,setMinute] = useState(0)
     const [second, setSecond] = useState(0)
     const [timerActive,setTimerActive] = useState(false)
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
-    
+    const countdown = true
+
     //code ripped from a website and it works
     useEffect(() => {
         if(timerActive)
@@ -80,7 +83,7 @@ function InGame()
                 
         
             
-        }, 100);
+        }, 10);
         
         //Something about clearing the interval
         return () => clearInterval(interval);
@@ -88,11 +91,21 @@ function InGame()
     }, [timerActive,minute]);
 
 
-      
+    
 
 
     let formattedTime = minute%intervalLength+':'+second.toString().padStart(2,'0')
     
+
+    if(countdown)
+    {
+        let min = intervalLength-(minute%intervalLength)
+        //mod 60 is used to prevent a 60 being in it
+        let sec = (60 - second)%60;
+        if (sec != 0) min --
+        formattedTime = min+':'+sec.toString().padStart(2,'0')
+    }
+
     function updatePitchData(minute)
     {
         
@@ -192,7 +205,7 @@ const styles = StyleSheet.create({
         marginVertical:40
     },
     gameInfo: {
-      marginBottom:40
+      marginBottom:20
         
     },
     

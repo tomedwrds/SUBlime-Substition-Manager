@@ -33,7 +33,21 @@ const PlayerSlider = ({navigation}) =>
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
   
-  
+  //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
+  const assignNameColor = (player_id) =>
+  {
+
+      //Prevent place holder values slipping through and causing erros
+      if (player_id != null)
+      {
+          //Join on the name of the two lists and return the color
+          var join = playerData.player_data.find(player => player.id == player_id)
+          //0 for name, 1 for color
+          return [join.name,join.color]
+      }
+      else{return[null,null]}
+
+  }
 
   
   const [moveDir, setMoveDir] = useState(null)
@@ -54,7 +68,7 @@ const PlayerSlider = ({navigation}) =>
       for(let k = 0; k < positionTimeline.length; k++)
       {
         //Check if gap is empty
-        if(positionTimeline[k].name == null)
+        if(positionTimeline[k] == null)
         {
           isGap = true
         }
@@ -91,18 +105,18 @@ const PlayerSlider = ({navigation}) =>
         let positionInitials = positionsData.position_data[i].position_inititals
         let positionCords = positionsData.position_data[i].position_cords
 
-        let priorPerson = positionTimeline[0].name
+        let priorPerson = positionTimeline[0]
 
         for(let k = 0; k < positionTimeline.length; k++)
         {
           //Check wether name has changed and also check to make sure that it is not the start of new interval
-          if(priorPerson != positionTimeline[k].name && k % generalData.interval_length != 0)
+          if(priorPerson != positionTimeline[k] && k % generalData.interval_length != 0)
           {
-            subData.push({subId: subId, subMin: k,subPlayerOn:priorPerson,subPlayerOff: positionTimeline[k].name,subPos:positionInitials,subCords: positionCords})
+            subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson)[0] ,subPlayerOff: assignNameColor(positionTimeline[k])[0],subPos:positionInitials,subCords: positionCords})
             subId ++
           }
           //Reset the prior person
-          priorPerson = positionTimeline[k].name
+          priorPerson = positionTimeline[k]
         }
       }
 
@@ -136,7 +150,7 @@ const PlayerSlider = ({navigation}) =>
         incrementSaveIndex(1)
       }
     
-      
+  
     },[canAddPlayer]);
   
   return(
@@ -191,7 +205,7 @@ const PlayerSlider = ({navigation}) =>
       <FlatList scrollEnabled 
       initialNumToRender={positionsData.position_data.length} 
       data = {positionsData.position_data} 
-      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData)} 
+      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor)} 
       keyExtractor ={item => item.position_id}/>
     </SafeAreaView>
   )

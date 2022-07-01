@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor) =>
 {
  
     //Set up vars specific to each variable
@@ -20,23 +20,12 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
     const positionIntervalWidth = item.position_interval_width
-    const pickerSelectData = playerData.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.name}))
+    const pickerSelectData = playerData.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
     const intervalLength = generalData.interval_length
     const currentInterval = generalData.current_interval
   
     const totalIntervals = generalData.total_intervals
-    //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
-    const assignColor = (name) =>
-    {
-        //Prevent place holder values slipping through and causing erros
-        if (name != null)
-        {
-            //Join on the name of the two lists and return the color
-            var join = playerData.player_data.find(player => player.name == name)
-            return join.color
-        }
-
-    }
+    
 
     const dragStart = (drag) => {
        
@@ -44,10 +33,10 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         const dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
         
         //Check if tile has something in it as null tiles cannot be dragged
-        if (positionTimeline[dragStartTile].name != null)
+        if (positionTimeline[dragStartTile] != null)
         {
             //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
-            let prior_name =  positionTimeline[(currentInterval-1)*intervalLength].name
+            let prior_name =  positionTimeline[(currentInterval-1)*intervalLength]
             let blob_length = 0
             let found_blob = false
             
@@ -56,7 +45,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
             {
                 
                 //This is used to check if tile has changed without causing an indesxing error
-                if (i < currentInterval*intervalLength) {var tileChanged = positionTimeline[i].name != prior_name}
+                if (i < currentInterval*intervalLength) {var tileChanged = positionTimeline[i] != prior_name}
                 
                 //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
                 if (tileChanged || i==currentInterval*intervalLength )
@@ -104,7 +93,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                     //Set prior name check exists to prevent indexing error
                     if (i < currentInterval*intervalLength)
                     {
-                        prior_name = positionTimeline[i].name
+                        prior_name = positionTimeline[i]
                     }
                     
                     //Reset the vars and blob length
@@ -145,7 +134,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 for (let i = endTile; i <= startTile; i++)
                 {
                     //Check to make sure that tile being iterated over is the same as draged tile
-                    if (positionTimeline[i].name == positionTimeline[startTile].name)
+                    if (positionTimeline[i] == positionTimeline[startTile])
                     {
                         updatePosition([i,null,positionId])
                     }
@@ -158,7 +147,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 for (let k = startTile; k < endTile; k++)
                 {
                     
-                    updatePosition([k,positionTimeline[startTile].name,positionId,positionTimeline[startTile].color])
+                    updatePosition([k,positionTimeline[startTile],positionId])
                 }
             }
         }
@@ -170,7 +159,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
 
                 for (let i = startTile; i < endTile; i++)
                 {
-                    if (positionTimeline[i].name == positionTimeline[startTile].name)
+                    if (positionTimeline[i] == positionTimeline[startTile])
                     {
                         updatePosition([i,null,positionId])
                     }
@@ -180,7 +169,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
             {
                 for (let k = endTile; k < startTile; k++)
                 {
-                    updatePosition([k,positionTimeline[startTile].name,positionId,positionTimeline[startTile].color])
+                    updatePosition([k,positionTimeline[startTile],positionId])
                 }
             }
         }
@@ -222,14 +211,14 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      {
       
        current_length += 1
-       var isTileEmpty = positionTimeline[i].name == null;
+       var isTileEmpty = positionTimeline[i] == null;
        if( i < (currentInterval)*intervalLength-1)
-       {var isNextTileSame = positionTimeline[i].name != positionTimeline[ i+1].name;}
+       {var isNextTileSame = positionTimeline[i] != positionTimeline[ i+1];}
        else var isNextTileSame = true
        if (isTileEmpty || (isNextTileSame && !isTileEmpty))
        {
      
-         transformed_data.push({name: positionTimeline[i].name, length: current_length,color: positionTimeline[i].color})
+         transformed_data.push({name: assignNameColor(positionTimeline[i])[0], length: current_length,color: assignNameColor(positionTimeline[i])[1]})
          current_length = 0
        }  
      }
@@ -277,7 +266,13 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           {
             
             return(
-                <AddPlayer pickerSelectData ={pickerSelectData} updatePosition = { (value) => {updatePosition([i,value,positionId,assignColor(value)])}} assignColor = {assignColor} key = {i}  name = {prop.name } index = {i} offset ={intervalLength*(currentInterval-1)} ></AddPlayer>
+                <AddPlayer pickerSelectData ={pickerSelectData}
+                //i is for index within positiontimeline. PositionId is the id of the position 
+                updatePosition = { (value) => {updatePosition([i,value,positionId])}} 
+                key = {i}  
+                name = {prop } 
+                index = {i} 
+                offset ={intervalLength*(currentInterval-1)} ></AddPlayer>
               
             )
           }
@@ -288,7 +283,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           
           <View style = {{position:'absolute',flexDirection:'row'}}>
             <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:sliderContentHeight}}/>
-            <View style = {{...styles.dragBar,backgroundColor: positionTimeline[startTile].color, width: dragBar[1].end-dragBar[1].start}}/>
+            <View style = {{...styles.dragBar,backgroundColor: assignNameColor(positionTimeline[startTile])[1], width: dragBar[1].end-dragBar[1].start}}/>
             <View style = {{width: dragBar[2].end-dragBar[2].start,height:sliderContentHeight}}/>   
           </View>: null
       }

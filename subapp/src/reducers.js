@@ -72,7 +72,7 @@ function positionsReducer(state = positionsState, action)
                 (content, i) => content.position_id === action.payload[2] ?
                     {...content, 
                         position_timeline: state.position_data[i].position_timeline.map((content,i)=> i===action.payload[0] ?
-                        {...content, name: action.payload[1], color: action.payload[3]}  : content)}
+                        action.payload[1]  : content)}
                                     : content)}
         case UPDATE_INTERVAL_WIDTH:
             return {...state, position_data: state.position_data.map((content) => content.position_id === action.payload[0] ? {...content, position_interval_width:action.payload[1]}:content)}

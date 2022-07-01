@@ -155,7 +155,7 @@ function PlayerView({navigation }) {
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
   const incrementPlayerIndex= amount => dispatch(increment_player_index(amount))
   const [canAddPlayer,setCanAddPlayer] = useState(false)
-  const isInitialMount = useRef(true);
+  
   const positionSelectionData = []
   for(let i = 0; i < positionState.position_data.length; i++)
   {

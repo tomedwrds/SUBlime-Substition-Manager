@@ -19,13 +19,14 @@ const LoadSave = ({navigation}) =>
     
     function loadData(i)
     {
+        let adjusted_index = savedState.save_data.findIndex(item => item.save_id == i)
+      
         //Update the player data
-        uploadPlayerData(savedState.save_data[i].save_playerData)
-       
-        uploadLayout(savedState.save_data[i].save_positionsData.position_data)
-        loadGameData(savedState.save_data[i].save_generalData)
+        uploadPlayerData(savedState.save_data[adjusted_index].save_playerData)
+        uploadLayout(savedState.save_data[adjusted_index].save_positionsData)
+        loadGameData(savedState.save_data[adjusted_index].save_generalData)
         //Load the page that the sliders is on
-        navigation.replace('Sliders')
+        navigation.replace('Selection')
     }
 
     

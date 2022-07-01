@@ -147,7 +147,7 @@ const FormationSelection = ({navigation}) =>
                             position_name: layoutDataRaw[rows][columns][0],
                             position_inititals: layoutDataRaw[rows][columns][1],
                             position_cords: [rows,columns],
-                            position_timeline: new Array(generalState.total_intervals*generalState.interval_length).fill({name:null, color:null})
+                            position_timeline: new Array(generalState.total_intervals*generalState.interval_length).fill(null)
                         })
                         
                             //Increment the index
@@ -155,6 +155,7 @@ const FormationSelection = ({navigation}) =>
                     }
                 }
             }
+           
             updateLayout({position_data: layoutData,formation_name: positionSelectionData[selectedLayout].layoutName})
             navigation.navigate('Selection')
         }

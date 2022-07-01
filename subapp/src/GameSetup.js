@@ -23,7 +23,6 @@ const GameSetup = ({navigation}) =>
         if(name == null || intervals == null || intervalW == null)
         {
            
-           
             Alert.alert(
                 "Error",
                 "Selection not complete",
