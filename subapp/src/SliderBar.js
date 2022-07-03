@@ -2,7 +2,7 @@ import React from "react"
 import { Dimensions,View,Text,StyleSheet } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from "react-native-gesture-handler";
 import AddPlayer from "./AddPlayer";
-
+import assignNameColor from "./sliders/assignNameColor";
 //General setup vars
 
 const sliderBarRightMargin =20
@@ -218,7 +218,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
        if (isTileEmpty || (isNextTileSame && !isTileEmpty))
        {
      
-         transformed_data.push({name: assignNameColor(positionTimeline[i])[0], length: current_length,color: assignNameColor(positionTimeline[i])[1]})
+         transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1]})
          current_length = 0
        }  
      }
@@ -283,7 +283,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           
           <View style = {{position:'absolute',flexDirection:'row'}}>
             <View style = {{ width: (dragBar[0].end-dragBar[0].start),opacity:0,height:sliderContentHeight}}/>
-            <View style = {{...styles.dragBar,backgroundColor: assignNameColor(positionTimeline[startTile])[1], width: dragBar[1].end-dragBar[1].start}}/>
+            <View style = {{...styles.dragBar,backgroundColor: assignNameColor(positionTimeline[startTile],playerData)[1], width: dragBar[1].end-dragBar[1].start}}/>
             <View style = {{width: dragBar[2].end-dragBar[2].start,height:sliderContentHeight}}/>   
           </View>: null
       }

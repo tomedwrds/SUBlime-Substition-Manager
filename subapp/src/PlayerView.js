@@ -13,10 +13,11 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'
 import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index} from './actions.js';
+import getPositionInitals from './player_selection/get_position_initals.js';
+import generateSchedule from './schedule auto generation/generateSchedule.js';
 
 
-
-const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos) => {
+const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState) => {
   
 
   
@@ -157,6 +158,7 @@ function PlayerView({navigation }) {
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
   const positionSelectionData = []
+  
   for(let i = 0; i < positionState.position_data.length; i++)
   {
     let formattedData = {label: positionState.position_data[i].position_name, value: positionState.position_data[i].position_inititals}
@@ -220,7 +222,7 @@ function PlayerView({navigation }) {
         </Pressable>
         <Pressable 
           style = {{paddingHorizontal:10}}
-          onPress = {()=>navigation.navigate('Sliders')}
+          onPress = {()=>navigation.navigate('Sliders')/*generateSchedule(positionState.position_data,playerState.player_data,)*/}
           >
             <Icon 
               name='check' 
@@ -236,7 +238,7 @@ function PlayerView({navigation }) {
       <FlatList
      
         data={playerState.player_data}
-        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos)}
+        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState)}
         keyExtractor={item => item.id}
       />
       

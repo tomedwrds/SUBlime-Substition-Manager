@@ -11,8 +11,8 @@ import { add_save_data, create_game_data, increment_save_index, update_current_i
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-
+import assignNameColor from './sliders/assignNameColor';
+import RNPickerSelect from 'react-native-picker-select';
 
 
 
@@ -33,21 +33,7 @@ const PlayerSlider = ({navigation}) =>
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
   
-  //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
-  const assignNameColor = (player_id) =>
-  {
-
-      //Prevent place holder values slipping through and causing erros
-      if (player_id != null)
-      {
-          //Join on the name of the two lists and return the color
-          var join = playerData.player_data.find(player => player.id == player_id)
-          //0 for name, 1 for color
-          return [join.name,join.color]
-      }
-      else{return[null,null]}
-
-  }
+  
 
   
   const [moveDir, setMoveDir] = useState(null)
@@ -112,7 +98,7 @@ const PlayerSlider = ({navigation}) =>
           //Check wether name has changed and also check to make sure that it is not the start of new interval
           if(priorPerson != positionTimeline[k] && k % generalData.interval_length != 0)
           {
-            subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson)[0] ,subPlayerOff: assignNameColor(positionTimeline[k])[0],subPos:positionInitials,subCords: positionCords})
+            subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson,playerData)[0] ,subPlayerOff: assignNameColor(positionTimeline[k],playerData)[0],subPos:positionInitials,subCords: positionCords})
             subId ++
           }
           //Reset the prior person
@@ -161,29 +147,7 @@ const PlayerSlider = ({navigation}) =>
       <View style = {{...styles.header, alignItems:'center'}}>
       <Text style ={{fontSize:40}}>Game Overview🏑</Text>
       
-        <View style = {styles.intervalSelection}>
-          
         
-        {/* Cheap way to create an element a certain amount of times */}
-        {[...Array(generalData.total_intervals)].map((prop,i) => { 
-          
-          //i+1 is used as current interval doesnt start at 0
-          let color = 'transparent'
-          let textColor = 'black'
-          if((i+1) == generalData.current_interval) {color = '#95b7ed'; textColor = 'white'}
-
-          return(
-             
-            <Pressable key = {i} onPress={()=>{updateCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
-              <Text  style = {{...styles.intervalText,color:textColor}}>{i+1}</Text>
-            </Pressable>
-            
-          )
-        })}
-      
-    
-        
-        </View>
          
 
         <View style = {styles.nextPageIcons}>
@@ -200,7 +164,47 @@ const PlayerSlider = ({navigation}) =>
           </Pressable>
         </View>
       </View>
+      
+      <View style = {styles.belowArea}>
+        <Text style = {{fontSize:20}}>View</Text>
+        <View style = {{alignItems:'center'}}>
+          <RNPickerSelect
+              onValueChange={(value) => console.log(value)}
+              items={[
+                  { label: 'Player', value: 'football' },
+                  { label: 'Time', value: 'baseball' },              
+              ]}
+              placeholder={{label:'Positions',value:'1'}}
+              style = {pickerSelectStyles}
+          />
+        </View>
+        
+        <View style = {styles.intervalSelectionContainer}>
+        <Text style = {{fontSize:20}}>Interval</Text>  
+        
+        <View style = {styles.intervalSelection}>
+        {/* Cheap way to create an element a certain amount of times */}
+        {[...Array(generalData.total_intervals)].map((prop,i) => { 
+          
+          //i+1 is used as current interval doesnt start at 0
+          let color = 'transparent'
+          let textColor = 'black'
+          if((i+1) == generalData.current_interval) {color = '#95b7ed'; textColor = 'white'}
 
+          return(
+             
+            <Pressable key = {i} onPress={()=>{updateCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
+              <Text  style = {{...styles.intervalText,color:textColor}}>{i+1}</Text>
+            </Pressable>
+            
+          )
+        })}
+        </View>
+        </View>
+      
+    
+        
+      </View>
         
       <FlatList scrollEnabled 
       initialNumToRender={positionsData.position_data.length} 
@@ -225,8 +229,24 @@ const styles = StyleSheet.create({
     flexDirection:"row",
     borderWidth: 2,
     borderRadius: 10,
-    marginLeft:70,
     overflow: 'hidden',
+    marginLeft:20
+  
+  },
+  intervalSelectionContainer: {
+    flexDirection:'row',
+    justifyContent:'flex-end',
+    flex:1,
+    marginRight: 20,
+    alignItems:'center'
+  },
+  belowArea:{
+    
+    flexDirection:"row",
+    marginLeft:70,
+    alignItems:'center',
+    
+    
    
   
   },
@@ -238,7 +258,7 @@ const styles = StyleSheet.create({
     
   },
   intervalText: {
-    fontSize:30
+    fontSize:20
   },
   nextPageIcons: {
     flex:1,
@@ -251,5 +271,44 @@ const styles = StyleSheet.create({
   }
 })
   
+const pickerSelectStyles = StyleSheet.create({
+  
+  inputAndroid: {
+    
+    color: 'black',
+    fontSize: 20,
+
+    width:'100%',
+    height:'100%',
+ 
+},
+  
+   
+
+
+  inputIOS: {
+   
+    fontSize: 16,
+    color: 'black',
+    fontSize: 20,
+    //backgroundColor: '#ebebeb',
+    textAlign: 'center',
+    borderWidth:2,
+    marginLeft:10,
+    padding:10,
+    borderRadius:9,
+    width:180
+    
+
+
+ 
+  
+
+  
+},
+  placeholder: {
+    color: 'black'
+  }
+});
   
   export default (PlayerSlider);
