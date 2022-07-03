@@ -7,8 +7,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import UpcomingSub from './UpcomingSub.js'
 import GamePitch from './GamePitch.js';
 import { update_current_interval } from '../actions.js';
-
-
+import { useKeepAwake } from 'expo-keep-awake';
 //Note not globalized
 const totalColumns = 7;
 const totalRows = 7;
@@ -29,7 +28,7 @@ function InGame()
     const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
     const totalInterval = useSelector(state => state.generalReducer).total_intervals
     
-    
+    useKeepAwake()
     //Set up vars that handle the timer
     const [minute,setMinute] = useState(0)
     const [second, setSecond] = useState(0)
@@ -37,7 +36,7 @@ function InGame()
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
     const countdown = true
-
+    
     //code ripped from a website and it works
     useEffect(() => {
         if(timerActive)
@@ -149,7 +148,9 @@ function InGame()
     
 
     return(
+        
         <SafeAreaView style = {styles.body}>
+            
             <View style = {styles.infoSide}>
                 <View style = {styles.gameInfo}>
                     <View style={{flexDirection:'row',alignItems:'center'}}>

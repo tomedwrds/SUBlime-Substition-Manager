@@ -183,3 +183,14 @@ export const load_game_data = data => dispatch => {
     payload: data
   });
 }
+
+
+
+export const SHOULD_MIRROR_INTERVALS = 'SHOULD_MIRROR_INTERVALS';
+
+export const should_mirror_intervals = data => dispatch => {
+  dispatch({
+    type: SHOULD_MIRROR_INTERVALS,
+    payload: data
+  });
+}

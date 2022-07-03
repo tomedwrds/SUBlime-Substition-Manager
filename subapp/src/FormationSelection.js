@@ -91,13 +91,25 @@ const FormationSelection = ({navigation}) =>
     },
     {
         layoutId:6,
+        layoutName: '7 aside', 
+        layoutData: [
+                [0,0,0,['Striker','ST'],0,0,0],
+                [0,['Striker','ST'],0,0,0,['Striker','ST'],0],
+                [0,0,0,0,0,0,0],
+                [0,['Midfield','MF'],0,0,0,['Midfield','MF'],0],
+                [0,0,0,['Defender','DF'],0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:7,
         layoutName: 'The test', 
         layoutData: [
                 [0,0,0,0,0,0,0],
                 [0,0,0],
                 [0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0],
-                [0,['Left Back','LB'],['Right Back','RB'],0,0,0,0],
+                [0,['Left Back','LB'],0,0,0,0,0],
                 [0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0]]
     },

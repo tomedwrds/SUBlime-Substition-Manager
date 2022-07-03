@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA} from './actions.js';
+import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS} from './actions.js';
 
 import { combineReducers } from 'redux';
 
@@ -67,11 +67,12 @@ function positionsReducer(state = positionsState, action)
     switch (action.type)
     {
         case UPDATE_POSITION:
-           
+        
+        
             return{...state, position_data: state.position_data.map(
                 (content, i) => content.position_id === action.payload[2] ?
                     {...content, 
-                        position_timeline: state.position_data[i].position_timeline.map((content,i)=> i===action.payload[0] ?
+                        position_timeline: state.position_data[i].position_timeline.map((content,i)=> ((i===action.payload[0] && action.payload[3]== false) || (i%action.payload[4]===action.payload[0]%action.payload[4] && action.payload[3])) ?
                         action.payload[1]  : content)}
                                     : content)}
         case UPDATE_INTERVAL_WIDTH:
@@ -90,7 +91,8 @@ const generalState = {
     interval_length: 0,
     total_intervals: 0,
     current_interval: 1,
-    team_name: ''
+    team_name: '',
+    mirror_intervals:false
 }
 
 function generalReducer(state = generalState, action)
@@ -109,7 +111,9 @@ function generalReducer(state = generalState, action)
         case UPDATE_TOTAL_INTERVALS:
             return{...state,total_intervals:action.payload}
         case LOAD_GAME_DATA:
-            return{...state, game_data: action.payload.game_data, interval_length: action.payload.interval_length, total_intervals: action.payload.total_intervals,team_name:action.payload.team_name}
+            return{...state, game_data: action.payload.game_data, interval_length: action.payload.interval_length, total_intervals: action.payload.total_intervals,team_name:action.payload.team_name, mirror_intervals: action.payload.mirror_intervals}
+        case SHOULD_MIRROR_INTERVALS:
+            return{...state, mirror_intervals: action.payload}
         default:
             return state;
     }

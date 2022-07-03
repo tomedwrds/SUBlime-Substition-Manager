@@ -26,7 +26,7 @@ const PlayerSlider = ({navigation}) =>
   const playerData = useSelector(state => state.playerReducer);
   const savedData = useSelector(state => state.savedReducer);
   const dispatch = useDispatch()
-  const updatePosition = time_name_position_color => dispatch(update_position(time_name_position_color))
+  const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,generalData.mirror_intervals,generalData.interval_length]))
   const createGameData = sub_data => dispatch(create_game_data(sub_data))
   const updateIntervalWidth = id_interval_width => dispatch(update_interval_width(id_interval_width))
   const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
