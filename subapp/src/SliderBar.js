@@ -26,11 +26,18 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
   
     const totalIntervals = generalData.total_intervals
     
-
+  
     const dragStart = (drag) => {
        
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
-        const dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        
+        let hoverRight = false
+        if (positionTimeline[dragStartTile-1] != null)
+        {
+          let hoverRight = positionTimeline[dragStartTile-1] != null
+           dragStartTile = dragStartTile-1
+        }
         
         //Check if tile has something in it as null tiles cannot be dragged
         if (positionTimeline[dragStartTile] != null)
@@ -180,7 +187,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
 
     const dragActive = (drag) =>
     {
-        
+   
         if (moveDir == 'right')
         {
             
@@ -204,22 +211,44 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      //Get a transformed version of teh data to play witth
      let transformed_data = []
      let current_length = 0;
-     
+     let overlap_length =-1
+     let overLapStart = 0
+     let setOverlap = false
+     let overLappedData = []
      
      //loop through whole list
      for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
      {
+      let overLapped = positionsData.position_data.map((item)=>item.position_timeline[i]).find((item,index)=>(index != positionId&& item!= null&& item == positionTimeline[i])) != undefined
+      if (overLapped && !setOverlap)
+      {
+        overLappedData.push({place:current_length,type:'start'})
+        setOverlap = true
+        
+      } else if (!overLapped && setOverlap)
+      {
+        overLappedData.push({place:current_length,type:'end'})
+        setOverlap = false
+      }
       
        current_length += 1
        var isTileEmpty = positionTimeline[i] == null;
        if( i < (currentInterval)*intervalLength-1)
-       {var isNextTileSame = positionTimeline[i] != positionTimeline[ i+1];}
-       else var isNextTileSame = true
-       if (isTileEmpty || (isNextTileSame && !isTileEmpty))
+       {var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];}
+       else var isNextTileSame = false
+       if (isTileEmpty || (!isNextTileSame && !isTileEmpty))
        {
-     
-         transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1]})
+         
+        if(overLapped)
+        {
+          overLappedData.push({place:current_length,type:'end'})
+          setOverlap = false
+        }
+         transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData.map(item => item)})
          current_length = 0
+         overLappedData = []
+      
+        
        }  
      }
     
@@ -250,9 +279,34 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         <View style = {{position:'absolute',flexDirection:'row'}}>
           
           {transformed_data_for_visual().map((prop,index) => {
+            
             return(
               <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
-                <Text style = {styles.sliderText}>{prop.name}</Text>
+                {(prop.overlap != []) ? 
+                
+                <View style = {{flex:1}}>
+                  <View style = {{position:'absolute',flexDirection:'row'}}>
+                  {prop.overlap.map((item,index) => 
+                  {
+                    if(index != 0)
+                    {
+                      return(
+                        <View key = {index} style = {{ width: (prop.overlap[index].place-prop.overlap[index-1].place)*positionIntervalWidth, height:(item.type == 'start'? 0:sliderContentHeight),backgroundColor:'red'}} >
+                         
+                        </View>
+                        //<View , backgroundColor:(prop.name == null? 'transparent':prop.color)}></View>
+                      )
+                    }
+                  })}
+                  </View>
+                </View>:<View></View>
+                 }
+               
+                <View style = {{position:'absolute',flexDirection:'row',height:sliderContentHeight,width:positionIntervalWidth*prop.length,justifyContent:'center',alignItems:'center'}}>
+                  <Text style = {styles.sliderText}>{prop.name}</Text>
+
+                </View>
+                
               </View>
             )
           })}
@@ -264,6 +318,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         {positionTimeline.map((prop,i) => {      
           if(i >= (currentInterval-1)*intervalLength && i < ((currentInterval)*intervalLength) )
           {
+
             
             return(
                 <AddPlayer pickerSelectData ={pickerSelectData}

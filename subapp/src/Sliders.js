@@ -13,6 +13,7 @@ import SliderBar from './SliderBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import assignNameColor from './sliders/assignNameColor';
 import RNPickerSelect from 'react-native-picker-select';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
 
 
@@ -143,7 +144,7 @@ const PlayerSlider = ({navigation}) =>
       
     <SafeAreaView>
     
-     
+    
       <View style = {{...styles.header, alignItems:'center'}}>
       <Text style ={{fontSize:40}}>Game Overview🏑</Text>
       
@@ -205,12 +206,14 @@ const PlayerSlider = ({navigation}) =>
     
         
       </View>
+    
         
-      <FlatList scrollEnabled 
-      initialNumToRender={positionsData.position_data.length} 
-      data = {positionsData.position_data} 
-      renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor)} 
-      keyExtractor ={item => item.position_id}/>
+          <FlatList scrollEnabled 
+          initialNumToRender={positionsData.position_data.length} 
+          data = {positionsData.position_data} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor)} 
+          keyExtractor ={item => item.position_id}/>
+    
     </SafeAreaView>
   )
 }
