@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions,View,Text,StyleSheet } from 'react-native';
+import { Dimensions,View,Text,StyleSheet, ImageBackground } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from "react-native-gesture-handler";
 import AddPlayer from "./AddPlayer";
 import assignNameColor from "./sliders/assignNameColor";
@@ -11,7 +11,7 @@ const sliderBorderWidth = 1
 const sliderBodyHeight = 100 
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
-
+const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
 const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor) =>
 {
  
@@ -32,13 +32,21 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
         let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
         
-        let hoverRight = false
+        
+        //Extra drag area on right
         if (positionTimeline[dragStartTile-1] != null)
         {
-          let hoverRight = positionTimeline[dragStartTile-1] != null
+          
            dragStartTile = dragStartTile-1
         }
         
+        //Extra drag area on left
+        if (positionTimeline[dragStartTile+1] != null)
+        {
+          
+           dragStartTile = dragStartTile+1
+        }
+
         //Check if tile has something in it as null tiles cannot be dragged
         if (positionTimeline[dragStartTile] != null)
         {
@@ -219,37 +227,47 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      //loop through whole list
      for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
      {
+      
+      
+       
+       
+      //Checking if next tile is diffrent - indexing error prevention
+      if( i < (currentInterval)*intervalLength-1)
+      {
+        var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];
+      }
+      else var isNextTileSame = false
+
       let overLapped = positionsData.position_data.map((item)=>item.position_timeline[i]).find((item,index)=>(index != positionId&& item!= null&& item == positionTimeline[i])) != undefined
+      
       if (overLapped && !setOverlap)
       {
         overLappedData.push({place:current_length,type:'start'})
         setOverlap = true
         
-      } else if (!overLapped && setOverlap)
+      } else if ((!overLapped && setOverlap )|| (!isNextTileSame && overLapped))
       {
-        overLappedData.push({place:current_length,type:'end'})
+        if((!isNextTileSame && overLapped))  overLappedData.push({place:current_length+1,type:'end'})
+        else overLappedData.push({place:current_length,type:'end'})
         setOverlap = false
       }
-      
-       current_length += 1
-       var isTileEmpty = positionTimeline[i] == null;
-       if( i < (currentInterval)*intervalLength-1)
-       {var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];}
-       else var isNextTileSame = false
-       if (isTileEmpty || (!isNextTileSame && !isTileEmpty))
-       {
-         
-        if(overLapped)
+      current_length += 1
+
+      if (!isNextTileSame)
+      {
+        
+        if(setOverlap)
         {
           overLappedData.push({place:current_length,type:'end'})
-          setOverlap = false
+        setOverlap = false
         }
-         transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData.map(item => item)})
-         current_length = 0
-         overLappedData = []
       
-        
-       }  
+        transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData})
+        current_length = 0
+        overLappedData = []
+    
+      
+      }  
      }
     
      return transformed_data
@@ -281,21 +299,37 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           {transformed_data_for_visual().map((prop,index) => {
             
             return(
+              
               <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
+               
                 {(prop.overlap != []) ? 
                 
                 <View style = {{flex:1}}>
                   <View style = {{position:'absolute',flexDirection:'row'}}>
-                  {prop.overlap.map((item,index) => 
+                  {prop.overlap.map((item,i) => 
                   {
-                    if(index != 0)
+                    if(i!=0)
                     {
                       return(
-                        <View key = {index} style = {{ width: (prop.overlap[index].place-prop.overlap[index-1].place)*positionIntervalWidth, height:(item.type == 'start'? 0:sliderContentHeight),backgroundColor:'red'}} >
-                         
-                        </View>
-                        //<View , backgroundColor:(prop.name == null? 'transparent':prop.color)}></View>
+                        
+                        
+                          <View key = {i} style = {{ width: (item.place-prop.overlap[i-1].place)*positionIntervalWidth,backgroundColor:'red', opacity: (item.type == 'end'? 0.3: 0),height:sliderContentHeight}} >
+                           <ImageBackground source = {image} style = {{flex:1}}>
+                            <View style = {{flex:1}}></View>
+                           </ImageBackground>
+                          </View>
+                       
+                        
+                        
                       )
+                    }
+                    else
+                    {
+                     
+                      return(
+                        <View key = {i} style = {{ width: item.place*positionIntervalWidth}}></View>
+                      )
+
                     }
                   })}
                   </View>
