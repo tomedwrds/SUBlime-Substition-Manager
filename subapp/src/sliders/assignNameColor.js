@@ -6,7 +6,7 @@ export default function assignNameColor (player_id,playerData)
     if (player_id != null)
     {
         //Join on the name of the two lists and return the color
-        var join = playerData.player_data.find(player => player.id == player_id)
+        var join = playerData.find(player => player.id == player_id)
         //0 for name, 1 for color
         return [join.name,join.color]
     }

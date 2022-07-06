@@ -24,18 +24,24 @@ const PlayerSlider = ({navigation}) =>
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
   const generalData = useSelector(state => state.generalReducer);
-  const playerData = useSelector(state => state.playerReducer);
+  
   const savedData = useSelector(state => state.savedReducer);
+  const teamData = useSelector(state => state.teamReducer);
+  const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
+  
+  const playerData = teamData.team_data[current_team_index].team_player_data.team_players
+ 
   const dispatch = useDispatch()
-  const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,generalData.mirror_intervals,generalData.interval_length]))
+  const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,positionsData.mirror_intervals,positionsData.interval_length]))
   const createGameData = sub_data => dispatch(create_game_data(sub_data))
   const updateIntervalWidth = id_interval_width => dispatch(update_interval_width(id_interval_width))
   const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
-  
-  
+  const current_interval = generalData.current_interval
 
+  
+ 
   
   const [moveDir, setMoveDir] = useState(null)
   const [startTile, setStartTile] = useState(null)
@@ -97,7 +103,7 @@ const PlayerSlider = ({navigation}) =>
         for(let k = 0; k < positionTimeline.length; k++)
         {
           //Check wether name has changed and also check to make sure that it is not the start of new interval
-          if(priorPerson != positionTimeline[k] && k % generalData.interval_length != 0)
+          if(priorPerson != positionTimeline[k] && k % positionsData.interval_length != 0)
           {
             subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson,playerData)[0] ,subPlayerOff: assignNameColor(positionTimeline[k],playerData)[0],subPos:positionInitials,subCords: positionCords})
             subId ++
@@ -185,7 +191,8 @@ const PlayerSlider = ({navigation}) =>
         
         <View style = {styles.intervalSelection}>
         {/* Cheap way to create an element a certain amount of times */}
-        {[...Array(generalData.total_intervals)].map((prop,i) => { 
+        
+        {[...Array(positionsData.total_intervals)].map((prop,i) => { 
           
           //i+1 is used as current interval doesnt start at 0
           let color = 'transparent'
@@ -206,12 +213,12 @@ const PlayerSlider = ({navigation}) =>
     
         
       </View>
-    
+      
         
           <FlatList scrollEnabled 
           initialNumToRender={positionsData.position_data.length} 
           data = {positionsData.position_data} 
-          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor)} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval)} 
           keyExtractor ={item => item.position_id}/>
     
     </SafeAreaView>

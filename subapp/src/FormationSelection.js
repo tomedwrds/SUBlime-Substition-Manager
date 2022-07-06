@@ -13,8 +13,9 @@ import { useSelector, useDispatch } from 'react-redux'
 const FormationSelection = ({navigation}) =>
 {   
     const dispatch = useDispatch()
-    const generalState = useSelector(state => state.generalReducer);
+    const positionState = useSelector(state => state.positionsReducer);
     const updateLayout = layout_data => dispatch(update_layout(layout_data))
+
     //This is the data sets used for the display of the views 
     const positionSelectionData =   [
     
@@ -159,7 +160,7 @@ const FormationSelection = ({navigation}) =>
                             position_name: layoutDataRaw[rows][columns][0],
                             position_inititals: layoutDataRaw[rows][columns][1],
                             position_cords: [rows,columns],
-                            position_timeline: new Array(generalState.total_intervals*generalState.interval_length).fill(null)
+                            position_timeline: new Array(positionState.total_intervals*positionState.interval_length).fill(null)
                         })
                         
                             //Increment the index
@@ -168,7 +169,7 @@ const FormationSelection = ({navigation}) =>
                 }
             }
            
-            updateLayout({position_data: layoutData,formation_name: positionSelectionData[selectedLayout].layoutName})
+            updateLayout([layoutData, positionSelectionData[selectedLayout].layoutName])
             navigation.navigate('Selection')
         }
     }

@@ -120,8 +120,12 @@ function playerReducer(state = teamState, action)
 }
 const positionsState = {
     position_data: [],
-    formation_name: ''
+    formation_name: '',
+    interval_length: 0,
+    total_intervals: 0,
+    mirror_intervals:false,
 }
+
 
 
 function positionsReducer(state = positionsState, action)
@@ -141,8 +145,13 @@ function positionsReducer(state = positionsState, action)
             return {...state, position_data: state.position_data.map((content) => content.position_id === action.payload[0] ? {...content, position_interval_width:action.payload[1]}:content)}
         
         case UPLOAD_LAYOUT:
-            return{...state,position_data: action.payload.position_data, formation_name: action.payload.formation_name}
-
+            return{...state,position_data: action.payload[0], formation_name: action.payload[1]}
+        case SHOULD_MIRROR_INTERVALS:
+            return{...state, mirror_intervals: action.payload}
+        case UPDATE_INTERVAL_LENGTH:
+                return{...state,interval_length:action.payload}
+        case UPDATE_TOTAL_INTERVALS:
+                return{...state,total_intervals:action.payload}
         default:
             return state;
     }
@@ -150,11 +159,10 @@ function positionsReducer(state = positionsState, action)
 
 const generalState = {
     game_data: [],
-    interval_length: 0,
-    total_intervals: 0,
+    
     current_interval: 1,
     team_name: '',
-    mirror_intervals:false,
+   
     current_team_index:0
 }
 
@@ -169,14 +177,10 @@ function generalReducer(state = generalState, action)
             return{...state, current_interval: action.payload}
         case UPDATE_TEAM_NAME:
             return{...state,team_name:action.payload}
-        case UPDATE_INTERVAL_LENGTH:
-            return{...state,interval_length:action.payload}
-        case UPDATE_TOTAL_INTERVALS:
-            return{...state,total_intervals:action.payload}
+       
         case LOAD_GAME_DATA:
             return{...state, game_data: action.payload.game_data, interval_length: action.payload.interval_length, total_intervals: action.payload.total_intervals,team_name:action.payload.team_name, mirror_intervals: action.payload.mirror_intervals}
-        case SHOULD_MIRROR_INTERVALS:
-            return{...state, mirror_intervals: action.payload}
+       
         default:
             return state;
     }

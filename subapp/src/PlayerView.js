@@ -20,7 +20,7 @@ import generateSchedule from './schedule auto generation/generateSchedule.js';
 const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index) => {
   
 
-  
+ 
   //Fetch the vars relavent to the player
   const playerId = item.id;
   const playerName = item.name;
@@ -155,11 +155,12 @@ function PlayerView({navigation }) {
   const removePlayer = player_index => dispatch(remove_player(player_index))
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
-  
-  
-  const current_team_index = useSelector(state => state.generalReducer).current_team_index
-  const current_player_index = teamState.team_data[current_team_index].team_player_data.team_player_index
   console.log(teamState)
+  
+  const current_team_index = teamState.team_data.findIndex(item => item.team_id == useSelector(state => state.generalReducer).current_team_index)
+  
+  const current_player_index = teamState.team_data[current_team_index].team_player_data.team_player_index
+ 
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
   const positionSelectionData = []

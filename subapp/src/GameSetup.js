@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch } from "react-native";
-
+import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
@@ -19,21 +19,32 @@ const GameSetup = ({navigation}) =>
     const currentTeamIndex = useSelector(state => state.teamReducer).team_index
     //Setup hooks
     const [name,setName] = useState(null)
-    const [intervals,setIntervals] = useState(null)
-    const [intervalW,setIntervalW] = useState(null)
+    const [intervals,setIntervals] = useState(4)
+    const [intervalW,setIntervalW] = useState(5)
     const [canAddTeam,setCanAddTeam] = useState(false)
-
+    const [leavingPage,setLeavingPage] = useState(false)
+    
+  
     useEffect(() => {
-        if(canAddTeam)
+        
+        if(canAddTeam && !leavingPage)
         {
+
            
             createTeam({team_id: currentTeamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0}})
             incrementTeamIndex(1)
             setCanAddTeam(false)
-            navigation.navigate('Formation')
+            setLeavingPage(true)
+            
             
         }
     },[canAddTeam])
+
+
+    useFocusEffect(()=>{
+        console.log('l')
+        setLeavingPage(false)
+    })
 
     function saveSettings()
     {
@@ -59,7 +70,11 @@ const GameSetup = ({navigation}) =>
             updateTeamName(name)
             updateIntervalLength(intervalW)
             updateTotalIntervals(intervals)
-            if (!canAddTeam) setCanAddTeam(true)
+            if (!canAddTeam && !leavingPage) 
+            {
+                setCanAddTeam(true) 
+                navigation.navigate('Formation')
+            }
 
 
         }

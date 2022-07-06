@@ -12,19 +12,22 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,generalData,assignNameColor) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval) =>
 {
- 
+
+  
+  
     //Set up vars specific to each variable
     const positionName = item.position_inititals
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
     const positionIntervalWidth = item.position_interval_width
-    const pickerSelectData = playerData.player_data.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
-    const intervalLength = generalData.interval_length
-    const currentInterval = generalData.current_interval
+    const pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
+    const intervalLength = positionsData.interval_length
+    
+    
   
-    const totalIntervals = generalData.total_intervals
+    const totalIntervals = positionsData.total_intervals
     
   
     const dragStart = (drag) => {
@@ -278,6 +281,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
 
   return(
   <GestureHandlerRootView    style = {styles.sliderBarContainer}>
+ 
     {/* Text for position */}
     <View style = {{justifyContent:'center',width:70,textAlign:'center',alignItems:'center'}}>
     <Text style = {styles.position_font}>{positionName}</Text>
@@ -349,10 +353,11 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         
         
         {/* Layer that handles the picker selects */}
-        {positionTimeline.map((prop,i) => {      
+        {positionTimeline.map((prop,i) => {   
+           
           if(i >= (currentInterval-1)*intervalLength && i < ((currentInterval)*intervalLength) )
           {
-
+           
             
             return(
                 <AddPlayer pickerSelectData ={pickerSelectData}
