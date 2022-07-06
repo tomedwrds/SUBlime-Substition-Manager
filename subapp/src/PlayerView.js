@@ -17,7 +17,7 @@ import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
 
 
-const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState) => {
+const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index) => {
   
 
   
@@ -41,7 +41,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
         },
         { 
           text: "Confirm", 
-          onPress: () => removePlayer(playerId)
+          onPress: () => removePlayer([current_team_index,playerId])
          
         }
       ]
@@ -70,7 +70,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
     if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
     {
       //Add the position to the player in the store
-      addPositionToPlayer([playerId,playerSelectedPos])
+      addPositionToPlayer([current_team_index,playerId,playerSelectedPos])
     }
 
   }
@@ -79,7 +79,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
   function deletePosition(chip) 
   {
     //Remove the chip from the player
-    removePositionFromPlayer([playerId,chip])
+    removePositionFromPlayer([current_team_index,playerId,chip])
   }
   
   
@@ -93,14 +93,14 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
         style = {styles.playerTextInput}
         placeholder={playerName != '' ? playerName:'Player Name'}
         placeholderTextColor= {playerName != '' ? 'black':"grey"} 
-        onEndEditing={(data)=>(updateName([playerId,data.nativeEvent.text]))}
+        onEndEditing={(data)=>(updateName([current_team_index,playerId,data.nativeEvent.text]))}
       />
 
       {/*Select postion bar*/}
       <View style ={styles.playerPositionSelector}>
         
         <RNPickerSelect 
-          onValueChange={(value) => { updateSelectedPos([playerId,value])}}
+          onValueChange={(value) => { updateSelectedPos([current_team_index,playerId,value])}}
           placeholder={{ label: 'Add positions', value: null }}
           style = {pickerSelectStyles}
           items = {positionSelectionData}
@@ -149,12 +149,17 @@ function PlayerView({navigation }) {
   const createPlayer = player_data => dispatch(create_player(player_data))
   const playerState = useSelector(state => state.playerReducer);
   const positionState = useSelector(state => state.positionsReducer);
+  const teamState = useSelector(state => state.teamReducer);
   const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
   const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
   const removePlayer = player_index => dispatch(remove_player(player_index))
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
-  const incrementPlayerIndex= amount => dispatch(increment_player_index(amount))
+  
+  
+  const current_team_index = useSelector(state => state.generalReducer).current_team_index
+  const current_player_index = teamState.team_data[current_team_index].team_player_data.team_player_index
+  console.log(teamState)
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
   const positionSelectionData = []
@@ -179,14 +184,14 @@ function PlayerView({navigation }) {
        // Your useEffect code here to be run on update
     if(canAddPlayer)
 
-   { createPlayer({
-      id: playerState.player_index,
+   { createPlayer([current_team_index,{
+      id: current_player_index,
       name: '',
       positions: [],
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null
-    })
-    incrementPlayerIndex(1)
+    }])
+    
     setCanAddPlayer(false)
   }
   
@@ -237,8 +242,8 @@ function PlayerView({navigation }) {
 
       <FlatList
      
-        data={playerState.player_data}
-        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState)}
+        data={teamState.team_data[current_team_index].team_player_data.team_players}
+        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index)}
         keyExtractor={item => item.id}
       />
       

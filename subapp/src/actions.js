@@ -194,3 +194,22 @@ export const should_mirror_intervals = data => dispatch => {
     payload: data
   });
 }
+
+export const CREATE_TEAM = 'CREATE_TEAM';
+
+export const create_team = team_data => dispatch => {
+  dispatch({
+    type: CREATE_TEAM,
+    payload: team_data
+  });
+}
+
+export const INCREMENT_TEAM_INDEX = 'INCREMENT_TEAM_INDEX';
+
+export const increment_team_index = data => dispatch => {
+  dispatch({
+    type: INCREMENT_TEAM_INDEX,
+    payload: data
+  });
+}
+  

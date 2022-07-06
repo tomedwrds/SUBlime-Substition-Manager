@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
-import { should_mirror_intervals, update_interval_length, update_team_name, update_total_intervals } from "./actions";
+import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals } from "./actions";
 const GameSetup = ({navigation}) => 
 {
     //Setup redux
@@ -13,12 +13,27 @@ const GameSetup = ({navigation}) =>
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
+    const createTeam = team_data => dispatch(create_team(team_data))
+    const incrementTeamIndex = data => dispatch(increment_team_index(data))
     const mirror = useSelector(state => state.generalReducer).mirror_intervals
+    const currentTeamIndex = useSelector(state => state.teamReducer).team_index
     //Setup hooks
     const [name,setName] = useState(null)
     const [intervals,setIntervals] = useState(null)
     const [intervalW,setIntervalW] = useState(null)
-    
+    const [canAddTeam,setCanAddTeam] = useState(false)
+
+    useEffect(() => {
+        if(canAddTeam)
+        {
+           
+            createTeam({team_id: currentTeamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0}})
+            incrementTeamIndex(1)
+            setCanAddTeam(false)
+            navigation.navigate('Formation')
+            
+        }
+    },[canAddTeam])
 
     function saveSettings()
     {
@@ -26,6 +41,7 @@ const GameSetup = ({navigation}) =>
         if(name == null || intervals == null || intervalW == null)
         {
            
+            
             Alert.alert(
                 "Error",
                 "Selection not complete",
@@ -43,7 +59,9 @@ const GameSetup = ({navigation}) =>
             updateTeamName(name)
             updateIntervalLength(intervalW)
             updateTotalIntervals(intervals)
-            navigation.navigate('Formation')
+            if (!canAddTeam) setCanAddTeam(true)
+
+
         }
     }
 
