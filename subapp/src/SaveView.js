@@ -15,14 +15,14 @@ function SaveView ({item},loadData,deleteSaveData)
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
-                <Text style = {styles.titleText}>{item.save_name}</Text>
-                <Text style = {styles.subText} >Formation: {item.save_positionsData.formation_name}</Text>
-                <Text style = {styles.subText} >{format_time()}</Text>
+                <Text style = {styles.titleText}>{item.team_name}</Text>
+                <Text style = {styles.subText} >Formation: {/*item.save_positionsData.formation_name*/}</Text>
+                <Text style = {styles.subText} >{'Time Placeholder'}</Text>
             </View>
             <View style = {styles.iconContainer}>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{loadData(item.save_id)}}
+                    onPress = {()=>{loadData(item.team_id)}}
                     >
                     <Icon 
                         name='check' 
@@ -32,7 +32,7 @@ function SaveView ({item},loadData,deleteSaveData)
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{deleteSaveData(item.save_id)}}
+                    onPress = {()=>{deleteSaveData(item.team_id)}}
                     >
                     <Icon 
                         name='trash' 

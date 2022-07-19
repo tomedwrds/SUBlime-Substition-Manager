@@ -20,7 +20,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import HomeScreen from './src/HomeScreen';
 import LoadSave from './src/LoadSave';
 import GameSetup from './src/GameSetup';
-
+import TeamOverview from './src/TeamOverview';
+import ScheduleSetup from './src/ScheduleSetup';
 
 
 const AppWrapper = () => {
@@ -52,9 +53,10 @@ const App = () => {
         <Stack.Screen name= 'GameSetup' component={GameSetup} />
         <Stack.Screen name= 'LoadSave' component={LoadSave} />
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
-        <Stack.Screen name= 'Selection' component={PlayerView}/>
+        <Stack.Screen name= 'TeamOverview' component={TeamOverview}/>
         <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
         <Stack.Screen name= 'Game' component={InGame}/>
+        <Stack.Screen name= 'ScheduleSetup' component={ScheduleSetup}/>
         
       </Stack.Navigator>
     </NavigationContainer>

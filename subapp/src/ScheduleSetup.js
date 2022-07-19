@@ -5,56 +5,31 @@ import { ScrollView } from "react-native-gesture-handler";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index } from "./actions";
-const GameSetup = ({navigation}) => 
+const ScheduleSetup = ({navigation}) => 
 {
     //Setup redux
     const dispatch = useDispatch()
-    const updateTeamName = name =>                  dispatch(update_team_name(name))
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
-    const createTeam = team_data => dispatch(create_team(team_data))
-    const incrementTeamIndex = data => dispatch(increment_team_index(data))
+   
     const mirror = useSelector(state => state.generalReducer).mirror_intervals
-    const teamIndex = useSelector(state => state.teamReducer).team_index
+  
 
-    const updateCurrentTeamIndex = index => dispatch(update_current_team_index(index))
+  
 
     //Setup hooks
-    const [name,setName] = useState(null)
-    const [intervals,setIntervals] = useState(4)
-    const [intervalW,setIntervalW] = useState(5)
-    const [canAddTeam,setCanAddTeam] = useState(false)
-    const [leavingPage,setLeavingPage] = useState(false)
+    const [intervals,setIntervals] = useState(null)
+    const [intervalW,setIntervalW] = useState(null)
+    
     
   
-    useEffect(() => {
-        
-        if(canAddTeam && !leavingPage)
-        {
-
-           
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0}})
-            updateCurrentTeamIndex(teamIndex)
-            incrementTeamIndex(1)
-
-            setCanAddTeam(false)
-            setLeavingPage(true)
-            navigation.navigate('TeamOverview')
-            
-        }
-    },[canAddTeam])
-
-
-    useFocusEffect(()=>{
-       
-        setLeavingPage(false)
-    })
+  
 
     function saveSettings()
     {
         //Check if names have been changed
-        if(name == null /*|| intervals == null || intervalW == null*/)
+        if(intervals == null || intervalW == null)
         {
            
             
@@ -72,15 +47,9 @@ const GameSetup = ({navigation}) =>
         }
         else
         {
-            updateTeamName(name)
-            // updateIntervalLength(intervalW)
-            // updateTotalIntervals(intervals)
-            if (!canAddTeam && !leavingPage) 
-            {
-                setCanAddTeam(true) 
-                
-                
-            }
+            updateIntervalLength(intervalW)
+            updateTotalIntervals(intervals)
+            navigation.navigate('Formation')
 
 
         }
@@ -93,7 +62,7 @@ const GameSetup = ({navigation}) =>
     return(
         <View style = {styles.container}>
             <View style = {styles.header}>
-                <Text style = {{fontSize:40,marginBottom:20}}>Game Setup 🤓</Text>
+                <Text style = {{fontSize:40,marginBottom:20}}>Schedule Setup 🤓</Text>
                 <Pressable 
                     onPress={()=>{saveSettings()}}
                     style = {{flex:1,alignItems:'flex-end'}}>
@@ -101,20 +70,8 @@ const GameSetup = ({navigation}) =>
                 </Pressable>
             </View>
             <ScrollView >
-                <Text style = {{fontSize:28}}>Team Information</Text>
-                <View style = {styles.inputArea}>
-                    <View style ={styles.subTextView} >
-                        <Text style = {styles.fieldTitle}>Team Name</Text>
-                    </View>
-                    <TextInput 
-                        placeholderTextColor={'#bfbbbb'} 
-                        style = {{backgroundColor:'#ebebeb',borderRadius:9,fontSize:24,padding:12,width:450,textAlign:'center'}}
-                      
-                        onChangeText={(value)=>setName(value)}
-                        />
-                    
-                </View>
-                {/* <Text style = {{fontSize:28}}>Game Settings</Text>
+                
+                <Text style = {{fontSize:28}}>Game Settings</Text>
                 <View style = {styles.inputArea}>
                     <View style ={styles.subTextView} >
                         <Text style = {styles.fieldTitle}>Total Intervals</Text>
@@ -150,7 +107,7 @@ const GameSetup = ({navigation}) =>
                         value = {mirror}
                         onValueChange={()=>{shouldMirrorIntervals(!mirror)}}
                     />
-                </View> */}
+                </View> 
             </ScrollView>
         </View>
     )
@@ -233,4 +190,4 @@ const pickerSelectStyles = StyleSheet.create({
     }
   });
 
-export default (GameSetup)
+export default (ScheduleSetup)

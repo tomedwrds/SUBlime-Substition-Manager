@@ -3,7 +3,8 @@ import { useDispatch,useSelector } from "react-redux";
 import { View,Text,FlatList,SafeAreaView } from "react-native";
 
 import SaveView from "./SaveView";
-import { create_game_data, delete_save_data,update_current_interval,update_team_name,update_total_intervals,upload_player_data,update_layout, load_game_data } from "./actions";
+import { create_game_data, delete_save_data,update_current_interval,update_team_name,update_total_intervals,upload_player_data,update_layout, load_game_data, update_current_team_index } from "./actions";
+import { findNonSerializableValue } from "@reduxjs/toolkit";
 const LoadSave = ({navigation}) => 
 {
     const dispatch = useDispatch()
@@ -12,21 +13,20 @@ const LoadSave = ({navigation}) =>
     
     const uploadPlayerData = data => dispatch(upload_player_data(data))
     const savedState = useSelector(state => state.savedReducer);
-    const playerState = useSelector(state => state.playerReducer);
     
+    const teamData = useSelector(state => state.teamReducer).team_data
+    
+    const updateCurrentTeamIndex = index => dispatch(update_current_team_index(index))
     const uploadLayout = layout_data => dispatch(update_layout(layout_data))
     const loadGameData = data => dispatch(load_game_data(data))
     
     function loadData(i)
     {
-        let adjusted_index = savedState.save_data.findIndex(item => item.save_id == i)
-      
-        //Update the player data
-        uploadPlayerData(savedState.save_data[adjusted_index].save_playerData)
-        uploadLayout(savedState.save_data[adjusted_index].save_positionsData)
-        loadGameData(savedState.save_data[adjusted_index].save_generalData)
+       
         //Load the page that the sliders is on
-        navigation.replace('Selection')
+        
+        updateCurrentTeamIndex(i)
+        navigation.replace('TeamOverview')
     }
 
     
@@ -34,11 +34,11 @@ const LoadSave = ({navigation}) =>
     return(
         <View style = {{margin:20}}>
             <View>
-                <Text style = {{fontSize:40}}>Saved Schedules 💾</Text>
+                <Text style = {{fontSize:40}}>Saved Teams 💾</Text>
             </View>
                 <FlatList
-                data = {savedState.save_data}
-                keyExtractor = {item => item.save_id}
+                data = {teamData}
+                keyExtractor = {item => item.team_id}
                 renderItem = {(item)=>SaveView(item,loadData,deleteSaveData)}
                 ></FlatList>
         </View>

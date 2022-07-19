@@ -213,3 +213,13 @@ export const increment_team_index = data => dispatch => {
   });
 }
   
+
+export const UPDATE_CURRENT_TEAM_INDEX = 'UPDATE_CURRENT_TEAM_INDEX';
+
+export const update_current_team_index = index => dispatch => {
+  dispatch({
+    type: UPDATE_CURRENT_TEAM_INDEX,
+    payload: index
+  });
+}
+  

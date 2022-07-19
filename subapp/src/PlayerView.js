@@ -150,16 +150,20 @@ function PlayerView({navigation }) {
   const playerState = useSelector(state => state.playerReducer);
   const positionState = useSelector(state => state.positionsReducer);
   const teamState = useSelector(state => state.teamReducer);
+  const generalState = useSelector(state => state.generalReducer);
   const addPositionToPlayer = position_and_index => dispatch(add_position(position_and_index))
   const removePositionFromPlayer = position_and_index => dispatch(remove_position(position_and_index))
   const removePlayer = player_index => dispatch(remove_player(player_index))
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
-  console.log(teamState)
   
-  const current_team_index = teamState.team_data.findIndex(item => item.team_id == useSelector(state => state.generalReducer).current_team_index)
-  
-  const current_player_index = teamState.team_data[current_team_index].team_player_data.team_player_index
+  const current_team_index = useSelector(state => state.generalReducer).current_team_index
+
+
+  //Used to account for deletion of certain items when going on index
+  const team_index = teamState.team_data.findIndex(item => item.team_id == current_team_index)
+ 
+  const current_player_index = teamState.team_data[team_index].team_player_data.team_player_index
  
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
@@ -185,7 +189,7 @@ function PlayerView({navigation }) {
        // Your useEffect code here to be run on update
     if(canAddPlayer)
 
-   { createPlayer([current_team_index,{
+   { createPlayer([team_index,{
       id: current_player_index,
       name: '',
       positions: [],
@@ -226,16 +230,7 @@ function PlayerView({navigation }) {
               color = '#0BD61F'
             />
         </Pressable>
-        <Pressable 
-          style = {{paddingHorizontal:10}}
-          onPress = {()=>navigation.navigate('Sliders')/*generateSchedule(positionState.position_data,playerState.player_data,)*/}
-          >
-            <Icon 
-              name='check' 
-              size = {50} 
-              color = '#0BD61F'
-            />
-        </Pressable>
+       
       </View>
      </View>
     
@@ -243,8 +238,8 @@ function PlayerView({navigation }) {
 
       <FlatList
      
-        data={teamState.team_data[current_team_index].team_player_data.team_players}
-        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index)}
+        data={teamState.team_data[team_index].team_player_data.team_players}
+        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,team_index)}
         keyExtractor={item => item.id}
       />
       
