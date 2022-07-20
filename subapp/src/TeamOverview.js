@@ -14,8 +14,9 @@ const TeamOverview = () => {
         <Tab.Navigator
             
         >
-            <Tab.Screen name="Players" component = {PlayerView}  />
+            
             <Tab.Screen name="Schedules" component = {SelectSchedule}  />
+            <Tab.Screen name="Players" component = {PlayerView}  />
             <Tab.Screen name="Playtime" component = {TimeOverview}  />
             
         </Tab.Navigator>
