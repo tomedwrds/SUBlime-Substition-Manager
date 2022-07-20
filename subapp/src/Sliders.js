@@ -32,7 +32,7 @@ const PlayerSlider = ({navigation}) =>
   const current_schedule_index = teamData.team_data[current_team_index].team_schedule_data.team_schedule_index
   
   const playerData = teamData.team_data[current_team_index].team_player_data.team_players
-  console.log(positionsData)
+  
   const dispatch = useDispatch()
   const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,positionsData.mirror_intervals,positionsData.interval_length]))
   const createGameData = sub_data => dispatch(create_game_data(sub_data))

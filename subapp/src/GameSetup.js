@@ -31,7 +31,7 @@ const GameSetup = ({navigation}) =>
         {
 
            
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0}})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:'undefined'})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -118,7 +118,7 @@ const GameSetup = ({navigation}) =>
                     </View>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
-                        onValueChange={(value)=>{setIntervals(value)}}
+                        onValueChange={(value)=>{}}
                         items ={[{label:'Hockey', value:'Hockey'}]}
                         placeholder = {{label:'',value:null}}
                        

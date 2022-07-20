@@ -2,14 +2,14 @@ import React from "react";
 import { Text,View,SafeAreaView,StyleSheet,Pressable,FlatList } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector,useDispatch } from "react-redux";
-import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
+import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals, delete_game } from "./actions";
 
 const GameHistory = ({navigation}) => {
     const dispatch = useDispatch()
     const teamData = useSelector(state => state.teamReducer);
     const generalData = useSelector(state =>state.generalReducer)
     const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
-    const deleteSchedule = index => dispatch(delete_schedule(index))
+    const deleteGame = index => dispatch(delete_game(index))
     const gameData = teamData.team_data[current_team_index].team_game_data.team_games
  
     
@@ -25,14 +25,14 @@ const GameHistory = ({navigation}) => {
         <FlatList
             data = {gameData}
             keyExtractor = {item => item.game_id}
-            renderItem = {(item)=>SaveView(item,deleteSchedule, current_team_index)}
+            renderItem = {(item)=>SaveView(item,deleteGame, current_team_index)}
             ></FlatList>
             </SafeAreaView>
     
     )
 }
 
-function SaveView ({item},deleteSchedule,current_team_index) 
+function SaveView ({item},deleteGame,current_team_index) 
 {
     function format_time()
     {
@@ -54,7 +54,7 @@ function SaveView ({item},deleteSchedule,current_team_index)
                 
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{deleteSchedule([current_team_index,item.schedule_id])}}
+                    onPress = {()=>{console.log(current_team_index);deleteGame([current_team_index,item.game_id])}}
                     >
                     <Icon 
                         name='trash' 

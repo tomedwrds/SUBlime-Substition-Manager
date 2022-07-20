@@ -250,6 +250,15 @@ export const delete_schedule = index => dispatch => {
     payload: index
   });
 }
+
+export const DELETE_GAME = 'DELETE_GAME';
+
+export const delete_game = index => dispatch => {
+  dispatch({
+    type: DELETE_GAME,
+    payload: index
+  });
+}
   
 
 export const UPDATE_FORMATION_NAME = 'UPDATE_FORMATION_NAME';
@@ -261,3 +270,4 @@ export const update_formation_name = name => dispatch => {
   });
 }
   
+
