@@ -45,7 +45,7 @@ function InGame()
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
     const countdown = true
-    
+    console.log(teamData.team_data[team_index].team_game_data)
     //code ripped from a website and it works
     useEffect(() => {
         if(timerActive)

@@ -6,7 +6,7 @@ import {Pressable,View,FlatList,Alert,StyleSheet,Text,Modal,TextInput} from 'rea
 
 
 import { useSelector, useDispatch, } from 'react-redux'
-import { add_save_data, create_game_data, increment_save_index, save_schedule, update_current_interval, update_interval_width, update_position, } from './actions';
+import { add_save_data, create_game_data, increment_save_index, save_game, save_schedule, update_current_interval, update_interval_width, update_position, } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -41,6 +41,7 @@ const PlayerSlider = ({navigation}) =>
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
   const saveSchedule = data => dispatch(save_schedule(data))
+  const saveGame = data => dispatch(save_game(data))
   const current_interval = generalData.current_interval
 
  
@@ -119,6 +120,40 @@ const PlayerSlider = ({navigation}) =>
       createGameData(subData)
       updateCurrentInterval(1)
       setCanAddPlayer(true)
+
+      //Add the game data to the game history
+
+      //Get the id of all players in the team and put in the list index 0 id index 1 frequency of player
+      const team_data = teamData.team_data[current_team_index].team_player_data.team_players
+      let timeData = []
+      for(let k = 0; k < team_data.length; k++ )
+      {
+          timeData.push([team_data[k].id,0])
+      }
+
+
+      //generate the time data
+      
+      for(let position = 0; position < positionsData.position_data.length; position ++)
+      {
+          for(let minute = 0; minute < positionsData.position_data[position].position_timeline.length;minute++)
+          {
+              let player = positionsData.position_data[position].position_timeline[minute]
+              
+              if (player != null)
+              {
+                  let indexToAddTime = timeData.findIndex(item => item[0] == player)
+                  
+                  if (indexToAddTime != -1)
+                  {
+                      timeData[player][1] +=1
+                  }
+              }
+          }
+      }
+      const current_game_index = teamData.team_data[current_team_index].team_game_data.team_game_index
+      saveGame([current_team_index,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
+
       navigation.navigate('Game')
     }
   }
@@ -152,7 +187,7 @@ const PlayerSlider = ({navigation}) =>
       
     <SafeAreaView>
     
-    <Modal
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
