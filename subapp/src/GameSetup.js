@@ -20,8 +20,7 @@ const GameSetup = ({navigation}) =>
 
     //Setup hooks
     const [name,setName] = useState(null)
-    const [intervals,setIntervals] = useState(4)
-    const [intervalW,setIntervalW] = useState(5)
+ 
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
     
@@ -32,7 +31,7 @@ const GameSetup = ({navigation}) =>
         {
 
            
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0}})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0}})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -111,6 +110,20 @@ const GameSetup = ({navigation}) =>
                         onChangeText={(value)=>setName(value)}
                         />
                     
+                </View>
+                <View style = {styles.inputArea}>
+                    <View style ={styles.subTextView} >
+                        <Text style = {styles.fieldTitle}>Sport</Text>
+                        
+                    </View>
+                    <RNPickerSelect
+                        style = {pickerSelectStyles}
+                        onValueChange={(value)=>{setIntervals(value)}}
+                        items ={[{label:'Hockey', value:'Hockey'}]}
+                        placeholder = {{label:'',value:null}}
+                       
+                        />
+                        
                 </View>
                 {/* <Text style = {{fontSize:28}}>Game Settings</Text>
                 <View style = {styles.inputArea}>

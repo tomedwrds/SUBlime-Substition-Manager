@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,UPDATE_FORMATION_NAME,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX, SAVE_SCHEDULE, DELETE_SCHEDULE} from './actions.js';
+import {CREATE_PLAYER,SAVE_GAME,UPDATE_FORMATION_NAME,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX, SAVE_SCHEDULE, DELETE_SCHEDULE} from './actions.js';
 
 import { combineReducers } from 'redux';
 
@@ -87,6 +87,14 @@ function teamReducer(state = teamState, action)
             return {...state,team_data: 
                 state.team_data.map(
                 (content,i) => content.team_id === action.payload[0] ? {...content, team_schedule_data: {team_schedule_index: content.team_schedule_data.team_schedule_index+1,team_schedules:[...state.team_data[i].team_schedule_data.team_schedules,action.payload[1]]}
+                    }
+                : content
+            )};
+        case SAVE_GAME:
+        
+            return {...state,team_data: 
+                state.team_data.map(
+                (content,i) => content.team_id === action.payload[0] ? {...content, team_game_data: {team_game_index: content.team_game_data.team_game_index+1,team_games:[...state.team_data[i].team_game_data.team_games,action.payload[1]]}
                     }
                 : content
             )};

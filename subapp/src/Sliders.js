@@ -2,7 +2,7 @@
 
 import 'react-native-gesture-handler';
 import React, { useState,useEffect, useLayoutEffect } from 'react';
-import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
+import {Pressable,View,FlatList,Alert,StyleSheet,Text,Modal,TextInput} from 'react-native'
 
 
 import { useSelector, useDispatch, } from 'react-redux'
@@ -49,7 +49,8 @@ const PlayerSlider = ({navigation}) =>
   const [startTile, setStartTile] = useState(null)
   const [dragBar, setDragBar] = useState([null,null,null,null])
   const [canAddPlayer,setCanAddPlayer] = useState(false)
-
+  const [modalVisible,setModalVisible] = useState(false)
+  const [otherTeamName, setOtherTeamName] = useState('')
   function selectionComplete ()
   {
     //Check if there is any gaps in the game schedule
@@ -151,7 +152,41 @@ const PlayerSlider = ({navigation}) =>
       
     <SafeAreaView>
     
-    
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={{fontSize:32}}>Final Steps</Text>
+            <TextInput
+            style = {{fontSize:24,borderWidth:2,borderRadius:9,padding:8,marginVertical:20,width:300,textAlign:'center'}}
+              placeholder='Enter Opponents Name'
+              onChangeText={(value)=>{setOtherTeamName(value)}}
+            />
+            <View style = {{flexDirection:'row'}}>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Go Back</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {if(otherTeamName!= '') {setModalVisible(!modalVisible); selectionComplete()}}}
+            >
+              <Text style={styles.textStyle}>Begin Match</Text>
+            </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      
       <View style = {{...styles.header, alignItems:'center'}}>
       <Text style ={{fontSize:40}}>Game Overview🏑</Text>
       
@@ -165,7 +200,7 @@ const PlayerSlider = ({navigation}) =>
               <Text style = {{fontSize:50}}>💾</Text>
           </Pressable> 
           <Pressable 
-            onPress = {()=>selectionComplete()}
+            onPress = {()=>setModalVisible(true)}
             
             >
              <Text style = {{fontSize:50}}>✅</Text>
@@ -268,7 +303,37 @@ const styles = StyleSheet.create({
     
     
    
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  
+  button: {
+    borderRadius: 9,
+    padding: 10,
+    elevation: 2,
+    borderWidth:2,
+    marginHorizontal:10
+  },
+  
 })
   
 const pickerSelectStyles = StyleSheet.create({

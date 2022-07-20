@@ -232,6 +232,15 @@ export const save_schedule = data => dispatch => {
     payload: data
   });
 }
+
+export const SAVE_GAME = 'SAVE_GAME';
+
+export const save_game = data => dispatch => {
+  dispatch({
+    type: SAVE_GAME,
+    payload: data
+  });
+}
   
 export const DELETE_SCHEDULE = 'DELETE_SCHEDULE';
 
