@@ -11,7 +11,9 @@ const Tab = createBottomTabNavigator()
 
 const TeamOverview = () => {
     return(
-        <Tab.Navigator>
+        <Tab.Navigator
+            
+        >
             <Tab.Screen name="Players" component = {PlayerView}  />
             <Tab.Screen name="Schedules" component = {SelectSchedule}  />
             <Tab.Screen name="Playtime" component = {TimeOverview}  />

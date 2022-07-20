@@ -23,10 +23,11 @@ const PlayerSlider = ({navigation}) =>
 {
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
-  const generalData = useSelector(state => state.generalReducer);
-  console.log(positionsData)
+  
+  
   const savedData = useSelector(state => state.savedReducer);
   const teamData = useSelector(state => state.teamReducer);
+  const generalData = useSelector(state => state.generalReducer);
   const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
   const current_schedule_index = teamData.team_data[current_team_index].team_schedule_data.team_schedule_index
   
@@ -172,18 +173,7 @@ const PlayerSlider = ({navigation}) =>
       </View>
       
       <View style = {styles.belowArea}>
-        <Text style = {{fontSize:20}}>View</Text>
-        <View style = {{alignItems:'center'}}>
-          <RNPickerSelect
-              onValueChange={(value) => console.log(value)}
-              items={[
-                  { label: 'Player', value: 'football' },
-                  { label: 'Time', value: 'baseball' },              
-              ]}
-              placeholder={{label:'Positions',value:'1'}}
-              style = {pickerSelectStyles}
-          />
-        </View>
+        
         
         <View style = {styles.intervalSelectionContainer}>
         <Text style = {{fontSize:20}}>Interval</Text>  
@@ -244,7 +234,7 @@ const styles = StyleSheet.create({
   },
   intervalSelectionContainer: {
     flexDirection:'row',
-    justifyContent:'flex-end',
+    
     flex:1,
     marginRight: 20,
     alignItems:'center'
