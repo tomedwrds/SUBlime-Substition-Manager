@@ -4,20 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SaveView ({item},loadData,deleteSaveData) 
 {
-    function format_time()
-    {
-        let time = item.save_date
-        const options = { hour:'numeric',minute:'numeric', year: 'numeric', month: 'long', day: 'numeric' };
-        return time.toLocaleDateString('en-NZ',options)
-    }
-  
-   
+    
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
                 <Text style = {styles.titleText}>{item.team_name}</Text>
-                <Text style = {styles.subText} >Formation: {/*item.save_positionsData.formation_name*/}</Text>
-                <Text style = {styles.subText} >{'Time Placeholder'}</Text>
+               
             </View>
             <View style = {styles.iconContainer}>
                 <Pressable 
@@ -69,6 +61,12 @@ const styles = StyleSheet.create({
     },
     subText: {
         color: 'darkgray'
+    },
+    textContainer:{
+       
+      
+        justifyContent:'center'
+       
     }
 })
 

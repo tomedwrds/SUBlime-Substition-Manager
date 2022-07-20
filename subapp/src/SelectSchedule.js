@@ -1,5 +1,5 @@
 import React from "react";
-import { Text,View,StyleSheet,Pressable,FlatList } from "react-native";
+import { Text,View,SafeAreaView,StyleSheet,Pressable,FlatList } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector,useDispatch } from "react-redux";
 import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
@@ -31,15 +31,26 @@ const SelectSchedule = ({navigation}) => {
 
 
     return(
-        <View>
-        <Pressable style = {{padding:20,backgroundColor:'red'}} onPress = {()=>navigation.navigate('ScheduleSetup')}><Text>New Schedule</Text></Pressable>
-        <View style = {{margin:20}}>
+        <SafeAreaView style = {styles.container}>
+            <View style = {styles.header}>
+                
+                <Text style = {{fontSize:40}}>Schedule Selection</Text>
+                <View style = {{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
+                    <Pressable onPress = {()=>navigation.navigate('ScheduleSetup')}>
+                        <Icon 
+                                name='plus' 
+                                size = {40} 
+                                color = 'green'
+                            />
+                    </Pressable>
+                </View>
+            </View>
         <FlatList
             data = {scheduleData}
             keyExtractor = {item => item.schedule_id}
             renderItem = {(item)=>SaveView(item,load_schedule,deleteSchedule, current_team_index)}
             ></FlatList>
-            </View></View>
+            </SafeAreaView>
     
     )
 }
@@ -97,6 +108,12 @@ const styles = StyleSheet.create({
         padding:20,
         marginBottom:20
         
+    },
+    header: {
+        flexDirection:'row'
+    },
+    container: {
+        marginHorizontal:20
     },
     iconContainer: {
         flexDirection:'row',

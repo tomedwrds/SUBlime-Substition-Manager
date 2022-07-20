@@ -21,12 +21,21 @@ function InGame()
     const dispatch = useDispatch()
     const positionData = useSelector(state => state.positionsReducer).position_data
     const subData =useSelector(state => state.generalReducer).game_data;
-    const playerData =useSelector(state => state.playerReducer);
+    
+    
+    const teamData =useSelector(state => state.teamReducer);
+    const current_team_index = useSelector(state => state.generalReducer).current_team_index
+
+
+    //Used to account for deletion of certain items when going on index
+    const team_index = teamData.team_data.findIndex(item => item.team_id == current_team_index)
+    const team_data = teamData.team_data[team_index].team_player_data
+    
     const currentInterval =useSelector(state => state.generalReducer).current_interval;
-    const intervalLength = useSelector(state => state.generalReducer).interval_length;
-    const teamName = useSelector(state => state.generalReducer).team_name;
+    const intervalLength = useSelector(state => state.positionsReducer).interval_length;
+    const teamName = teamData.team_data[team_index].team_name
     const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
-    const totalInterval = useSelector(state => state.generalReducer).total_intervals
+    const totalInterval = useSelector(state => state.positionsReducer).total_intervals
     
     useKeepAwake()
     //Set up vars that handle the timer
@@ -97,7 +106,7 @@ function InGame()
       if (player_id != null)
       {
           //Join on the name of the two lists and return the color
-          var join = playerData.player_data.find(player => player.id == player_id)
+          var join = team_data.team_players.find(player => player.id == player_id)
           //0 for name, 1 for color
           return [join.name,join.color]
       }

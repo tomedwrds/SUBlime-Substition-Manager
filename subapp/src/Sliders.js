@@ -117,6 +117,7 @@ const PlayerSlider = ({navigation}) =>
 
       createGameData(subData)
       updateCurrentInterval(1)
+      setCanAddPlayer(true)
       navigation.navigate('Game')
     }
   }

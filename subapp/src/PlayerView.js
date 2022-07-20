@@ -167,20 +167,25 @@ function PlayerView({navigation }) {
  
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
-  const positionSelectionData = []
-  
-  for(let i = 0; i < positionState.position_data.length; i++)
-  {
-    let formattedData = {label: positionState.position_data[i].position_name, value: positionState.position_data[i].position_inititals}
+  const positionSelectionData = [
+    {label: 'Striker', value:'ST'},
+    {label: 'Left Foward', value:'LF'},
+    {label: 'Center Foward', value:'CF'},
+    {label: 'Right Foward', value:'RF'},
+    {label: 'Left Inner', value:'LI'},
+    {label: 'Right Inner', value:'RI'},
+    {label: 'Left Midfield', value:'LM'},
+    {label: 'Center Midfield', value:'CM'},
+    {label: 'Right Midfield', value:'RM'},
+    {label: 'Left Half', value:'LH'},
+    {label: 'Center Half', value:'CH'},
+    {label: 'Right Half', value:'RH'},
+    {label: 'Defender', value:'DF'},
+    {label: 'Left Back', value:'LB'},
+    {label: 'Center Back', value:'CB'},
+    {label: 'Right Back', value:'RB'},
+    {label: 'Goal Keeper', value:'GK'}]
 
-    //Check if element of same name already exists to allow it to be removed
-    if(!positionSelectionData.some(formattedData => formattedData.label == positionState.position_data[i].position_name ))
-    {
-      
-      positionSelectionData.push(formattedData)
-    }
-
-  }
   
   
 

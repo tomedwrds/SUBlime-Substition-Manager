@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PlayerView from "./PlayerView";
 import PlayerSlider from "./Sliders";
 import ScheduleTimeOverview from "./ScheduleTimeOverview";
-import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Tab = createBottomTabNavigator()
 
 
