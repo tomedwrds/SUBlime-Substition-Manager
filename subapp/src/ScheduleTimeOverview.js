@@ -47,6 +47,9 @@ const ScheduleTimeOverview = () => {
             }
         }
     }
+
+
+    //styistitic fix up for odd number of players 
     
     function nameFromIndex (i)
     {
@@ -56,23 +59,40 @@ const ScheduleTimeOverview = () => {
     function TimeTab({item})
     {
         return(
-            <View>
+           
                 <View style = {styles.timeBar}>
-                    <Text>{nameFromIndex(item[0])}</Text>
-                    <Text>{item[1]}</Text>
+                    
+                        <View style = {{flexDirection:'row'}}>
+                        <View style = {styles.nameArea}>
+                            <Text style = {styles.generalText}>{nameFromIndex(item[0])}</Text>
+                        </View>
+                        <View style = {styles.timeArea}>
+                            <Text style = {styles.generalText}>{item[1]}</Text>
+                        </View>
+                        </View>
+                    
+                    
                 </View>
-            </View>
+            
         )
     }
 
     return(
-        <SafeAreaView>
+        <SafeAreaView style = {{flex:1}}>
             <View style = {styles.timeContainer}>
-                <Text style = {styles.titleText}>Playtime Allocation</Text>
+                <View style = {{flexDirection:'row'}}>
+                    <Text style = {styles.titleText}>Playtime Allocation</Text>
+                    <View style = {{justifyContent:'center',alignItems:'flex-end',flex:1}}>
+                        <Text style = {{fontSize:40}}>⏰</Text>
+                    </View>
+                </View>
                 <FlatList
                 data = {timeData}
                 renderItem={item=>TimeTab(item,nameFromIndex)}
                 keyExtractor = {item => item[0]}
+               
+                
+                
                 />
                 
             </View>
@@ -81,15 +101,33 @@ const ScheduleTimeOverview = () => {
 }
 
 const styles = StyleSheet.create({
-    timeContainer: {
-        marginLeft:20
-    },
+    timeContainer:{
+        marginHorizontal:20
+    }
+    ,
     titleText: {
         fontSize: 40
     },
     timeBar: {
-        backgroundColor:'red',
-        flexDirection:'row'
+
+      
+        alignItems:'center',
+        justifyContent:'center',
+        flex:1,
+        height:32,
+        
+       
+    },
+    nameArea: {
+     flex:1   
+    },
+    timeArea:{
+       alignItems:'center',
+       width:50
+    
+    },
+    generalText: {
+        fontSize:28
     }
 })
 export default (ScheduleTimeOverview)
