@@ -45,7 +45,7 @@ function InGame()
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
     const countdown = true
-    console.log(teamData.team_data[team_index].team_game_data)
+    
     //code ripped from a website and it works
     useEffect(() => {
         if(timerActive)
@@ -107,8 +107,16 @@ function InGame()
       {
           //Join on the name of the two lists and return the color
           var join = team_data.team_players.find(player => player.id == player_id)
-          //0 for name, 1 for color
-          return [join.name,join.color]
+          
+          if (join != undefined)
+        {
+            //0 for name, 1 for color
+            return [join.name,join.color]
+        }
+        else
+        {
+            return ['Deleted Player', 'red']
+        }
       }
       else{return[null,null]}
 
