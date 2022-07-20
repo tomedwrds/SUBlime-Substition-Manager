@@ -20,6 +20,7 @@ const GameSetup = ({navigation}) =>
 
     //Setup hooks
     const [name,setName] = useState(null)
+    const [sport,setSport] = useState(null)
  
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
@@ -31,7 +32,7 @@ const GameSetup = ({navigation}) =>
         {
 
            
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:'undefined'})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -51,7 +52,7 @@ const GameSetup = ({navigation}) =>
     function saveSettings()
     {
         //Check if names have been changed
-        if(name == null /*|| intervals == null || intervalW == null*/)
+        if(name == null || sport == null)
         {
            
             
@@ -90,7 +91,7 @@ const GameSetup = ({navigation}) =>
     return(
         <View style = {styles.container}>
             <View style = {styles.header}>
-                <Text style = {{fontSize:40,marginBottom:20}}>Game Setup 🤓</Text>
+                <Text style = {{fontSize:40,marginBottom:20}}>Game Setup</Text>
                 <Pressable 
                     onPress={()=>{saveSettings()}}
                     style = {{flex:1,alignItems:'flex-end'}}>
@@ -118,8 +119,8 @@ const GameSetup = ({navigation}) =>
                     </View>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
-                        onValueChange={(value)=>{}}
-                        items ={[{label:'Hockey', value:'Hockey'}]}
+                        onValueChange={(value)=>{setSport(value)}}
+                        items ={[{label:'7 Aside Hockey', value:'7H'},{label:'11 Aside Hockey',value:'11H'},{label: 'Test', value:'T'}]}
                         placeholder = {{label:'',value:null}}
                        
                         />

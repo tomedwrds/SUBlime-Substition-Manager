@@ -279,7 +279,9 @@ const PlayerSlider = ({navigation}) =>
           initialNumToRender={positionsData.position_data.length} 
           data = {positionsData.position_data} 
           renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval)} 
-          keyExtractor ={item => item.position_id}/>
+          keyExtractor ={item => item.position_id}
+          contentContainerStyle={{paddingBottom:120}}
+          />
     
     </SafeAreaView>
   )

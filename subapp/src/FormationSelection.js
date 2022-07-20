@@ -15,12 +15,17 @@ const FormationSelection = ({navigation}) =>
     const dispatch = useDispatch()
     const positionState = useSelector(state => state.positionsReducer);
     const updateLayout = layout_data => dispatch(update_layout(layout_data))
-
-    //This is the data sets used for the display of the views 
-    const positionSelectionData =   [
+    
+    const teamData = useSelector(state => state.teamReducer);
+    const generalData = useSelector(state => state.generalReducer);
+    const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
+   
+    //This is the data sets used for the display of the formation
+    const positionSelectionDataAll =   [
     
     {   layoutId: 0,
         layoutName: 'The Classic', 
+        layoutSport: '11H',
         layoutData: [
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [['Left Foward','LF'],0,0,0,0,0,['Right Foward','RF']],
@@ -33,6 +38,7 @@ const FormationSelection = ({navigation}) =>
     {
         layoutId:1,
         layoutName: '3-4-3', 
+        layoutSport: '11H',
         layoutData: [
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
@@ -44,7 +50,8 @@ const FormationSelection = ({navigation}) =>
     },
     {
         layoutId:2,
-        layoutName: 'Park the Bus', 
+        layoutName: 'Park the Bus',
+        layoutSport: '11H', 
         layoutData: [
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [0,0,0,0,0,0,0],
@@ -57,6 +64,7 @@ const FormationSelection = ({navigation}) =>
     {
         layoutId:3,
         layoutName: '4-4-2', 
+        layoutSport: '11H',
         layoutData: [
                 [0,0,0,0,0,0,0],
                 [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
@@ -69,6 +77,7 @@ const FormationSelection = ({navigation}) =>
     {
         layoutId:4,
         layoutName: '2-2-2', 
+        layoutSport: '7H',
         layoutData: [
                 [0,0,0,0,0,0,0],
                 [0,0,['Left Foward','LF'],0,['Right Foward','RF'],0,0],
@@ -81,6 +90,7 @@ const FormationSelection = ({navigation}) =>
     {
         layoutId:5,
         layoutName: '3-3', 
+        layoutSport: '7H',
         layoutData: [
                 [0,0,0,0,0,0,0],
                 [0,['Left Foward','LF'],0,['Centre Foward','CF'],0,['Right Foward','RF'],0],
@@ -93,6 +103,7 @@ const FormationSelection = ({navigation}) =>
     {
         layoutId:6,
         layoutName: '7 aside', 
+        layoutSport: '7H',
         layoutData: [
                 [0,0,0,['Striker','ST'],0,0,0],
                 [0,['Striker','ST'],0,0,0,['Striker','ST'],0],
@@ -104,7 +115,8 @@ const FormationSelection = ({navigation}) =>
     },
     {
         layoutId:7,
-        layoutName: 'The test', 
+        layoutName: 'The test',
+        layoutSport: 'T', 
         layoutData: [
                 [0,0,0,0,0,0,0],
                 [0,0,0],
@@ -115,7 +127,27 @@ const FormationSelection = ({navigation}) =>
                 [0,0,0,0,0,0,0]]
     },
 
-]
+]   
+    //Filters to only have formations relavent to sport code
+    let positionSelectionData = positionSelectionDataAll.filter(item => item.layoutSport == teamData.team_data[current_team_index].team_sport)
+    
+    //Place an empty formation in to fill space if odd number
+    if(positionSelectionData.length% 2 == 1)
+    {
+        positionSelectionData.push({
+            layoutId: -1,
+            layoutName: '', 
+            layoutSport: '',
+            layoutData: [
+                [0,0,0,0,0,0,0],
+                [0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0]]})
+    }
+
     //Hook used to store what the current selected layout is
     const[selectedLayout,setSelectedLayout] = useState(null)
    
@@ -143,7 +175,7 @@ const FormationSelection = ({navigation}) =>
         {
             ///Format the selected layout data
             let layoutData = []
-            let layoutDataRaw = positionSelectionData[selectedLayout].layoutData
+            let layoutDataRaw = positionSelectionDataAll[selectedLayout].layoutData
             let index = 0;
             //Iterate through the ds
             for(let rows = 0; rows < layoutDataRaw.length; rows++)
@@ -169,7 +201,7 @@ const FormationSelection = ({navigation}) =>
                 }
             }
            
-            updateLayout([layoutData, positionSelectionData[selectedLayout].layoutName])
+            updateLayout([layoutData, positionSelectionDataAll[selectedLayout].layoutName])
             navigation.navigate('ScheduleOverview')
         }
     }
@@ -196,6 +228,7 @@ const FormationSelection = ({navigation}) =>
             data = {positionSelectionData}
             numColumns = {2}
             keyExtractor = {item => item.layoutId}
+            contentContainerStyle={{paddingBottom:50}}
             />
 
             

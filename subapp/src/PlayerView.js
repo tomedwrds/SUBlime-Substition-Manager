@@ -167,24 +167,64 @@ function PlayerView({navigation }) {
  
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
-  const positionSelectionData = [
-    {label: 'Striker', value:'ST'},
-    {label: 'Left Foward', value:'LF'},
-    {label: 'Center Foward', value:'CF'},
-    {label: 'Right Foward', value:'RF'},
-    {label: 'Left Inner', value:'LI'},
-    {label: 'Right Inner', value:'RI'},
-    {label: 'Left Midfield', value:'LM'},
-    {label: 'Center Midfield', value:'CM'},
-    {label: 'Right Midfield', value:'RM'},
-    {label: 'Left Half', value:'LH'},
-    {label: 'Center Half', value:'CH'},
-    {label: 'Right Half', value:'RH'},
-    {label: 'Defender', value:'DF'},
-    {label: 'Left Back', value:'LB'},
-    {label: 'Center Back', value:'CB'},
-    {label: 'Right Back', value:'RB'},
-    {label: 'Goal Keeper', value:'GK'}]
+
+  //Get the position selection data depdent on what sport
+  const sport = teamState.team_data[team_index].team_sport
+ 
+  let positionSelectionData = []
+  switch(sport)
+  {
+    case '11H':
+       positionSelectionData = [
+        {label: 'Striker', value:'ST'},
+        {label: 'Left Foward', value:'LF'},
+        {label: 'Center Foward', value:'CF'},
+        {label: 'Right Foward', value:'RF'},
+        {label: 'Left Inner', value:'LI'},
+        {label: 'Right Inner', value:'RI'},
+        {label: 'Left Midfield', value:'LM'},
+        {label: 'Center Midfield', value:'CM'},
+        {label: 'Right Midfield', value:'RM'},
+        {label: 'Left Half', value:'LH'},
+        {label: 'Center Half', value:'CH'},
+        {label: 'Right Half', value:'RH'},
+        {label: 'Defender', value:'DF'},
+        {label: 'Left Back', value:'LB'},
+        {label: 'Center Back', value:'CB'},
+        {label: 'Right Back', value:'RB'},
+        {label: 'Goal Keeper', value:'GK'}]
+        break;
+    case '7H':
+      positionSelectionData = [
+        {label: 'Striker', value:'ST'},
+        {label: 'Left Foward', value:'LF'},
+        {label: 'Center Foward', value:'CF'},
+        {label: 'Right Foward', value:'RF'},
+        {label: 'Left Inner', value:'LI'},
+        {label: 'Right Inner', value:'RI'},
+        {label: 'Left Midfield', value:'LM'},
+        {label: 'Center Midfield', value:'CM'},
+        {label: 'Right Midfield', value:'RM'},
+        {label: 'Left Half', value:'LH'},
+        {label: 'Center Half', value:'CH'},
+        {label: 'Right Half', value:'RH'},
+        {label: 'Defender', value:'DF'},
+        {label: 'Left Back', value:'LB'},
+        {label: 'Center Back', value:'CB'},
+        {label: 'Right Back', value:'RB'},
+        {label: 'Goal Keeper', value:'GK'}]
+    case 'T':
+      positionSelectionData = [
+        {label: 'Left Back', value: 'LB'}
+      ]
+      break;
+    default:
+      break;
+
+
+  }
+
+  
 
   
   
@@ -246,6 +286,7 @@ function PlayerView({navigation }) {
         data={teamState.team_data[team_index].team_player_data.team_players}
         renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,team_index)}
         keyExtractor={item => item.id}
+        contentContainerStyle={{paddingBottom:30}}
       />
       
     

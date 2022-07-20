@@ -25,21 +25,31 @@ const GameField = ({item},setSelectedLayout,selectedLayout) => {
             setSelectedLayout(null)
         }
     }
- 
-    return(
-        //Pressable wrap is used for determing when elements have been pressed
-        <Pressable style = {{flex:1}} onPress = {()=>{(updateSelection())}}>
+    if(item.layoutId != -1)
+    {
+        return(
+            
+            
+            <Pressable style = {{flex:1}} onPress = {()=>{(updateSelection())}}>
 
-            {/* gamePitchContainer is the wrapping view of all elemenets all formating of background color, border, margin etc is in this */}
-            <View style = {{...styles.gamePitchContainer,backgroundColor:selectedColor}}>
-                
-                {/* Tile text */}
-                <Text style = {styles.nameText}>{item.layoutName}</Text>
-                {/* View wrapper needs to exist to allow magic fuckery of absolute positioning  */}
-                <GamePitch layoutData = {item.layoutData}/>
-            </View>
-        </Pressable>
-    )
+                {/* gamePitchContainer is the wrapping view of all elemenets all formating of background color, border, margin etc is in this */}
+                <View style = {{...styles.gamePitchContainer,backgroundColor:selectedColor}}>
+                    
+                    {/* Tile text */}
+                    <Text style = {styles.nameText}>{item.layoutName}</Text>
+                    {/* View wrapper needs to exist to allow magic fuckery of absolute positioning  */}
+                    <GamePitch layoutData = {item.layoutData}/>
+                </View>
+            </Pressable>
+          
+        )
+    }
+    else
+    {
+        return(
+            <View style = {{flex:1}}/>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
