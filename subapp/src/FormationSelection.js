@@ -170,7 +170,7 @@ const FormationSelection = ({navigation}) =>
             }
            
             updateLayout([layoutData, positionSelectionData[selectedLayout].layoutName])
-            navigation.navigate('Sliders')
+            navigation.navigate('ScheduleOverview')
         }
     }
 

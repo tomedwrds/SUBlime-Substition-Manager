@@ -6,7 +6,7 @@ import {Pressable,View,FlatList,Alert,StyleSheet,Text} from 'react-native'
 
 
 import { useSelector, useDispatch, } from 'react-redux'
-import { add_save_data, create_game_data, increment_save_index, update_current_interval, update_interval_width, update_position, } from './actions';
+import { add_save_data, create_game_data, increment_save_index, save_schedule, update_current_interval, update_interval_width, update_position, } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -24,10 +24,11 @@ const PlayerSlider = ({navigation}) =>
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
   const generalData = useSelector(state => state.generalReducer);
-  
+  console.log(positionsData)
   const savedData = useSelector(state => state.savedReducer);
   const teamData = useSelector(state => state.teamReducer);
   const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
+  const current_schedule_index = teamData.team_data[current_team_index].team_schedule_data.team_schedule_index
   
   const playerData = teamData.team_data[current_team_index].team_player_data.team_players
  
@@ -38,9 +39,9 @@ const PlayerSlider = ({navigation}) =>
   const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
+  const saveSchedule = data => dispatch(save_schedule(data))
   const current_interval = generalData.current_interval
 
-  
  
   
   const [moveDir, setMoveDir] = useState(null)
@@ -131,16 +132,14 @@ const PlayerSlider = ({navigation}) =>
       if(canAddPlayer)
       {
         console.log('saved')
-        let savedId =  savedData.save_index
-        let savedName = generalData.team_name
+        let savedId =  current_schedule_index
+        let savedName = generalData.formation_name
         let savedDate = new Date()
-        let savedPlayerData =playerData;
         let savedPositionsData =positionsData;
-        let savedGeneralData =generalData;
-
-        addSaveData({save_id: savedId, save_name: savedName, save_date: savedDate, save_playerData:savedPlayerData, save_positionsData:savedPositionsData,save_generalData:savedGeneralData})
+   
+        saveSchedule([current_team_index,{schedule_id: savedId, schedule_name: savedName, schedule_date: savedDate, schedule_data:savedPositionsData}])
         setCanAddPlayer(false)
-        incrementSaveIndex(1)
+        
       }
     
   

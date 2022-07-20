@@ -10,9 +10,7 @@ const GameSetup = ({navigation}) =>
     //Setup redux
     const dispatch = useDispatch()
     const updateTeamName = name =>                  dispatch(update_team_name(name))
-    const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
-    const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
-    const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
+   
     const createTeam = team_data => dispatch(create_team(team_data))
     const incrementTeamIndex = data => dispatch(increment_team_index(data))
     const mirror = useSelector(state => state.generalReducer).mirror_intervals

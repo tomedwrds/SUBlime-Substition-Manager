@@ -4,7 +4,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
-import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index } from "./actions";
+import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index, update_formation_name } from "./actions";
 const ScheduleSetup = ({navigation}) => 
 {
     //Setup redux
@@ -12,6 +12,7 @@ const ScheduleSetup = ({navigation}) =>
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
+    const updateFormationName = name => dispatch(update_formation_name(name))
    
     const mirror = useSelector(state => state.generalReducer).mirror_intervals
   
@@ -21,7 +22,7 @@ const ScheduleSetup = ({navigation}) =>
     //Setup hooks
     const [intervals,setIntervals] = useState(null)
     const [intervalW,setIntervalW] = useState(null)
-    
+    const [name,setName] = useState(null)
     
   
   
@@ -29,7 +30,7 @@ const ScheduleSetup = ({navigation}) =>
     function saveSettings()
     {
         //Check if names have been changed
-        if(intervals == null || intervalW == null)
+        if(intervals == null || intervalW == null || name == null)
         {
            
             
@@ -49,6 +50,7 @@ const ScheduleSetup = ({navigation}) =>
         {
             updateIntervalLength(intervalW)
             updateTotalIntervals(intervals)
+            updateFormationName(name)
             navigation.navigate('Formation')
 
 
@@ -72,6 +74,18 @@ const ScheduleSetup = ({navigation}) =>
             <ScrollView >
                 
                 <Text style = {{fontSize:28}}>Game Settings</Text>
+                <View style = {styles.inputArea}>
+                    <View style ={styles.subTextView} >
+                        <Text style = {styles.fieldTitle}>Schedule Name</Text>
+                    </View>
+                    <TextInput 
+                        placeholderTextColor={'#bfbbbb'} 
+                        style = {{backgroundColor:'#ebebeb',borderRadius:9,fontSize:24,padding:12,width:450,textAlign:'center'}}
+                      
+                        onChangeText={(value)=>setName(value)}
+                        />
+                        
+                </View>
                 <View style = {styles.inputArea}>
                     <View style ={styles.subTextView} >
                         <Text style = {styles.fieldTitle}>Total Intervals</Text>

@@ -223,3 +223,32 @@ export const update_current_team_index = index => dispatch => {
   });
 }
   
+
+export const SAVE_SCHEDULE = 'SAVE_SCHEDULE';
+
+export const save_schedule = data => dispatch => {
+  dispatch({
+    type: SAVE_SCHEDULE,
+    payload: data
+  });
+}
+  
+export const DELETE_SCHEDULE = 'DELETE_SCHEDULE';
+
+export const delete_schedule = index => dispatch => {
+  dispatch({
+    type: DELETE_SCHEDULE,
+    payload: index
+  });
+}
+  
+
+export const UPDATE_FORMATION_NAME = 'UPDATE_FORMATION_NAME';
+
+export const update_formation_name = name => dispatch => {
+  dispatch({
+    type: UPDATE_FORMATION_NAME,
+    payload: name
+  });
+}
+  

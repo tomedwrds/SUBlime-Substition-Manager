@@ -22,6 +22,7 @@ import LoadSave from './src/LoadSave';
 import GameSetup from './src/GameSetup';
 import TeamOverview from './src/TeamOverview';
 import ScheduleSetup from './src/ScheduleSetup';
+import ScheduleOverview from './src/ScheduleOverview';
 
 
 const AppWrapper = () => {
@@ -54,7 +55,7 @@ const App = () => {
         <Stack.Screen name= 'LoadSave' component={LoadSave} />
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
         <Stack.Screen name= 'TeamOverview' component={TeamOverview}/>
-        <Stack.Screen name= 'Sliders' component={PlayerSlider}/>
+        <Stack.Screen name= 'ScheduleOverview' component={ScheduleOverview}/>
         <Stack.Screen name= 'Game' component={InGame}/>
         <Stack.Screen name= 'ScheduleSetup' component={ScheduleSetup}/>
         

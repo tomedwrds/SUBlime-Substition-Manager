@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX} from './actions.js';
+import {CREATE_PLAYER,UPDATE_FORMATION_NAME,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX, SAVE_SCHEDULE, DELETE_SCHEDULE} from './actions.js';
 
 import { combineReducers } from 'redux';
 
@@ -41,7 +41,7 @@ function teamReducer(state = teamState, action)
                 : content
             )};
 
-            return {...state,player_data: state.player_data.filter(item => item.id !== action.payload)};
+            
         
         case UPDATE_SELECTED_POS:
              return {...state,team_data: 
@@ -82,6 +82,22 @@ function teamReducer(state = teamState, action)
                         : content2)}}
                                             : content
                 )}
+        case SAVE_SCHEDULE:
+            
+            return {...state,team_data: 
+                state.team_data.map(
+                (content,i) => content.team_id === action.payload[0] ? {...content, team_schedule_data: {team_schedule_index: content.team_schedule_data.team_schedule_index+1,team_schedules:[...state.team_data[i].team_schedule_data.team_schedules,action.payload[1]]}
+                    }
+                : content
+            )};
+        case DELETE_SCHEDULE:
+            return {...state,team_data: 
+                state.team_data.map(
+                (content,i) => content.team_id === action.payload[0] ? {...content, team_schedule_data: {...content.team_schedule_data,team_schedules: content.team_schedule_data.team_schedules.filter(item => item.schedule_id != action.payload[1])}
+                    }
+                : content
+            )};
+
            
         default:
             return state;
@@ -138,7 +154,7 @@ function positionsReducer(state = positionsState, action)
             return{...state, position_data: state.position_data.map(
                 (content, i) => content.position_id === action.payload[2] ?
                     {...content, 
-                        position_timeline: state.position_data[i].position_timeline.map((content,i)=> ((i===action.payload[0] && action.payload[3]== false) || (i%action.payload[4]===action.payload[0]%action.payload[4] && action.payload[3])) ?
+                    position_timeline: state.position_data[i].position_timeline.map((content,i)=> ((i===action.payload[0] && action.payload[3]== false) || (i%action.payload[4]===action.payload[0]%action.payload[4] && action.payload[3])) ?
                         action.payload[1]  : content)}
                                     : content)}
         case UPDATE_INTERVAL_WIDTH:
@@ -162,6 +178,7 @@ const generalState = {
     
     current_interval: 1,
     team_name: '',
+    formation_name: '',
    
     current_team_index:0
 }
@@ -179,10 +196,12 @@ function generalReducer(state = generalState, action)
             return{...state, current_interval: action.payload}
         case UPDATE_TEAM_NAME:
             return{...state,team_name:action.payload}
+        case UPDATE_FORMATION_NAME:
+            return{...state,formation_name:action.payload}
        
         case LOAD_GAME_DATA:
             return{...state, game_data: action.payload.game_data, interval_length: action.payload.interval_length, total_intervals: action.payload.total_intervals,team_name:action.payload.team_name, mirror_intervals: action.payload.mirror_intervals}
-       
+        
         default:
             return state;
     }
