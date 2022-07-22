@@ -2,10 +2,12 @@ import React from "react";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PlayerView from "./PlayerView";
-import PlayerSlider from "./Sliders";
+
 import ScheduleTimeOverview from "./ScheduleTimeOverview";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import SliderMain from "./Sliders";
 const Tab = createBottomTabNavigator()
 
 
@@ -37,7 +39,7 @@ const ScheduleOverview = () => {
             tabBarIcon: ({color}) => screenOptions(route, color),
            
         })}>
-            <Tab.Screen name="Schedule" component = {PlayerSlider}  />
+            <Tab.Screen name="Schedule" component = {SliderMain}  />
             <Tab.Screen name="Team" component = {PlayerView}  />
             <Tab.Screen name = "Playtime" component = {ScheduleTimeOverview}/>
             

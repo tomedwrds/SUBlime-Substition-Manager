@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,current_team_index) =>
 {
 
   
@@ -21,9 +21,28 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionName = item.position_inititals
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
-    const positionIntervalWidth = item.position_interval_width
-    const pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
+    let positionIntervalWidth = item.position_interval_width
     const intervalLength = positionsData.interval_length
+
+    if(viewType == 'Player')
+    {
+      positionIntervalWidth = playerData[positionName].intervalWidth
+    }
+    console.log(positionIntervalWidth)
+    console.log('l')
+    //
+    let pickerSelectData = []
+    if(viewType == 'Position')
+    {
+      pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
+    } 
+    else(viewType == 'Player')
+    {
+      //potential for index error here
+      //console.log(playerData[positionId].positions)
+      //pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
+      //pickerSelectData = playerData[positionId].positions.map(item => ({label: item.name,value:item.id}))
+    }
     
     
   
@@ -264,7 +283,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           overLappedData.push({place:current_length,type:'end'})
         setOverlap = false
         }
-      
+        
         transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData})
         current_length = 0
         overLappedData = []
@@ -272,7 +291,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       }  
      }
-    
+     
      return transformed_data
    }
   
@@ -294,7 +313,20 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       {/* First view is the primary view all the other views are stacked on top of this. Onlayout is used to setup calculations*/}
       <View 
-        onLayout={(k) => {updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])}} 
+       key = {positionName}
+        onLayout={(k) => {
+        if(viewType == 'Position')
+        {
+          updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+          
+        } 
+        else
+        {
+          console.log('f')
+          updatePlayerIntervalWidth([current_team_index,positionName,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+        }
+      }}
+        
         style = {styles.sliderBarBody}>
 
         {/* Top layer that displays transformed data */}
@@ -304,8 +336,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
             
             return(
               
-              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
-               
+              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? sliderContentHeight:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'red':prop.color)}}>
+            
                 {(prop.overlap != []) ? 
                 
                 <View style = {{flex:1}}>
@@ -314,6 +346,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                   {
                     if(i!=0)
                     {
+                      
                       return(
                         
                         

@@ -270,4 +270,12 @@ export const update_formation_name = name => dispatch => {
   });
 }
   
+export const UPDATE_PLAYER_INTERVAL_WIDTH = 'UPDATE_PLAYER_INTERVAL_WIDTH';
+
+export const update_player_interval_width = width => dispatch => {
+  dispatch({
+    type: UPDATE_PLAYER_INTERVAL_WIDTH,
+    payload: width
+  });
+}
 

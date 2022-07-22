@@ -213,6 +213,7 @@ function PlayerView({navigation }) {
         {label: 'Center Back', value:'CB'},
         {label: 'Right Back', value:'RB'},
         {label: 'Goal Keeper', value:'GK'}]
+        break;
     case 'T':
       positionSelectionData = [
         {label: 'Left Back', value: 'LB'}
@@ -239,7 +240,8 @@ function PlayerView({navigation }) {
       name: '',
       positions: [],
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
-      selectedPos: null
+      selectedPos: null,
+      intervalWidth: 0
     }])
     
     setCanAddPlayer(false)

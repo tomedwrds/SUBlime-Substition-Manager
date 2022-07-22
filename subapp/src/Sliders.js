@@ -6,7 +6,7 @@ import {Pressable,View,FlatList,Alert,StyleSheet,Text,Modal,TextInput} from 'rea
 
 
 import { useSelector, useDispatch, } from 'react-redux'
-import { add_save_data, create_game_data, increment_save_index, save_game, save_schedule, update_current_interval, update_interval_width, update_position, } from './actions';
+import { add_save_data, create_game_data, increment_save_index, save_game, save_schedule, update_current_interval, update_interval_width, update_player_interval_width, update_position, } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -19,13 +19,15 @@ import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-
 
 
 
-const PlayerSlider = ({navigation}) => 
+const SliderMain = (props,{navigation}) => 
 {
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
+ 
   
+
+
   
-  const savedData = useSelector(state => state.savedReducer);
   const teamData = useSelector(state => state.teamReducer);
   const generalData = useSelector(state => state.generalReducer);
   const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
@@ -37,6 +39,7 @@ const PlayerSlider = ({navigation}) =>
   const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,positionsData.mirror_intervals,positionsData.interval_length]))
   const createGameData = sub_data => dispatch(create_game_data(sub_data))
   const updateIntervalWidth = id_interval_width => dispatch(update_interval_width(id_interval_width))
+  const updatePlayerIntervalWidth = width => dispatch(update_player_interval_width(width))
   const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
   const addSaveData = data => dispatch(add_save_data(data))
   const incrementSaveIndex = amount=> dispatch(increment_save_index(amount))
@@ -52,6 +55,51 @@ const PlayerSlider = ({navigation}) =>
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   const [modalVisible,setModalVisible] = useState(false)
   const [otherTeamName, setOtherTeamName] = useState('')
+  const [viewType, setViewType] = useState('Position')
+
+
+
+let sliderData = []
+if(viewType == 'Player')
+{
+  
+  for(let i = 0; i < playerData.length; i ++)
+  {
+    let id  = i;
+    let initials = playerData[i].id //playerData[i].name
+
+    //Create the position timeline 
+    let timeline = new Array(positionsData.total_intervals*positionsData.interval_length).fill(null)
+
+    sliderData.push({position_id:id,position_inititals:initials,position_name:initials,position_interval_width:100,position_timeline:timeline})
+  }
+
+  //Asign positions data to the players
+  for(let position = 0; position < positionsData.position_data.length; position++)
+  {
+    for(let minute = 0; minute< positionsData.position_data[position].position_timeline.length;minute++)
+    {
+      let data = positionsData.position_data[position].position_timeline[minute]
+      if(data != null)
+      {
+        //find join index
+        let index = sliderData.findIndex(item => item.position_id == data)
+        if(index != -1)
+        {
+          sliderData[index].position_timeline[minute] = data
+
+        }
+        
+      }
+    }
+  }
+  
+}
+else
+{
+  sliderData = positionsData.position_data
+}
+
   function selectionComplete ()
   {
     //Check if there is any gaps in the game schedule
@@ -244,7 +292,18 @@ const PlayerSlider = ({navigation}) =>
       </View>
       
       <View style = {styles.belowArea}>
-        
+        <Text style = {{fontSize:20}}>View</Text>
+          <View style = {{alignItems:'center'}}>
+            <RNPickerSelect
+                onValueChange={(value) => setViewType(value)}
+                items={[
+                    { label: 'Player', value: 'Player' },
+                      
+                ]}
+                placeholder={{label:'Position',value:'Position'}}
+                style = {pickerSelectStyles}
+            />
+          </View>
         
         <View style = {styles.intervalSelectionContainer}>
         <Text style = {{fontSize:20}}>Interval</Text>  
@@ -276,9 +335,9 @@ const PlayerSlider = ({navigation}) =>
       
         
           <FlatList scrollEnabled 
-          initialNumToRender={positionsData.position_data.length} 
-          data = {positionsData.position_data} 
-          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval)} 
+          initialNumToRender={sliderData.length} 
+          data = {sliderData} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,current_team_index)} 
           keyExtractor ={item => item.position_id}
           contentContainerStyle={{paddingBottom:120}}
           />
@@ -307,7 +366,7 @@ const styles = StyleSheet.create({
   },
   intervalSelectionContainer: {
     flexDirection:'row',
-    
+    justifyContent:'flex-end',
     flex:1,
     marginRight: 20,
     alignItems:'center'
@@ -413,4 +472,4 @@ const pickerSelectStyles = StyleSheet.create({
   }
 });
   
-  export default (PlayerSlider);
+  export default (SliderMain);
