@@ -21,16 +21,16 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionName = item.position_inititals
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
-    let positionIntervalWidth = item.position_interval_width
     const intervalLength = positionsData.interval_length
 
+    
+    //Adjust were interval width is recieved from depdent on picker select data
+    let positionIntervalWidth = item.position_interval_width
     if(viewType == 'Player')
     {
-      positionIntervalWidth = playerData[positionName].intervalWidth
+      positionIntervalWidth = playerData[positionId].intervalWidth
     }
-    console.log(positionIntervalWidth)
-    console.log('l')
-    //
+    
     let pickerSelectData = []
     if(viewType == 'Position')
     {
@@ -40,7 +40,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     {
       //potential for index error here
       //console.log(playerData[positionId].positions)
-      //pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
+      pickerSelectData = playerData.filter(item => item.positions.includes(positionName) == true).map(item => ({label: item.name,value:item.id}))
       //pickerSelectData = playerData[positionId].positions.map(item => ({label: item.name,value:item.id}))
     }
     
@@ -50,7 +50,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     
   
     const dragStart = (drag) => {
-       
+       if(viewType == 'Position')
+       {
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
         let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
         
@@ -153,6 +154,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         
         
         }
+      }
     
        
      
@@ -235,7 +237,29 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     }    
 
  
+    //Assign color gets the relavent information from the player data strucutre and assigns that color to the slider
+    function assignNameColorPos (position_id,position_data)
+    {
 
+      //Prevent place holder values slipping through and causing erros
+      if (position_id != null)
+      {
+          
+          //Join on the name of the two lists and return the color
+          var join = position_data.find(pos => pos.position_id == position_id)
+          if (join != undefined)
+          {
+              //0 for name, 1 for color
+              return [join.position_name,join.position_color]
+          }
+          else
+          {
+              return ['Deleted Player', 'red']
+          }
+      }
+      else{return[null,null]}
+
+    }
    const transformed_data_for_visual = () =>
    {
      //Get a transformed version of teh data to play witth
@@ -265,7 +289,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       if (overLapped && !setOverlap)
       {
         overLappedData.push({place:current_length,type:'start'})
-        setOverlap = true
+       setOverlap = true
         
       } else if ((!overLapped && setOverlap )|| (!isNextTileSame && overLapped))
       {
@@ -284,7 +308,14 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         setOverlap = false
         }
         
-        transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData})
+        if(viewType == 'Player')
+        {
+          transformed_data.push({name: assignNameColorPos(positionTimeline[i],positionsData.position_data)[0], length: current_length,color: assignNameColorPos(positionTimeline[i],positionsData.position_data)[1], overlap:overLappedData})
+        }
+        else
+        {
+          transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData})
+        }
         current_length = 0
         overLappedData = []
     
@@ -322,8 +353,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         } 
         else
         {
-          console.log('f')
-          updatePlayerIntervalWidth([current_team_index,positionName,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+          
+          updatePlayerIntervalWidth([current_team_index,positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
         }
       }}
         
@@ -333,10 +364,10 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         <View style = {{position:'absolute',flexDirection:'row'}}>
           
           {transformed_data_for_visual().map((prop,index) => {
-            
+         
             return(
               
-              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? sliderContentHeight:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'red':prop.color)}}>
+              <View key = {index}  style = {{...styles.sliderBox, height:(prop.name == null? 0:sliderContentHeight), width: positionIntervalWidth*prop.length, backgroundColor:(prop.name == null? 'transparent':prop.color)}}>
             
                 {(prop.overlap != []) ? 
                 
@@ -344,7 +375,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                   <View style = {{position:'absolute',flexDirection:'row'}}>
                   {prop.overlap.map((item,i) => 
                   {
-                    if(i!=0)
+                    if(i!=0 && viewType == 'Position')
                     {
                       
                       return(

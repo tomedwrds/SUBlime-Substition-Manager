@@ -65,8 +65,8 @@ if(viewType == 'Player')
   
   for(let i = 0; i < playerData.length; i ++)
   {
-    let id  = i;
-    let initials = playerData[i].id //playerData[i].name
+    let id  =  playerData[i].id;
+    let initials = playerData[i].name
 
     //Create the position timeline 
     let timeline = new Array(positionsData.total_intervals*positionsData.interval_length).fill(null)
@@ -79,16 +79,15 @@ if(viewType == 'Player')
   {
     for(let minute = 0; minute< positionsData.position_data[position].position_timeline.length;minute++)
     {
-      let data = positionsData.position_data[position].position_timeline[minute]
-      if(data != null)
+      let position_id = positionsData.position_data[position].position_timeline[minute]
+      if(position_id != null)
       {
-        //find join index
-        let index = sliderData.findIndex(item => item.position_id == data)
-        if(index != -1)
-        {
-          sliderData[index].position_timeline[minute] = data
+       
+        
+        
+          sliderData[position_id].position_timeline[minute] = position
 
-        }
+        
         
       }
     }
@@ -99,6 +98,7 @@ else
 {
   sliderData = positionsData.position_data
 }
+
 
   function selectionComplete ()
   {

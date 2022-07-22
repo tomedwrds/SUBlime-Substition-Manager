@@ -192,7 +192,8 @@ const FormationSelection = ({navigation}) =>
                             position_name: layoutDataRaw[rows][columns][0],
                             position_inititals: layoutDataRaw[rows][columns][1],
                             position_cords: [rows,columns],
-                            position_timeline: new Array(positionState.total_intervals*positionState.interval_length).fill(null)
+                            position_timeline: new Array(positionState.total_intervals*positionState.interval_length).fill(null),
+                            position_color: '#' + Math.floor(Math.random()*16777215).toString(16)
                         })
                         
                             //Increment the index
