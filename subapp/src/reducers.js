@@ -16,8 +16,8 @@ function teamReducer(state = teamState, action)
         case CREATE_TEAM:
             return{...state,team_data: [...state.team_data, action.payload]}
         
-        // case DELETE_SAVE_DATA:
-        //     return{...state,save_data: state.save_data.filter(item => item.save_id !== action.payload)};
+        case DELETE_SAVE_DATA:
+            return{...state,team_data: state.team_data.filter(item => item.team_id !== action.payload)};
         
         case INCREMENT_TEAM_INDEX:
             return{...state,team_index: state.team_index+action.payload}
@@ -244,8 +244,7 @@ function savedReducer(state = savedState, action)
         case ADD_SAVE_DATA:
             return{...state,save_data: [...state.save_data, action.payload]}
         
-        case DELETE_SAVE_DATA:
-            return{...state,save_data: state.save_data.filter(item => item.save_id !== action.payload)};
+       
         
         case INCREMENT_SAVE_INDEX:
             return{...state,save_index: state.save_index+action.payload}

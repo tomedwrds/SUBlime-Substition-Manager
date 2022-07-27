@@ -14,7 +14,7 @@ const ScheduleSetup = ({navigation}) =>
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
     const updateFormationName = name => dispatch(update_formation_name(name))
    
-    const mirror = useSelector(state => state.generalReducer).mirror_intervals
+    const mirror = useSelector(state => state.positionsReducer).mirror_intervals
   
 
   

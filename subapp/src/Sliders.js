@@ -19,8 +19,9 @@ import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-
 
 
 
-const SliderMain = (props,{navigation}) => 
+const SliderMain = ({navigation},props) => 
 {
+
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
  
@@ -201,7 +202,7 @@ else
       }
       const current_game_index = teamData.team_data[current_team_index].team_game_data.team_game_index
       saveGame([current_team_index,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
-
+      console.log(navigation)
       navigation.navigate('Game')
     }
   }

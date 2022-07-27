@@ -17,133 +17,11 @@ import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
 
 
-const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index) => {
-  
 
- 
-  //Fetch the vars relavent to the player
-  const playerId = item.id;
-  const playerName = item.name;
-  const playerPositions = item.positions;
-  const playerSelectedPos = item.selectedPos;
-  
-  //Creates a modal that then prompts the ability to delete a player
-  const deletePlayer = () => {
-    //Create alert to show to player
-    Alert.alert(
-      "Do you wish to delete this player?",
-      '',
-      [
-        //Creates an array of selectable player
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        { 
-          text: "Confirm", 
-          onPress: () => removePlayer([current_team_index,playerId])
-         
-        }
-      ]
-    )
-  }
-
-
-  //Render a position chip for each position in the list
-  const renderPositionChips = ({ item }) => (
-    
-    <Chip 
-      style = {styles.positions} 
-      onPress = {() => {deletePosition(item)}} 
-      onClose = {() => {}} >
-        {item}
-
-    </Chip>
-    
-  );
-  
-
-  //Add a position to a player
-  function addPosition() 
-  {
-    //Check if position isnt already in list or the selected pos is null
-    if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
-    {
-      //Add the position to the player in the store
-      addPositionToPlayer([current_team_index,playerId,playerSelectedPos])
-    }
-
-  }
-
-  //Delete the postion
-  function deletePosition(chip) 
-  {
-    //Remove the chip from the player
-    removePositionFromPlayer([current_team_index,playerId,chip])
-  }
-  
-  
-  return (
-
-    
-    <View style = {styles.playerBar}>
-
-      {/*Text input for player name*/}
-      <TextInput 
-        style = {styles.playerTextInput}
-        placeholder={playerName != '' ? playerName:'Player Name'}
-        placeholderTextColor= {playerName != '' ? 'black':"grey"} 
-        onEndEditing={(data)=>(updateName([current_team_index,playerId,data.nativeEvent.text]))}
-      />
-
-      {/*Select postion bar*/}
-      <View style ={styles.playerPositionSelector}>
-        
-        <RNPickerSelect 
-          onValueChange={(value) => { updateSelectedPos([current_team_index,playerId,value])}}
-          placeholder={{ label: 'Add positions', value: null }}
-          style = {pickerSelectStyles}
-          items = {positionSelectionData}
-         
-          useNativeAndroidPickerStyle={false}
-        />
-
-      </View>
-      
-      {/*Add position chip button*/}
-      <Pressable 
-        style = {{marginHorizontal:10}}
-        onPress = {() =>addPosition()}>
-          <Icon 
-            name='plus' 
-            size = {30} 
-            color = '#0BD61F'
-          />
-      </Pressable>
-      
-      {/*Displays all the position chips in a grid format*/}
-      <View style = {styles.playerPositionChips}>
-        <FlatList
-        
-          data={playerPositions}
-          renderItem={renderPositionChips}
-          horizontal
-          keyExtractor={item => playerPositions.indexOf(item)}
-        />  
-      </View>
-      
-      {/*Delete player button*/}
-      <Pressable 
-        onPress={deletePlayer} 
-        style = {styles.playerDelete}>
-          <Text style = {{fontSize:30}}>🗑️</Text>
-      </Pressable>
-    </View>
-  );
-}
 
 
 function PlayerView({navigation }) {
+  
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
@@ -157,19 +35,18 @@ function PlayerView({navigation }) {
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
   
-  const current_team_index = useSelector(state => state.generalReducer).current_team_index
-
-
-  //Used to account for deletion of certain items when going on index
-  const team_index = teamState.team_data.findIndex(item => item.team_id == current_team_index)
+  //This is the id of the current team in use
+  const team_id = useSelector(state => state.generalReducer).current_team_index
+  //This is the adjusted index to account for deletion of players
+  const adjusted_team_index = teamState.team_data.findIndex(item => item.team_id == team_id)
  
-  const current_player_index = teamState.team_data[team_index].team_player_data.team_player_index
+  const current_player_index = teamState.team_data[adjusted_team_index].team_player_data.team_player_index
  
   const [canAddPlayer,setCanAddPlayer] = useState(false)
   
 
   //Get the position selection data depdent on what sport
-  const sport = teamState.team_data[team_index].team_sport
+  const sport = teamState.team_data[adjusted_team_index].team_sport
  
   let positionSelectionData = []
   switch(sport)
@@ -225,7 +102,130 @@ function PlayerView({navigation }) {
 
   }
 
+  const PlayerTab = ({item}) => {
   
+
+ 
+    //Fetch the vars relavent to the player
+    const playerId = item.id;
+    const playerName = item.name;
+    const playerPositions = item.positions;
+    const playerSelectedPos = item.selectedPos;
+    
+    //Creates a modal that then prompts the ability to delete a player
+    const deletePlayer = () => {
+      //Create alert to show to player
+      Alert.alert(
+        "Do you wish to delete this player?",
+        '',
+        [
+          //Creates an array of selectable player
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          { 
+            text: "Confirm", 
+            onPress: () => removePlayer([team_id,playerId])
+           
+          }
+        ]
+      )
+    }
+  
+  
+    //Render a position chip for each position in the list
+    const renderPositionChips = ({ item }) => (
+      
+      <Chip 
+        style = {styles.positions} 
+        onPress = {() => {deletePosition(item)}} 
+        onClose = {() => {}} >
+          {item}
+  
+      </Chip>
+      
+    );
+    
+  
+    //Add a position to a player
+    function addPosition() 
+    {
+      //Check if position isnt already in list or the selected pos is null
+      if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
+      {
+        //Add the position to the player in the store
+        addPositionToPlayer([team_id,playerId,playerSelectedPos])
+      }
+  
+    }
+  
+    //Delete the postion
+    function deletePosition(chip) 
+    {
+      //Remove the chip from the player
+      removePositionFromPlayer([team_id,playerId,chip])
+    }
+    
+    
+    return (
+  
+      
+      <View style = {styles.playerBar}>
+  
+        {/*Text input for player name*/}
+        <TextInput 
+          style = {styles.playerTextInput}
+          placeholder={playerName != '' ? playerName:'Player Name'}
+          placeholderTextColor= {playerName != '' ? 'black':"grey"} 
+          onEndEditing={(data)=>(updateName([team_id,playerId,data.nativeEvent.text]))}
+        />
+  
+        {/*Select postion bar*/}
+        <View style ={styles.playerPositionSelector}>
+          
+          <RNPickerSelect 
+            onValueChange={(value) => { updateSelectedPos([team_id,playerId,value])}}
+            placeholder={{ label: 'Add positions', value: null }}
+            style = {pickerSelectStyles}
+            items = {positionSelectionData}
+           
+            useNativeAndroidPickerStyle={false}
+          />
+  
+        </View>
+        
+        {/*Add position chip button*/}
+        <Pressable 
+          style = {{marginHorizontal:10}}
+          onPress = {() =>addPosition()}>
+            <Icon 
+              name='plus' 
+              size = {30} 
+              color = '#0BD61F'
+            />
+        </Pressable>
+        
+        {/*Displays all the position chips in a grid format*/}
+        <View style = {styles.playerPositionChips}>
+          <FlatList
+          
+            data={playerPositions}
+            renderItem={renderPositionChips}
+            horizontal
+            keyExtractor={item => playerPositions.indexOf(item)}
+          />  
+        </View>
+        
+        {/*Delete player button*/}
+        <Pressable 
+          onPress={deletePlayer} 
+          style = {styles.playerDelete}>
+            <Text style = {{fontSize:30}}>🗑️</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   
   
@@ -235,7 +235,7 @@ function PlayerView({navigation }) {
        // Your useEffect code here to be run on update
     if(canAddPlayer)
 
-   { createPlayer([team_index,{
+   { createPlayer([team_id,{
       id: current_player_index,
       name: '',
       positions: [],
@@ -285,8 +285,8 @@ function PlayerView({navigation }) {
 
       <FlatList
      
-        data={teamState.team_data[team_index].team_player_data.team_players}
-        renderItem={(item) => PlayerTab(item,positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,team_index)}
+        data={teamState.team_data[adjusted_team_index].team_player_data.team_players}
+        renderItem={(item) => PlayerTab(item)}
         keyExtractor={item => item.id}
         contentContainerStyle={{paddingBottom:30}}
       />

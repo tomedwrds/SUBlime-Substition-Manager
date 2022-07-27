@@ -5,6 +5,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
 
 const SelectSchedule = ({navigation}) => {
+
     const dispatch = useDispatch()
     const teamData = useSelector(state => state.teamReducer);
     const generalData = useSelector(state =>state.generalReducer)

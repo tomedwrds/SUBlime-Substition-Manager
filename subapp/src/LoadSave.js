@@ -28,6 +28,7 @@ const LoadSave = ({navigation}) =>
         updateCurrentTeamIndex(i)
         navigation.replace('TeamOverview')
     }
+   
 
     
 
