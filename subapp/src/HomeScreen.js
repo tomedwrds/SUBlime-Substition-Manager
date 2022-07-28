@@ -4,8 +4,10 @@ import GameSetup from "./GameSetup";
 const HomeScreen = ({navigation}) => 
 {
     const [displaySetup,setDisplaySetup] = useState(false)
+    
     function closeModal (){setDisplaySetup(false)}
     return(
+        
         
         <View style = {{flex:1}}>
             <GameSetup

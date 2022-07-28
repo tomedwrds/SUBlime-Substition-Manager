@@ -60,23 +60,27 @@ const TimeOverview = () => {
     }
     function TimeTab({item})
     {
-        return(
-           
-                <View style = {styles.timeBar}>
-                    
-                        <View style = {{flexDirection:'row'}}>
-                        <View style = {styles.nameArea}>
-                            <Text style = {styles.generalText}>{nameFromIndex(item[0])}</Text>
-                        </View>
-                        <View style = {styles.timeArea}>
-                            <Text style = {styles.generalText}>{item[1]}</Text>
-                        </View>
-                        </View>
-                    
-                    
-                </View>
+        
+        if (nameFromIndex(item[0]).trim() != '')
+        {
+            return(
             
-        )
+                    <View style = {styles.timeBar}>
+                        
+                            <View style = {{flexDirection:'row'}}>
+                            <View style = {styles.nameArea}>
+                                <Text style = {styles.generalText}>{nameFromIndex(item[0])}</Text>
+                            </View>
+                            <View style = {styles.timeArea}>
+                                <Text style = {styles.generalText}>{item[1]}</Text>
+                            </View>
+                            </View>
+                        
+                        
+                    </View>
+                
+            )
+        }
     }
 
     return(
@@ -90,7 +94,7 @@ const TimeOverview = () => {
                 </View>
                 <FlatList
                 data = {timeData}
-                renderItem={item=>TimeTab(item,nameFromIndex)}
+                renderItem={item=>TimeTab(item)}
                 keyExtractor = {item => item[0]}
                
                 

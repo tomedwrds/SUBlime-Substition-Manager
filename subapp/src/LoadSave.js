@@ -34,7 +34,7 @@ const LoadSave = ({navigation}) =>
     
 
     return(
-        <SafeAreaView style = {{marginHorizontal:20}}>
+        <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
             <View>
                 <Text style = {{fontSize:40}}>Saved Teams 💾</Text>
             </View>
@@ -42,6 +42,7 @@ const LoadSave = ({navigation}) =>
                 data = {teamData}
                 keyExtractor = {item => item.team_id}
                 renderItem = {(item)=>SaveView(item,loadData,deleteSaveData)}
+                style = {{flex:1}}
                 ></FlatList>
         </SafeAreaView>
     )

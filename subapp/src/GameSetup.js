@@ -8,7 +8,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index } from "./actions";
 const GameSetup = (props) => 
 {
-    console.log(props.navigation)
+  
     //Setup redux
     const dispatch = useDispatch()
     const updateTeamName = name =>                  dispatch(update_team_name(name))
@@ -27,12 +27,13 @@ const GameSetup = (props) =>
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
     
-  
+    
     useEffect(() => {
         
         if(canAddTeam && !leavingPage)
         {
 
+            
             //Get the position related data 
             createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport})
             updateCurrentTeamIndex(teamIndex)
@@ -41,6 +42,7 @@ const GameSetup = (props) =>
             setCanAddTeam(false)
             setLeavingPage(true)
             props.navigation.navigate('TeamOverview')
+            props.closeModal()
             
         }
     },[canAddTeam])
@@ -59,8 +61,8 @@ const GameSetup = (props) =>
            
             
             Alert.alert(
-                "Error",
-                "Selection not complete",
+                "Insufficent Information",
+                "Fill in all of the fields in order to progress",
                 [
                   {
                     text: "Dismiss",
@@ -95,6 +97,8 @@ const GameSetup = (props) =>
         transparent={false}
         visible={props.displayModal}
         onRequestClose={props.closeModal}
+        animationType={'slide'}
+        onShow={()=>{setSport(null);setName(null)}}
         >
         <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
