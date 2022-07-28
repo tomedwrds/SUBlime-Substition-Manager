@@ -5,7 +5,8 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
-import { View, Pressable, TextInput, Button,StyleSheet, SafeAreaView, Alert, FlatList,Text } from 'react-native';
+import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -263,9 +264,9 @@ function PlayerView({navigation }) {
   
 
   return(
-   <View style = {{margin:20}}>
+   <SafeAreaView style = {{marginHorizontal:20}}>
      <View style={{flexDirection:'row'}}>
-      <Text style = {{fontSize:40}}>Team Overview (👪)</Text>
+      <Text style = {{fontSize:40}}>Team Overview</Text>
       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end'}}>
         <Pressable 
           style = {{paddingHorizontal:10}}
@@ -292,7 +293,7 @@ function PlayerView({navigation }) {
       />
       
     
-  </View>
+  </SafeAreaView>
     
     
     

@@ -31,10 +31,14 @@ const SliderMain = ({navigation},props) =>
   
   const teamData = useSelector(state => state.teamReducer);
   const generalData = useSelector(state => state.generalReducer);
-  const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
-  const current_schedule_index = teamData.team_data[current_team_index].team_schedule_data.team_schedule_index
+
+  const team_id = generalData.current_team_index
+  const adjusted_team_index = teamData.team_data.findIndex(item => item.team_id == team_id)
+
+
+  const current_schedule_index = teamData.team_data[adjusted_team_index].team_schedule_data.team_schedule_index
   
-  const playerData = teamData.team_data[current_team_index].team_player_data.team_players
+  const playerData = teamData.team_data[adjusted_team_index].team_player_data.team_players
   
   const dispatch = useDispatch()
   const updatePosition = time_name_position_color => dispatch(update_position([...time_name_position_color,positionsData.mirror_intervals,positionsData.interval_length]))
@@ -173,7 +177,7 @@ else
       //Add the game data to the game history
 
       //Get the id of all players in the team and put in the list index 0 id index 1 frequency of player
-      const team_data = teamData.team_data[current_team_index].team_player_data.team_players
+      const team_data = teamData.team_data[adjusted_team_index].team_player_data.team_players
       let timeData = []
       for(let k = 0; k < team_data.length; k++ )
       {
@@ -200,8 +204,8 @@ else
               }
           }
       }
-      const current_game_index = teamData.team_data[current_team_index].team_game_data.team_game_index
-      saveGame([current_team_index,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
+      const current_game_index = teamData.team_data[adjusted_team_index].team_game_data.team_game_index
+      saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
       console.log(navigation)
       navigation.navigate('Game')
     }
@@ -224,7 +228,7 @@ else
         let savedDate = new Date()
         let savedPositionsData =positionsData;
    
-        saveSchedule([current_team_index,{schedule_id: savedId, schedule_name: savedName, schedule_date: savedDate, schedule_data:savedPositionsData}])
+        saveSchedule([team_id,{schedule_id: savedId, schedule_name: savedName, schedule_date: savedDate, schedule_data:savedPositionsData}])
         setCanAddPlayer(false)
         
       }
@@ -303,6 +307,7 @@ else
                 ]}
                 placeholder={{label:'Position',value:'Position'}}
                 style = {pickerSelectStyles}
+                useNativeAndroidPickerStyle={false}
             />
           </View>
         
@@ -338,7 +343,7 @@ else
           <FlatList scrollEnabled 
           initialNumToRender={sliderData.length} 
           data = {sliderData} 
-          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,current_team_index)} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id)} 
           keyExtractor ={item => item.position_id}
           contentContainerStyle={{paddingBottom:120}}
           />
@@ -360,7 +365,7 @@ const styles = StyleSheet.create({
     
     flexDirection:"row",
     borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: 5,
     overflow: 'hidden',
     marginLeft:20
   
@@ -437,11 +442,16 @@ const pickerSelectStyles = StyleSheet.create({
   
   inputAndroid: {
     
+    fontSize: 16,
     color: 'black',
     fontSize: 20,
-
-    width:'100%',
-    height:'100%',
+    //backgroundColor: '#ebebeb',
+    textAlign: 'center',
+    borderWidth:2,
+    marginLeft:10,
+    padding:10,
+    borderRadius:9,
+    width:180
  
 },
   

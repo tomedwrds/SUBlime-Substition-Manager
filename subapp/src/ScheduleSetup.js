@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch, ScrollView } from "react-native";
+import SafeViewAndroid from "./SafeViewAndroid";
+import { SafeAreaView } from "react-native-safe-area-context";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index, update_formation_name } from "./actions";
@@ -62,16 +62,16 @@ const ScheduleSetup = ({navigation}) =>
 
     
     return(
-        <View style = {styles.container}>
+        <SafeAreaView style = {styles.container} >
             <View style = {styles.header}>
-                <Text style = {{fontSize:40,marginBottom:20}}>Schedule Setup 🤓</Text>
+                <Text style = {{fontSize:40,marginBottom:10}}>Schedule Setup 🤓</Text>
                 <Pressable 
                     onPress={()=>{saveSettings()}}
                     style = {{flex:1,alignItems:'flex-end'}}>
                     <Text style = {{fontSize:40}}>✅</Text>
                 </Pressable>
             </View>
-            <ScrollView >
+            <ScrollView style ={{paddingBottom:100}} >
                 
                 <Text style = {{fontSize:28}}>Game Settings</Text>
                 <View style = {styles.inputArea}>
@@ -80,7 +80,7 @@ const ScheduleSetup = ({navigation}) =>
                     </View>
                     <TextInput 
                         placeholderTextColor={'#bfbbbb'} 
-                        style = {{backgroundColor:'#ebebeb',borderRadius:9,fontSize:24,padding:12,width:450,textAlign:'center'}}
+                        style = {{backgroundColor:'#ebebeb',borderRadius:9,fontSize:20,padding:12,width:450,textAlign:'center'}}
                       
                         onChangeText={(value)=>setName(value)}
                         />
@@ -91,13 +91,16 @@ const ScheduleSetup = ({navigation}) =>
                         <Text style = {styles.fieldTitle}>Total Intervals</Text>
                         <Text style = {styles.infoText}>2 - halfs 3 - thirds 4 - quarters</Text>
                     </View>
+                    <View style ={{borderRadius:9,overflow:'hidden'}}>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
                         onValueChange={(value)=>{setIntervals(value)}}
                         items ={Array.from({length: 4}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
                         placeholder = {{label:'',value:null}}
+                        useNativeAndroidPickerStyle={false}
                        
                         />
+                        </View>
                         
                 </View>
                 <View style = {styles.inputArea}>
@@ -105,13 +108,17 @@ const ScheduleSetup = ({navigation}) =>
                         <Text style = {styles.fieldTitle}>Interval Length</Text>
                         <Text style = {styles.infoText}>Length of each interval in minutes</Text>
                     </View>
-                    <RNPickerSelect
-                    style = {pickerSelectStyles}
-                    onValueChange={(value)=>{setIntervalW(value)}}
-                    items ={Array.from({length: 100}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
-                    placeholder = {{label:'',value:null}}
-                    />
+                    <View style ={{borderRadius:9,overflow:'hidden'}}>
+                        <RNPickerSelect
+                        style = {pickerSelectStyles}
+                        onValueChange={(value)=>{setIntervalW(value)}}
+                        items ={Array.from({length: 100}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
+                        placeholder = {{label:'',value:null}}
+                        useNativeAndroidPickerStyle={false}
+                        />
+                    </View>
                 </View>
+              
                 <View style = {styles.inputArea}>
                     <View style ={styles.subTextView}>
                         <Text style = {styles.fieldTitle}>Mirror Intervals</Text>
@@ -121,15 +128,21 @@ const ScheduleSetup = ({navigation}) =>
                         value = {mirror}
                         onValueChange={()=>{shouldMirrorIntervals(!mirror)}}
                     />
-                </View> 
+                </View>
+                
+         
+               
+             
+             
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin:20
+       marginLeft:20,
+       flex:1
     },
     subTextView: {
         width: 200
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
         marginVertical:8,
         
         alignItems:'center',
-     
+        
         
      
         
@@ -167,11 +180,19 @@ const pickerSelectStyles = StyleSheet.create({
   
     inputAndroid: {
       
-      color: 'black',
-      fontSize: 20,
-  
-      width:'100%',
-      height:'100%',
+        fontSize: 1,
+        color: 'black',
+        fontSize: 20,
+        backgroundColor: '#ebebeb',
+        padding:12,
+ 
+        borderRadius:9,
+        width:450,
+        
+        alignItems:'center',
+        justifyContent:'center',
+        
+        textAlign: 'center',
       
    
   },

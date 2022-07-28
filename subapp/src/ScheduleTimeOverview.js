@@ -1,5 +1,6 @@
 import React from "react";
-import { SafeAreaView, Text,StyleSheet,View } from "react-native";
+import { Text,StyleSheet,View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 

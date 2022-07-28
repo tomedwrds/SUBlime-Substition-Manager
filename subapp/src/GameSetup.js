@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch } from "react-native";
+import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch, Modal } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import RNPickerSelect from 'react-native-picker-select';
 import { useDispatch,useSelector } from "react-redux";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index } from "./actions";
-const GameSetup = ({navigation}) => 
+const GameSetup = (props) => 
 {
+    console.log(props.navigation)
     //Setup redux
     const dispatch = useDispatch()
     const updateTeamName = name =>                  dispatch(update_team_name(name))
@@ -38,7 +40,7 @@ const GameSetup = ({navigation}) =>
 
             setCanAddTeam(false)
             setLeavingPage(true)
-            navigation.navigate('TeamOverview')
+            props.navigation.navigate('TeamOverview')
             
         }
     },[canAddTeam])
@@ -89,7 +91,12 @@ const GameSetup = ({navigation}) =>
 
     
     return(
-        <View style = {styles.container}>
+        <Modal 
+        transparent={false}
+        visible={props.displayModal}
+        onRequestClose={props.closeModal}
+        >
+        <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
                 <Text style = {{fontSize:40,marginBottom:20}}>Game Setup</Text>
                 <Pressable 
@@ -112,7 +119,9 @@ const GameSetup = ({navigation}) =>
                         />
                     
                 </View>
+                
                 <View style = {styles.inputArea}>
+           
                     <View style ={styles.subTextView} >
                         <Text style = {styles.fieldTitle}>Sport</Text>
                         
@@ -122,6 +131,7 @@ const GameSetup = ({navigation}) =>
                         onValueChange={(value)=>{setSport(value)}}
                         items ={[{label:'7 Aside Hockey', value:'7H'},{label:'11 Aside Hockey',value:'11H'},{label: 'Test', value:'T'}]}
                         placeholder = {{label:'',value:null}}
+                        useNativeAndroidPickerStyle={false}
                        
                         />
                         
@@ -164,13 +174,14 @@ const GameSetup = ({navigation}) =>
                     />
                 </View> */}
             </ScrollView>
-        </View>
+        </SafeAreaView>
+        </Modal>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin:20
+        marginHorizontal:20
     },
     subTextView: {
         width: 200
@@ -208,11 +219,19 @@ const pickerSelectStyles = StyleSheet.create({
   
     inputAndroid: {
       
-      color: 'black',
-      fontSize: 20,
+        fontSize: 16,
+        color: 'black',
+        fontSize: 20,
+        backgroundColor: '#ebebeb',
+        padding:12,
+        fontSize:24,
+        borderRadius:9,
+        width:450,
   
-      width:'100%',
-      height:'100%',
+        
+        textAlign: 'center',
+  
+     
       
    
   },

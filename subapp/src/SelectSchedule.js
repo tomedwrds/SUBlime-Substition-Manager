@@ -1,5 +1,6 @@
 import React from "react";
-import { Text,View,SafeAreaView,StyleSheet,Pressable,FlatList } from "react-native";
+import { Text,View,StyleSheet,Pressable,FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector,useDispatch } from "react-redux";
 import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
@@ -9,14 +10,15 @@ const SelectSchedule = ({navigation}) => {
     const dispatch = useDispatch()
     const teamData = useSelector(state => state.teamReducer);
     const generalData = useSelector(state =>state.generalReducer)
-    const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
+    const team_id  = generalData.current_team_index
+    const adjusted_team_index = teamData.team_data.findIndex(item => item.team_id == team_id)
     const deleteSchedule = index => dispatch(delete_schedule(index))
-    const scheduleData = teamData.team_data[current_team_index].team_schedule_data.team_schedules
+    const scheduleData = teamData.team_data[adjusted_team_index].team_schedule_data.team_schedules
     const updateLayout = layout_data => dispatch(update_layout(layout_data))
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
-    
+
     function load_schedule(i)
     {
         //Adjust index to account for deleted stuff
@@ -49,15 +51,16 @@ const SelectSchedule = ({navigation}) => {
         <FlatList
             data = {scheduleData}
             keyExtractor = {item => item.schedule_id}
-            renderItem = {(item)=>SaveView(item,load_schedule,deleteSchedule, current_team_index)}
+            renderItem = {(item)=>SaveView(item,load_schedule,deleteSchedule, team_id)}
             ></FlatList>
             </SafeAreaView>
     
     )
 }
 
-function SaveView ({item},load_schedule,deleteSchedule,current_team_index) 
+function SaveView ({item},load_schedule,deleteSchedule,team_id) 
 {
+    
     function format_time()
     {
         let time = item.schedule_date
@@ -87,7 +90,7 @@ function SaveView ({item},load_schedule,deleteSchedule,current_team_index)
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{deleteSchedule([current_team_index,item.schedule_id])}}
+                    onPress = {()=>{deleteSchedule([team_id,item.schedule_id])}}
                     >
                     <Icon 
                         name='trash' 

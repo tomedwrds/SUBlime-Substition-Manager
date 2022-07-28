@@ -12,7 +12,7 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,current_team_index) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,team_id) =>
 {
 
   
@@ -354,7 +354,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         else
         {
           
-          updatePlayerIntervalWidth([current_team_index,positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+          updatePlayerIntervalWidth([team_id,positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
         }
       }}
         
@@ -463,13 +463,13 @@ const styles = StyleSheet.create({
     },
     sliderBox: {
       
-      borderRadius: 5,
+      borderRadius: 9,
       justifyContent: 'center'
     },
     dragBar: {
       opacity:0.6,
       height:sliderContentHeight,
-      borderRadius: 5
+      borderRadius: 9
     },
     sliderBarContainer: {
       height:sliderBodyHeight,
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
       flexDirection:'row',
       flex:1,
       borderWidth: 1,
-      borderRadius:5
+      borderRadius:9
     },
     
     position_font: {
