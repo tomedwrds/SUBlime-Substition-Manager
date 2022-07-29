@@ -2,7 +2,7 @@ import React from "react";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PlayerView from "./PlayerView";
-
+import { TouchableOpacity } from "react-native";
 import ScheduleTimeOverview from "./ScheduleTimeOverview";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -24,6 +24,9 @@ const screenOptions = (route, color) => {
       case 'Playtime':
         iconName = 'clock-o';
         break;
+      case 'Back':
+        iconName = 'arrow-left';
+        break;
       default:
         break;
     }
@@ -39,6 +42,10 @@ const ScheduleOverview = () => {
             tabBarIcon: ({color}) => screenOptions(route, color),
            
         })}>
+          <Tab.Screen name="Back"  component={SliderMain}
+                options={({navigation})=> ({
+                  tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('TeamOverview', {screen:'Schedule'})}/>
+            })}/>
             <Tab.Screen name="Schedule" component = {SliderMain}  />
             <Tab.Screen name="Team" component = {PlayerView}  />
             <Tab.Screen name = "Playtime" component = {ScheduleTimeOverview}/>
