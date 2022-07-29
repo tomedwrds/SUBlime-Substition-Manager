@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { Button } from "react-native-paper";
-import { View,Text, Pressable,Alert,StyleSheet } from "react-native";
+import { View,Text, Pressable,Alert,StyleSheet, Modal } from "react-native";
 
 import GameField from "./in_game/GameField";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 
 
-const FormationSelection = ({navigation}) =>
+const FormationSelection = (props) =>
 {   
     const dispatch = useDispatch()
     const positionState = useSelector(state => state.positionsReducer);
@@ -203,39 +203,53 @@ const FormationSelection = ({navigation}) =>
             }
            
             updateLayout([layoutData, positionSelectionDataAll[selectedLayout].layoutName])
-            navigation.navigate('ScheduleOverview')
+            props.toggleModalFormations()
+            props.navigation.navigate('ScheduleOverview')
         }
     }
 
 
     //Flat list is used that renders a field of the data
     return(
-        <SafeAreaView>
-            <View style = {styles.header}>
-                <View>
-                    <Text style = {{fontSize:40}}>Select a Formation</Text>
-                </View>
-             
-                <Pressable style = {{alignItems:'flex-end',flex:1}} onPress={() => formatPositionData()}>
-                    
-                    <Text style = {{fontSize:50}}>{selectedLayout == null? '☑️':'✅'}</Text>
-                    
-                </Pressable>
-               
-            </View>
-
-            <FlatList
-            renderItem={(item) => GameField(item,setSelectedLayout,selectedLayout)}
-            data = {positionSelectionData}
-            numColumns = {2}
-            keyExtractor = {item => item.layoutId}
-            contentContainerStyle={{paddingBottom:50}}
-            />
-
-            
-            
-        </SafeAreaView>
+        <Modal
+        transparent={false}
+        visible={props.displayFormations}
+        onRequestClose={props.toggleModalFormation}
+        animationType={'slide'}
+        onShow={()=>{setSelectedLayout(null);}}
         
+        >
+            <SafeAreaView>
+                <View style = {styles.header}>
+                    <View>
+                        <Text style = {{fontSize:40}}>Select a Formation</Text>
+                    </View>
+                    <Pressable 
+                        onPress={()=>{props.toggleModalSetup(); props.toggleModalFormations()}}
+                        style = {{flex:1,alignItems:'flex-end',flex:1}}>
+                        <Text style = {{fontSize:40}}>⬅️</Text>
+                    </Pressable>
+                    <Pressable style = {{alignItems:'flex-end'}} onPress={() => formatPositionData()}>
+                        
+                        <Text style = {{fontSize:40}}>{selectedLayout == null? '☑️':'✅'}</Text>
+                        
+                    </Pressable>
+                
+                </View>
+
+                <FlatList
+                renderItem={(item) => GameField(item,setSelectedLayout,selectedLayout)}
+                data = {positionSelectionData}
+                numColumns = {2}
+                keyExtractor = {item => item.layoutId}
+                contentContainerStyle={{paddingBottom:50}}
+                />
+
+                
+                
+            </SafeAreaView>
+        </Modal>
+            
     )
 }
 const styles = StyleSheet.create({

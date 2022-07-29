@@ -2,9 +2,11 @@ import React from "react";
 import { Text,View,StyleSheet,Pressable,FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
-
+import ScheduleSetup from "./ScheduleSetup";
+import FormationSelection from "./FormationSelection";
 const SelectSchedule = ({navigation}) => {
 
     const dispatch = useDispatch()
@@ -18,6 +20,14 @@ const SelectSchedule = ({navigation}) => {
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
+
+
+    //Modal managment
+    const [displaySetup,setDisplaySetup] = useState(false)
+    function toggleModalSetup (){setDisplaySetup(!displaySetup); }
+    
+    const [displayFormations,setDisplayFormations] = useState(false)
+    function toggleModalFormations (){setDisplayFormations(!displayFormations);}
 
     function load_schedule(i)
     {
@@ -35,16 +45,28 @@ const SelectSchedule = ({navigation}) => {
 
     return(
         <SafeAreaView style = {styles.container}>
+            <ScheduleSetup
+                displayModal = {displaySetup}
+                toggleModalSetup = {()=>toggleModalSetup()}
+                toggleModalFormations = {()=>toggleModalFormations()}
+                navigation = {navigation}
+            />
+             <FormationSelection
+                displayFormations = {displayFormations}
+                toggleModalSetup = {()=>toggleModalSetup()}
+                toggleModalFormations = {()=>toggleModalFormations()}
+                navigation = {navigation}
+            />
             <View style = {styles.header}>
                 
-                <Text style = {{fontSize:40}}>Schedule Selection</Text>
+                <Text style = {{fontSize:40}}>Substituion Schedules</Text>
                 <View style = {{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
-                    <Pressable onPress = {()=>navigation.navigate('ScheduleSetup')}>
+                    <Pressable onPress = {()=>toggleModalSetup()}>
                         <Icon 
-                                name='plus' 
-                                size = {40} 
-                                color = 'green'
-                            />
+                        name='plus' 
+                        size = {50} 
+                        color = '#0BD61F'
+                        />
                     </Pressable>
                 </View>
             </View>

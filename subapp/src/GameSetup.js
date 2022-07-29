@@ -103,9 +103,15 @@ const GameSetup = (props) =>
         <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
                 <Text style = {{fontSize:40,marginBottom:20}}>Game Setup</Text>
+                
+                <Pressable 
+                    onPress={()=>{props.closeModal()}}
+                    style = {{alignItems:'flex-end',flex:1}}>
+                    <Text style = {{fontSize:40}}>⬅️</Text>
+                </Pressable>
                 <Pressable 
                     onPress={()=>{saveSettings()}}
-                    style = {{flex:1,alignItems:'flex-end'}}>
+                    style = {{alignItems:'flex-end'}}>
                     <Text style = {{fontSize:40}}>✅</Text>
                 </Pressable>
             </View>
@@ -133,7 +139,7 @@ const GameSetup = (props) =>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
                         onValueChange={(value)=>{setSport(value)}}
-                        items ={[{label:'7 Aside Hockey', value:'7H'},{label:'11 Aside Hockey',value:'11H'},{label: 'Test', value:'T'}]}
+                        items ={[{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Netball',value:'N'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Test', value:'T'}]}
                         placeholder = {{label:'',value:null}}
                         useNativeAndroidPickerStyle={false}
                        

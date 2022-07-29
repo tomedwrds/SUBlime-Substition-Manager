@@ -267,9 +267,9 @@ function PlayerView({navigation }) {
    <SafeAreaView style = {{marginHorizontal:20}}>
      <View style={{flexDirection:'row'}}>
       <Text style = {{fontSize:40}}>Team Overview</Text>
-      <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end'}}>
+      <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
         <Pressable 
-          style = {{paddingHorizontal:10}}
+       
           onPress = {addPlayer}
           >
             <Icon 

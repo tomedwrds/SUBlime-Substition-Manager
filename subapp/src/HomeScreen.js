@@ -20,10 +20,10 @@ const HomeScreen = ({navigation}) =>
             </View>
             <View style = {{flex:7, alignItems:'center',justifyContent:'center'}}>
                 <View style = {{flex:1}}></View>
-                <Pressable onPress ={()=> setDisplaySetup(true)} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center'}}>
+                <Pressable onPress ={()=> setDisplaySetup(true)} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center',marginBottom:10}}>
                     <Text style = {{padding:30, fontSize:30}}>New Team</Text>
                 </Pressable>
-                <View style = {{flex:1}}></View>
+                
                 <Pressable onPress ={()=> navigation.navigate('LoadSave')} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center'}}>
                     <Text style = {{padding:30, fontSize:30}}>Load Team</Text>
                 </Pressable>
