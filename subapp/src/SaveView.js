@@ -1,10 +1,28 @@
 import React from "react";
-import { Text,View,StyleSheet,Pressable } from "react-native";
+import { Text,View,StyleSheet,Pressable,Alert } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SaveView ({item},loadData,deleteSaveData) 
 {
-    
+    const deleteTeam = () => {
+        //Create alert to show to player
+        Alert.alert(
+          "Do you wish to delete this this team?",
+          'Once deleted the team is permanently gone',
+          [
+            //Creates an array of selectable player
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            { 
+              text: "Confirm", 
+              onPress: () => deleteSaveData(item.team_id)
+             
+            }
+          ]
+        )
+      }
     return(
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
@@ -24,7 +42,7 @@ function SaveView ({item},loadData,deleteSaveData)
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{deleteSaveData(item.team_id)}}
+                    onPress = {deleteTeam}
                     >
                     <Icon 
                         name='trash' 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text,View,StyleSheet,Pressable,FlatList } from "react-native";
+import { Text,View,StyleSheet,Pressable,FlatList,Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from "react";
@@ -70,11 +70,14 @@ const SelectSchedule = ({navigation}) => {
                     </Pressable>
                 </View>
             </View>
+   
         <FlatList
             data = {scheduleData}
             keyExtractor = {item => item.schedule_id}
             renderItem = {(item)=>SaveView(item,load_schedule,deleteSchedule, team_id)}
+     
             ></FlatList>
+            
             </SafeAreaView>
     
     )
@@ -89,7 +92,26 @@ function SaveView ({item},load_schedule,deleteSchedule,team_id)
         const options = { hour:'numeric',minute:'numeric', year: 'numeric', month: 'long', day: 'numeric' };
         return time.toLocaleDateString('en-NZ',options)
     }
-  
+    
+    const deleteScheduleAlert = () => {
+        //Create alert to show to player
+        Alert.alert(
+          "Do you wish to delete this this schedule?",
+          'Once deleted, the schedule is permanently gone',
+          [
+            //Creates an array of selectable player
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            { 
+              text: "Confirm", 
+              onPress: () => deleteSchedule([team_id,item.schedule_id])
+             
+            }
+          ]
+        )
+      }
    
     return(
         <View style = {styles.body}>
@@ -112,7 +134,7 @@ function SaveView ({item},load_schedule,deleteSchedule,team_id)
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
-                    onPress = {()=>{deleteSchedule([team_id,item.schedule_id])}}
+                    onPress = {deleteScheduleAlert}
                     >
                     <Icon 
                         name='trash' 

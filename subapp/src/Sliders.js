@@ -206,7 +206,7 @@ else
       }
       const current_game_index = teamData.team_data[adjusted_team_index].team_game_data.team_game_index
       saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
-      console.log(navigation)
+      
       navigation.navigate('Game')
     }
   }
