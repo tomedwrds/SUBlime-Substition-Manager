@@ -458,7 +458,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                         
                         
                           <View key = {i} style = {{ width: (item.place-prop.overlap[i-1].place)*positionIntervalWidth,backgroundColor:'red', opacity: (item.type == 'end'? 0.3: 0),height:sliderContentHeight}} >
-                           <ImageBackground source = {image} style = {{flex:1}}>
+                           <ImageBackground source = {require('./images/overlap.png')} style = {{flex:1}}>
                             <View style = {{flex:1}}></View>
                            </ImageBackground>
                           </View>

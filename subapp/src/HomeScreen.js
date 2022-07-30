@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View,Text,Pressable } from "react-native";
 import GameSetup from "./GameSetup";
+
 const HomeScreen = ({navigation}) => 
 {
     const [displaySetup,setDisplaySetup] = useState(false)
@@ -10,12 +11,13 @@ const HomeScreen = ({navigation}) =>
         
         
         <View style = {{flex:1}}>
+            
             <GameSetup
                 displayModal = {displaySetup}
                 closeModal = {()=>closeModal()}
                 navigation = {navigation}
             />
-            <View style = {{flex:5,justifyContent:'center',alignItems:'center'}}>
+            <View style = {{flex:5,justifyContent:'center',alignItems:'center'}}>   
                 <Text style = {{fontSize:70}}>SUBlime</Text>
             </View>
             <View style = {{flex:7, alignItems:'center',justifyContent:'center'}}>

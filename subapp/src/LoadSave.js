@@ -34,6 +34,7 @@ const LoadSave = ({navigation}) =>
     
 
     return(
+    
         <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
             <View>
                 <Text style = {{fontSize:40}}>Saved Teams 💾</Text>

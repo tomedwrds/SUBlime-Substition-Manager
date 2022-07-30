@@ -95,7 +95,7 @@ function InGame(props)
                 
         
             
-        }, 10);
+        }, 1000);
         
         //Something about clearing the interval
         return () => clearInterval(interval);
