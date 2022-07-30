@@ -86,8 +86,9 @@ const TimeOverview = () => {
              //Loop through time data and average all lists
             for(let player = 0; player < timeData.length; player++)
             {
-                timeData[player][1].filter(time => time != 0)
-
+        
+                timeData[player][1] = timeData[player][1].filter(time => time != 0)
+            
                 if(timeData[player][1].length == 0)
                 {
                     timeData[player][1] = 0

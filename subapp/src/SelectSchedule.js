@@ -39,7 +39,7 @@ const SelectSchedule = ({navigation}) => {
         updateIntervalLength(scheduleData[schedule_index].schedule_data.interval_length)
         updateTotalIntervals(scheduleData[schedule_index].schedule_data.total_intervals)
         shouldMirrorIntervals(scheduleData[schedule_index].schedule_data.mirror_intervals)
-        navigation.navigate('ScheduleOverview')
+        navigation.navigate('ScheduleOverview', {screen:'Schedule'})
     }
 
 

@@ -34,7 +34,7 @@ const screenOptions = (route, color) => {
     return <Icon name={iconName} color={color} size={24} />;
   };
 
-const ScheduleOverview = () => {
+const ScheduleOverview = ({navigation}) => {
     return(
         <Tab.Navigator
         screenOptions={({route})=>({
@@ -46,7 +46,13 @@ const ScheduleOverview = () => {
                 options={({navigation})=> ({
                   tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('TeamOverview', {screen:'Schedule'})}/>
             })}/>
-            <Tab.Screen name="Schedule" component = {SliderMain}  />
+            <Tab.Screen name="Schedule" children={()=>
+            <SliderMain
+            navigation = {navigation}
+            gameActive = {false}
+            seconds = {0}
+            minute = {0}
+            />} />
             <Tab.Screen name="Team" component = {PlayerView}  />
             <Tab.Screen name = "Playtime" component = {ScheduleTimeOverview}/>
             

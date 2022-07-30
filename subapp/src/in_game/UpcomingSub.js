@@ -56,7 +56,7 @@ function UpcomingSub({item},minute,second,currentInterval,intervalLength)
             <View style = {styles.subBar}>
                 <Text style = {styles.sideText}>{formattedSubTime}</Text>
                 <View style = {styles.nameBorder}>
-                    <Text style = {styles.nameText}>{subPlayerOn} ➜ {subPlayerOff}</Text>
+                    <Text style = {styles.nameText}>{subPlayerOff} ➜ {subPlayerOn}</Text>
                 </View> 
                 <Text style = {styles.sideText}>{subPosition}</Text>
             </View>

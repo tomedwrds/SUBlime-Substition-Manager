@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SaveView ({item},loadData,deleteSaveData) 
 {
+    
     const deleteTeam = () => {
         //Create alert to show to player
         Alert.alert(

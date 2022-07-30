@@ -12,10 +12,9 @@ const sliderBodyHeight = 100
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,team_id) =>
-{
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval) =>
+{ 
 
-  
   
     //Set up vars specific to each variable
     const positionName = item.position_inititals
@@ -55,23 +54,28 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
         let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
         
+     
         
-        //Extra drag area on right
-        if (positionTimeline[dragStartTile-1] != null)
-        {
-          
-           dragStartTile = dragStartTile-1
-        }
+       
+
+        // //Extra drag area on right
+        // if (positionTimeline[dragStartTile-1] != null && positionTimeline[dragStartTile] == null)
+        // {
+         
+       
+        //    dragStartTile = dragStartTile-1
+        // }
         
-        //Extra drag area on left
-        if (positionTimeline[dragStartTile+1] != null)
-        {
+        // //Extra drag area on left
+        // if (positionTimeline[dragStartTile+1] != null && positionTimeline[dragStartTile] == null)
+        // {
           
-           dragStartTile = dragStartTile+1
-        }
+        //    dragStartTile = dragStartTile+1
+        // }
+        
 
         //Check if tile has something in it as null tiles cannot be dragged
-        if (positionTimeline[dragStartTile] != null)
+        if (positionTimeline[dragStartTile] != null && dragStartTile >= minutesPlayed)
         {
             //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
             let prior_name =  positionTimeline[(currentInterval-1)*intervalLength]
@@ -175,7 +179,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                     //Check to make sure that tile being iterated over is the same as draged tile
                     if (positionTimeline[i] == positionTimeline[startTile])
                     {
-                        updatePosition([i,null,positionId])
+
+                      if(i >= minutesPlayed) updatePosition([i,null,positionId])
                     }
                 }
             }
@@ -186,7 +191,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 for (let k = startTile; k < endTile; k++)
                 {
                     
-                    updatePosition([k,positionTimeline[startTile],positionId])
+                  if(k >= minutesPlayed) updatePosition([k,positionTimeline[startTile],positionId])
                 }
             }
         }
@@ -200,7 +205,9 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 {
                     if (positionTimeline[i] == positionTimeline[startTile])
                     {
-                        updatePosition([i,null,positionId])
+                      if(i >= minutesPlayed) updatePosition([i,null,positionId])
+
+                        
                     }
                 }
             }
@@ -208,7 +215,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
             {
                 for (let k = endTile; k < startTile; k++)
                 {
-                    updatePosition([k,positionTimeline[startTile],positionId])
+                  if(k >= minutesPlayed) updatePosition([k,positionTimeline[startTile],positionId])
                 }
             }
         }
@@ -271,7 +278,13 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      let overLappedData = []
      
      //loop through whole list
-     for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
+
+    //Add overlapped data for minutes
+    if(minutesPlayed >= (currentInterval-1)*intervalLength && activeGameInterval == currentInterval)
+    {
+      transformed_data.push({name:'Already Played',length:minutesPlayed%intervalLength,color:'white',overlap:[]})
+      
+     for(let i = (currentInterval-1)*intervalLength+minutesPlayed%intervalLength; i < currentInterval*intervalLength; i++)
      {
       
       
@@ -322,6 +335,69 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       }  
      }
+    }
+    else if(currentInterval < activeGameInterval)
+    {
+      console.log('l')
+      transformed_data.push({name:'Already Played',length:intervalLength,color:'white',overlap:[]})
+      
+    }
+    else
+    {
+      for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
+     {
+      
+      
+       
+       
+      //Checking if next tile is diffrent - indexing error prevention
+      if( i < (currentInterval)*intervalLength-1)
+      {
+        var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];
+      }
+      else var isNextTileSame = false
+
+      let overLapped = positionsData.position_data.map((item)=>item.position_timeline[i]).find((item,index)=>(index != positionId&& item!= null&& item == positionTimeline[i])) != undefined
+      
+      if (overLapped && !setOverlap)
+      {
+        overLappedData.push({place:current_length,type:'start'})
+       setOverlap = true
+        
+      } else if ((!overLapped && setOverlap )|| (!isNextTileSame && overLapped))
+      {
+        if((!isNextTileSame && overLapped))  overLappedData.push({place:current_length+1,type:'end'})
+        else overLappedData.push({place:current_length,type:'end'})
+        setOverlap = false
+      }
+      current_length += 1
+
+      if (!isNextTileSame)
+      {
+        
+        if(setOverlap)
+        {
+          overLappedData.push({place:current_length,type:'end'})
+        setOverlap = false
+        }
+        
+        if(viewType == 'Player')
+        {
+          transformed_data.push({name: assignNameColorPos(positionTimeline[i],positionsData.position_data)[0], length: current_length,color: assignNameColorPos(positionTimeline[i],positionsData.position_data)[1], overlap:overLappedData})
+        }
+        else
+        {
+          transformed_data.push({name: assignNameColor(positionTimeline[i],playerData)[0], length: current_length,color: assignNameColor(positionTimeline[i],playerData)[1], overlap:overLappedData})
+        }
+        current_length = 0
+        overLappedData = []
+    
+      
+      }  
+     }
+    }
+
+
      
      return transformed_data
    }

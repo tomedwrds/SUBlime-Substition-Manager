@@ -23,6 +23,7 @@ import GameSetup from './src/GameSetup';
 import TeamOverview from './src/TeamOverview';
 import ScheduleSetup from './src/ScheduleSetup';
 import ScheduleOverview from './src/ScheduleOverview';
+import GameOverview from './src/in_game/GameOverview';
 
 
 const AppWrapper = () => {
@@ -56,7 +57,7 @@ const App = () => {
         <Stack.Screen name= 'Formation' component={FormationSelection}/>
         <Stack.Screen name= 'TeamOverview' component={TeamOverview}/>
         <Stack.Screen name= 'ScheduleOverview' component={ScheduleOverview}/>
-        <Stack.Screen name= 'Game' component={InGame}/>
+        <Stack.Screen name= 'Game' component={GameOverview}/>
         <Stack.Screen name= 'ScheduleSetup' component={ScheduleSetup}/>
         
       </Stack.Navigator>

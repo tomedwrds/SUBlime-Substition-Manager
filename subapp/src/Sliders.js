@@ -19,16 +19,15 @@ import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-
 
 
 
-const SliderMain = ({navigation},props) => 
+const SliderMain = (props) => 
 {
+  
+
+
 
   //Setup all the hooks and shit that is then passed into all the items
   const positionsData = useSelector(state => state.positionsReducer);
  
-  
-
-
-  
   const teamData = useSelector(state => state.teamReducer);
   const generalData = useSelector(state => state.generalReducer);
 
@@ -64,6 +63,102 @@ const SliderMain = ({navigation},props) =>
 
 
 
+  //Get data for updating schedule on fly
+  let minutesPlayed = props.minute
+  if(minutesPlayed == undefined) minutesPlayed = 0
+  const navigation = props.navigation
+  let gameActive = props.gameActive
+  let activeGameInterval = props.activeGameInterval
+  if (activeGameInterval == undefined) activeGameInterval = 1
+  console.log(props.gameActive)
+  if(gameActive == undefined) gameActive =false
+
+  const updateShcheduleInGame = () => {
+    //Create alert to show to player
+    Alert.alert(
+      "Do you wish to update the schedule?",
+      'This feature is new and unstable and may crash the app. Additonally any changes to player play time is not reflected.',
+      [
+        //Creates an array of selectable player
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { 
+          text: "Confirm", 
+          onPress: () => 
+          {
+            //Check if there is any gaps in the game schedule
+    let isGap = false
+
+    //Loop through all position data to check
+    for(let i =0; i< positionsData.position_data.length; i++)
+    {
+      //Loop through the positon timeline and check for nulls
+      let positionTimeline = positionsData.position_data[i].position_timeline
+      for(let k = 0; k < positionTimeline.length; k++)
+      {
+        //Check if gap is empty
+        if(positionTimeline[k] == null)
+        {
+          isGap = true
+        }
+      }
+    }
+
+    //evaluate wether there is a gap
+    if(isGap)
+    {
+      //If there is a gap create a modal prompt 
+      Alert.alert(
+        "Error gaps in scheule",
+        'Team selection not complete',
+        [
+          //Creates an array of selectable player
+          {
+            text: "Close",
+            style: "cancel"
+          }
+        ]
+      )
+
+    }
+    else
+    {
+      //If not gaps create the sub data 
+      const subData = []
+      let subId = 0
+      //Loop through all sub data 
+      for(let i =0; i< positionsData.position_data.length; i++)
+      {
+        //Loop through the positon timeline and check when the person in position has changed 
+        let positionTimeline = positionsData.position_data[i].position_timeline
+        let positionInitials = positionsData.position_data[i].position_inititals
+        let positionCords = positionsData.position_data[i].position_cords
+
+        let priorPerson = positionTimeline[0]
+
+        for(let k = 0; k < positionTimeline.length; k++)
+        {
+          //Check wether name has changed and also check to make sure that it is not the start of new interval
+          if(priorPerson != positionTimeline[k] && k % positionsData.interval_length != 0)
+          {
+            subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson,playerData)[0] ,subPlayerOff: assignNameColor(positionTimeline[k],playerData)[0],subPos:positionInitials,subCords: positionCords})
+            subId ++
+          }
+          //Reset the prior person
+          priorPerson = positionTimeline[k]
+        }
+      }
+
+      createGameData(subData)
+    }
+          }
+         
+        }
+      ]
+    )
+  }
 let sliderData = []
 if(viewType == 'Player')
 {
@@ -130,7 +225,7 @@ else
     {
       //If there is a gap create a modal prompt 
       Alert.alert(
-        "Error",
+        "Error gaps in scheule",
         'Team selection not complete',
         [
           //Creates an array of selectable player
@@ -171,8 +266,8 @@ else
       }
 
       createGameData(subData)
-      updateCurrentInterval(1)
-      setCanAddPlayer(true)
+      
+      
 
       //Add the game data to the game history
 
@@ -205,9 +300,15 @@ else
           }
       }
       const current_game_index = teamData.team_data[adjusted_team_index].team_game_data.team_game_index
-      saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
       
-      navigation.navigate('Game')
+      if(gameActive == false)
+     { 
+      console.log('k')
+      updateCurrentInterval(1)
+      navigation.navigate('Game',{screen:'Active Game'})}
+      saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
+      setCanAddPlayer(true)
+      
     }
   }
 
@@ -288,7 +389,17 @@ else
               <Text style = {{fontSize:50}}>💾</Text>
           </Pressable> 
           <Pressable 
-            onPress = {()=>setModalVisible(true)}
+            onPress = {()=>{
+              if(gameActive == true)
+              {
+                updateShcheduleInGame()
+              }
+              else
+              {
+                setModalVisible(true)
+              }
+            }}
+              
             
             >
              <Text style = {{fontSize:50}}>✅</Text>
@@ -343,7 +454,7 @@ else
           <FlatList scrollEnabled 
           initialNumToRender={sliderData.length} 
           data = {sliderData} 
-          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id)} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval)} 
           keyExtractor ={item => item.position_id}
           contentContainerStyle={{paddingBottom:120}}
           />

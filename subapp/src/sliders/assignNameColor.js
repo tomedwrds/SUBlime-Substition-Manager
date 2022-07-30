@@ -3,6 +3,11 @@ export default function assignNameColor (player_id,playerData)
 {
 
     //Prevent place holder values slipping through and causing erros
+    if(player_id == 'Played')
+    {
+        return ['Already Played','white']
+    }
+    else 
     if (player_id != null)
     {
         
@@ -18,6 +23,8 @@ export default function assignNameColor (player_id,playerData)
             return ['Deleted Player', 'red']
         }
     }
-    else{return[null,null]}
+    else{return[null,null]
+    
+    }
 
 }

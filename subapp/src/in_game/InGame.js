@@ -15,7 +15,7 @@ const totalRows = 7;
 
 
 
-function InGame()
+function InGame(props)
 {
     
     const dispatch = useDispatch()
@@ -31,19 +31,22 @@ function InGame()
     const team_index = teamData.team_data.findIndex(item => item.team_id == current_team_index)
     const team_data = teamData.team_data[team_index].team_player_data
     
-    const currentInterval =useSelector(state => state.generalReducer).current_interval;
+    
     const intervalLength = useSelector(state => state.positionsReducer).interval_length;
     const teamName = teamData.team_data[team_index].team_name
-    const updateCurrentInterval = interval => dispatch(update_current_interval(interval))
+   
     const totalInterval = useSelector(state => state.positionsReducer).total_intervals
     
     useKeepAwake()
     //Set up vars that handle the timer
-    const [minute,setMinute] = useState(0)
-    const [second, setSecond] = useState(0)
+    const second = props.second
+    const setSecond = props.setSecond
+    const minute = props.minute
+    const setMinute = props.setMinute
     const [timerActive,setTimerActive] = useState(false)
     const [pitchData,setPitchData] = useState(updatePitchData(0))
     
+
     const countdown = true
     
     //code ripped from a website and it works
@@ -86,13 +89,13 @@ function InGame()
                 {
                   
                     setTimerActive(()=> false)
-                    if(notReachedEnd) updateCurrentInterval(currentInterval+1)
+                    if(notReachedEnd) props.updateActiveGameInterval(props.activeGameInterval+1)
                 }
             }
                 
         
             
-        }, 1000);
+        }, 10);
         
         //Something about clearing the interval
         return () => clearInterval(interval);
@@ -179,7 +182,7 @@ function InGame()
                         <Text style={{fontSize:40}}>⏯️</Text>
                     </Pressable>
                     </View>
-                    <Text style = {styles.generalText}>Interval {currentInterval}/{totalInterval}</Text>
+                    <Text style = {styles.generalText}>Interval {props.activeGameInterval}/{totalInterval}</Text>
                     <Text style = {styles.generalText}>{formattedTime}</Text>
                    
                 
@@ -191,7 +194,7 @@ function InGame()
                         
                     </View>
                     <FlatList
-                        renderItem={(item) => UpcomingSub(item,minute,second,currentInterval,intervalLength)}
+                        renderItem={(item) => UpcomingSub(item,minute,second,props.activeGameInterval,intervalLength)}
                         keyExtractor ={item => item.subId}
                         data={subData.sort(function(a,b) {return a.subMin-b.subMin})}
                     />
