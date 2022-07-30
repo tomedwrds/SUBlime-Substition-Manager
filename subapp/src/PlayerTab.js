@@ -3,6 +3,7 @@ import { Alert,Text,View,Pressable,TextInput,StyleSheet,FlatList } from "react-n
 import { Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
+import DropDownPicker from "react-native-dropdown-picker";
 const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index) => {
   
 
@@ -84,8 +85,9 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
   
         {/*Select postion bar*/}
         <View style ={styles.playerPositionSelector}>
-          
-          <RNPickerSelect 
+          <DropDownPicker/>
+          <Text>asfasf</Text>
+          {/* <RNPickerSelect 
             onValueChange={(value) => { updateSelectedPos([current_team_index,playerId,value])}}
             placeholder={{ label: 'Add positions', value: null }}
             style = {pickerSelectStyles}
@@ -93,7 +95,7 @@ const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,r
            
             useNativeAndroidPickerStyle={false}
           />
-  
+   */}
         </View>
         
         {/*Add position chip button*/}

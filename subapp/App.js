@@ -46,6 +46,7 @@ const App = () => {
     //<GameSetup></GameSetup>
     //<InGame></InGame>
     <NavigationContainer>
+      
       <Stack.Navigator
       screenOptions={{
         headerShown: false

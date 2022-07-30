@@ -13,16 +13,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index, update_player_positions_open} from './actions.js';
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
+//import DropDownPicker from 'react-native-dropdown-picker';
 
 
 
 
 
 function PlayerView({navigation }) {
-  
+  console.log('l')
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
@@ -35,7 +36,7 @@ function PlayerView({navigation }) {
   const removePlayer = player_index => dispatch(remove_player(player_index))
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
-  
+  const updatePlayerPositionsOpen = data => dispatch(update_player_positions_open(data))
   //This is the id of the current team in use
   const team_id = useSelector(state => state.generalReducer).current_team_index
   //This is the adjusted index to account for deletion of players
@@ -112,6 +113,7 @@ function PlayerView({navigation }) {
     const playerName = item.name;
     const playerPositions = item.positions;
     const playerSelectedPos = item.selectedPos;
+    const playerOpen = item.open;
     
     //Creates a modal that then prompts the ability to delete a player
     const deletePlayer = () => {
@@ -178,26 +180,42 @@ function PlayerView({navigation }) {
         <TextInput 
           style = {styles.playerTextInput}
           placeholder={playerName != '' ? playerName:'Player Name'}
+         
           placeholderTextColor= {playerName != '' ? 'black':"grey"} 
           onEndEditing={(data)=>(updateName([team_id,playerId,data.nativeEvent.text]))}
         />
   
         {/*Select postion bar*/}
         <View style ={styles.playerPositionSelector}>
-          
-          <RNPickerSelect 
+          {/* <DropDownPicker
+            items = {positionSelectionData}
+            open={playerOpen}
+            multiple={true}
+            max={20}
+            placeholder='Select Positions'
+            dropDownContainerStyle={{borderColor:'white'}}
+            style = {{borderColor:'white',borderRadius:4}}
+            
+            textStyle={{fontSize:20}}
+            placeholderStyle={{color:'grey'}}
+            listMode={'SCROLLVIEW'}
+            setOpen={()=>updatePlayerPositionsOpen([team_id,playerId])}
+         
+
+          /> */}
+          {/* <RNPickerSelect 
             onValueChange={(value) => { updateSelectedPos([team_id,playerId,value])}}
             placeholder={{ label: 'Add positions', value: null }}
             style = {pickerSelectStyles}
             items = {positionSelectionData}
            
             useNativeAndroidPickerStyle={false}
-          />
+          /> */}
   
         </View>
         
         {/*Add position chip button*/}
-        <Pressable 
+        {/* <Pressable 
           style = {{marginHorizontal:10}}
           onPress = {() =>addPosition()}>
             <Icon 
@@ -205,7 +223,7 @@ function PlayerView({navigation }) {
               size = {30} 
               color = '#0BD61F'
             />
-        </Pressable>
+        </Pressable> */}
         
         {/*Displays all the position chips in a grid format*/}
         <View style = {styles.playerPositionChips}>
@@ -242,7 +260,8 @@ function PlayerView({navigation }) {
       positions: [],
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null,
-      intervalWidth: 0
+      intervalWidth: 0,
+      open: false,
     }])
     
     setCanAddPlayer(false)
@@ -264,7 +283,7 @@ function PlayerView({navigation }) {
   
 
   return(
-   <SafeAreaView style = {{marginHorizontal:20}}>
+   <SafeAreaView style = {{marginHorizontal:20,flex:'1'}}>
      <View style={{flexDirection:'row'}}>
       <Text style = {{fontSize:40}}>Team Overview</Text>
       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
@@ -283,17 +302,20 @@ function PlayerView({navigation }) {
      </View>
     
 
-
+    <View style = {{flex:1}}>
       <FlatList
      
         data={teamState.team_data[adjusted_team_index].team_player_data.team_players}
         renderItem={(item) => PlayerTab(item)}
         keyExtractor={item => item.id}
-        contentContainerStyle={{paddingBottom:30}}
+        //contentContainerStyle={{paddingBottom:30}}
+        //ListEmptyComponent={()=><View style = {{justifyContent:'center',marginTop:50,alignItems:'center'}}><Text style = {{fontSize:20}}>No players added yet press the '➕' to add players </Text></View>}
+        
       />
       
-    
+      </View>
   </SafeAreaView>
+
     
     
     
@@ -317,7 +339,9 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8
+    marginBottom: 8,
+    height:55
+
   },
   positions: {
     
@@ -331,11 +355,14 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     backgroundColor: 'white',
     height: '90%',
-    flex: 1,
+    flex: 2,
+    paddingLeft:4
   },
   playerPositionSelector : {
-    flex: 1,  
-    height: '90%'
+    flex: 3,  
+   
+    
+   
   },
   playerAddPostions : {
     marginLeft: 20,

@@ -184,6 +184,7 @@ else
       }
      
     }
+    
 
     //evaluate wether there is a gap
     if(isGap || isOverlap) 

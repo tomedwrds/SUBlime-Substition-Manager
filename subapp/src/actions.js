@@ -279,3 +279,12 @@ export const update_player_interval_width = width => dispatch => {
   });
 }
 
+
+export const UPDATE_PLAYER_POSITIONS_OPEN = 'UPDATE_PLAYER_POSITIONS_OPEN';
+
+export const update_player_positions_open = data => dispatch => {
+  dispatch({
+    type: UPDATE_PLAYER_POSITIONS_OPEN,
+    payload: data
+  });
+}
