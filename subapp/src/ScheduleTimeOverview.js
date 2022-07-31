@@ -91,6 +91,8 @@ const ScheduleTimeOverview = () => {
                 data = {timeData}
                 renderItem={item=>TimeTab(item,nameFromIndex)}
                 keyExtractor = {item => item[0]}
+                contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+                ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No time data exists\n All time data will be displayed here'}</Text></View>}
                
                 
                 
@@ -103,7 +105,8 @@ const ScheduleTimeOverview = () => {
 
 const styles = StyleSheet.create({
     timeContainer:{
-        marginHorizontal:20
+        marginHorizontal:20,
+        flex:1
     }
     ,
     titleText: {

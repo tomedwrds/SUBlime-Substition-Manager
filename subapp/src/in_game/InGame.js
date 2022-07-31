@@ -182,15 +182,18 @@ function InGame(props)
                         <Text style={{fontSize:40}}>⏯️</Text>
                     </Pressable>
                     </View>
+                    <View style = {{flexDirection:'row'}}>
+
+                    <Text style = {{...styles.generalText,flex:1}}>{formattedTime}</Text>
                     <Text style = {styles.generalText}>Interval {props.activeGameInterval}/{totalInterval}</Text>
-                    <Text style = {styles.generalText}>{formattedTime}</Text>
+                    </View>
                    
                 
 
                 </View>
                 <View style = {styles.subInfo}>
                     <View style = {styles.subInfoHeader}>
-                        <Text style = {{fontSize:24,marginVertical:10}}>Upcoming Subs (🗣️)</Text>
+                        <Text style = {{fontSize:24,marginVertical:5}}>Upcoming Subs</Text>
                         
                     </View>
                     <FlatList
@@ -229,7 +232,7 @@ const styles = StyleSheet.create({
         alignItems:'flex-end'
     },
     infoSide: {
-        margin:20,
+        marginHorizontal:20,
         flex:1
     },
     pitchSide: {
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
         marginVertical:40
     },
     gameInfo: {
-      marginBottom:20
+      marginBottom:5
         
     },
     

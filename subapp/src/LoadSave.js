@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { View,Text,FlatList } from "react-native";
+import { View,Text,FlatList,Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import SaveView from "./SaveView";
@@ -27,7 +27,7 @@ const LoadSave = ({navigation}) =>
         //Load the page that the sliders is on
         
         updateCurrentTeamIndex(i)
-        navigation.replace('TeamOverview')
+        navigation.replace('TeamOverview',{screen:'Subsheets'})
     }
    
 
@@ -36,15 +36,23 @@ const LoadSave = ({navigation}) =>
     return(
     
         <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
-            <View>
-                <Text style = {{fontSize:40}}>Saved Teams 💾</Text>
+            <View style = {{flexDirection:'row'}}>
+                <Text style = {{fontSize:40,marginBottom:10}}>Select a team</Text>
+                <Pressable 
+                        onPress={()=>{navigation.goBack()}}
+                        style = {{flex:1,alignItems:'flex-end',flex:1}}>
+                        <Text style = {{fontSize:40}}>⬅️</Text>
+                    </Pressable>
             </View>
                 <FlatList
+            
                 data = {teamData}
                 keyExtractor = {item => item.team_id}
                 renderItem = {(item)=>SaveView(item,loadData,deleteSaveData)}
                 style = {{flex:1}}
-                ></FlatList>
+                contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+                ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No teams found\n Go back to main menu to create a team'}</Text></View>}
+                />
         </SafeAreaView>
     )
 }

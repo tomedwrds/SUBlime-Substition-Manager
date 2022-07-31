@@ -13,7 +13,7 @@ const screenOptions = (route, color) => {
     let iconName;
   
     switch (route.name) {
-      case 'Schedules':
+      case 'Subsheets':
         iconName = 'clipboard';
         break;
       case 'Team':
@@ -54,7 +54,7 @@ const TeamOverview = () => {
          options={({navigation})=> ({
            tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('HomeScreen')}/>
     })}/>
-            <Tab.Screen name="Schedules" component = {SelectSchedule}  />
+            <Tab.Screen name="Subsheets" component = {SelectSchedule}  />
             <Tab.Screen name="Team" component = {PlayerView}  />
             <Tab.Screen name="Season Playtime" component = {TimeOverview}  />
             <Tab.Screen name="Game History" component = {GameHistory}  />

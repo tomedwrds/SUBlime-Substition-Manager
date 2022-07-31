@@ -245,7 +245,9 @@ else
           timeData.push([team_data[k].id,0])
       }
 
-
+      //get date data
+      const current_date = new Date()
+      const savedDate = {year:current_date.getFullYear(),month:current_date.getMonth(),day: current_date.getDate(), hour: current_date.getHours(),minute: current_date.getMinutes()}
       //generate the time data
       
       for(let position = 0; position < positionsData.position_data.length; position ++)
@@ -272,7 +274,7 @@ else
       
       updateCurrentInterval(1)
       navigation.navigate('Game',{screen:'Active Game'})
-      saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: new Date(), game_data: timeData}])
+      saveGame([team_id,{game_id:current_game_index,game_opponent: otherTeamName, game_date: savedDate, game_data: timeData}])
       setCanAddPlayer(true)
 
      }
@@ -291,10 +293,13 @@ else
     useEffect(() => {
       if(canAddPlayer)
       {
-        console.log('saved')
+        
         let savedId =  current_schedule_index
-        let savedName = generalData.formation_name
-        let savedDate = new Date()
+
+        let savedName = generalData.formation_name 
+        if (otherTeamName != '') savedName = 'Subsheet used against "' + otherTeamName +'"'
+        const current_date = new Date()
+        const savedDate = {year:current_date.getFullYear(),month:current_date.getMonth(),day: current_date.getDate(), hour: current_date.getHours(),minute: current_date.getMinutes()}
         let savedPositionsData =positionsData;
    
         saveSchedule([team_id,{schedule_id: savedId, schedule_name: savedName, schedule_date: savedDate, schedule_data:savedPositionsData}])
@@ -424,7 +429,8 @@ else
           data = {sliderData} 
           renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval)} 
           keyExtractor ={item => item.position_id}
-          contentContainerStyle={{paddingBottom:120}}
+          contentContainerStyle={{flexGrow:1,paddingBottom:150}}
+          
           />
     
     </SafeAreaView>
@@ -512,7 +518,8 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     borderWidth:2,
-    marginHorizontal:10
+    marginHorizontal:10,
+    backgroundColor:'white'
   },
   
 })

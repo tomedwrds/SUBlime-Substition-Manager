@@ -176,11 +176,14 @@ const TimeOverview = () => {
             return(
                 <FlatList
                 data = {timeData}
+                contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+                ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No time data exist\n All time data will be displayed here'}</Text></View>}
                 renderItem={({item})=>
                 <TimeTab
                 name = {nameFromIndex(item[0])}
                 total = {item[1]}/>}
                 keyExtractor = {item => item[0]}
+                
     
                 />
             )
@@ -257,7 +260,8 @@ const TimeOverview = () => {
 const styles = StyleSheet.create({
     timeContainer:{
         marginHorizontal:20,
-        marginRight:20
+        marginRight:20,
+        flex:1
     }
     ,
     titleText: {

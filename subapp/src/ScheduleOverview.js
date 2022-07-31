@@ -15,7 +15,7 @@ const screenOptions = (route, color) => {
     let iconName;
   
     switch (route.name) {
-      case 'Schedule':
+      case 'Subsheet':
         iconName = 'clipboard';
         break;
       case 'Team':
@@ -44,9 +44,9 @@ const ScheduleOverview = ({navigation}) => {
         })}>
           <Tab.Screen name="Back"  component={SliderMain}
                 options={({navigation})=> ({
-                  tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('TeamOverview', {screen:'Schedule'})}/>
+                  tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('TeamOverview', {screen:'Subsheets'})}/>
             })}/>
-            <Tab.Screen name="Schedule" children={()=>
+            <Tab.Screen name="Subsheet" children={()=>
             <SliderMain
             navigation = {navigation}
             gameActive = {false}

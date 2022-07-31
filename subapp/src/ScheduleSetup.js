@@ -72,7 +72,7 @@ const ScheduleSetup = (props) =>
         >
             <SafeAreaView style = {styles.container} >
                 <View style = {styles.header}>
-                    <Text style = {{fontSize:40,marginBottom:10}}>Schedule Setup</Text>
+                    <Text style = {{fontSize:40,marginBottom:10}}>Subsheet Settings</Text>
                     <Pressable 
                         onPress={()=>{props.toggleModalSetup()}}
                         style = {{flex:1,alignItems:'flex-end'}}>
@@ -86,10 +86,10 @@ const ScheduleSetup = (props) =>
                 </View>
                 <ScrollView style ={{paddingBottom:100}} >
                     
-                    <Text style = {{fontSize:28}}>Game Settings</Text>
+                  
                     <View style = {styles.inputArea}>
                         <View style ={styles.subTextView} >
-                            <Text style = {styles.fieldTitle}>Schedule Name</Text>
+                            <Text style = {styles.fieldTitle}>Subsheet Name</Text>
                         </View>
                         <TextInput 
                             placeholderTextColor={'#bfbbbb'} 
@@ -135,7 +135,7 @@ const ScheduleSetup = (props) =>
                     <View style = {styles.inputArea}>
                         <View style ={styles.subTextView}>
                             <Text style = {styles.fieldTitle}>Mirror Intervals</Text>
-                            <Text style = {styles.infoText}>{`Makes the schedule of every\ninterval identical to the first one`}</Text>
+                            <Text style = {styles.infoText}>{`(Recommended)\nMakes the subsheet of every\ninterval identical to the first one.`}</Text>
                         </View>
                         <Switch
                             value = {mirror}

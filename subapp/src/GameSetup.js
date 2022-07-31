@@ -41,7 +41,7 @@ const GameSetup = (props) =>
 
             setCanAddTeam(false)
             setLeavingPage(true)
-            props.navigation.navigate('TeamOverview',{screen:'Schedules'})
+            props.navigation.navigate('TeamOverview',{screen:'Subsheets'})
             props.closeModal()
             
         }

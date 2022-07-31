@@ -29,27 +29,20 @@ function SaveView ({item},loadData,deleteSaveData)
             <View style = {styles.textContainer}>
                 <Text style = {styles.titleText}>{item.team_name}</Text>
                
+               
             </View>
             <View style = {styles.iconContainer}>
                 <Pressable 
                     style = {styles.icon}
                     onPress = {()=>{loadData(item.team_id)}}
                     >
-                    <Icon 
-                        name='check' 
-                        size = {40} 
-                        color = 'green'
-                    />
+                    <Text style = {{fontSize:40}}>✅</Text>
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
                     onPress = {deleteTeam}
                     >
-                    <Icon 
-                        name='trash' 
-                        size = {40} 
-                        color = 'red'
-                    />
+                    <Text style = {{fontSize:40}}>❌</Text>
                 </Pressable>
             </View>
 
@@ -73,10 +66,10 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     icon: {
-        padding: 10
+        padding: 4
     },
     titleText: {
-        fontSize:24
+        fontSize:32
     },
     subText: {
         color: 'darkgray'

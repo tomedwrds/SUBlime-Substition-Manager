@@ -60,6 +60,7 @@ function PlayerView({navigation }) {
         {label: 'Right Foward', value:'RF'},
         {label: 'Left Inner', value:'LI'},
         {label: 'Right Inner', value:'RI'},
+      
         {label: 'Left Half', value:'LH'},
         {label: 'Center Half', value:'CH'},
         {label: 'Right Half', value:'RH'},
@@ -105,7 +106,7 @@ function PlayerView({navigation }) {
     const playerPositions = item.positions;
     const playerSelectedPos = item.selectedPos;
     const playerOpen = item.open;
-    //const [values,setValues] = useState(false)
+    
     //Creates a modal that then prompts the ability to delete a player
     const deletePlayer = () => {
       //Create alert to show to player
@@ -129,31 +130,28 @@ function PlayerView({navigation }) {
   
   
     //Render a position chip for each position in the list
-    const renderPositionChips = ({ item }) => {
-      console.log(item)
-      return(
-
+    const renderPositionChips = ({ item }) => (
+      
       <Chip 
-        
+        style = {styles.positions} 
         onPress = {() => {deletePosition(item)}} 
         onClose = {() => {}} >
           {item}
   
       </Chip>
-      )
       
-      };
+    );
     
   
     //Add a position to a player
-    function addPosition(k) 
+    function addPosition() 
     {
-      let data = []
-      for(let i =0; i < k.length; i++)
+      //Check if position isnt already in list or the selected pos is null
+      if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
       {
-        data.push(k[i].value)
+        //Add the position to the player in the store
+        addPositionToPlayer([team_id,playerId,playerSelectedPos])
       }
-      addPositionToPlayer([team_id,playerId,data])
   
     }
   
@@ -181,51 +179,50 @@ function PlayerView({navigation }) {
         {/*Select postion bar*/}
         <View style ={styles.playerPositionSelector}>
           
-        <DropDownPicker
+        {/* <DropDownPicker
             items = {positionSelectionData}
             open={playerOpen}
             multiple={true}
-            value = {playerPositions}
             max={20}
             placeholder='Select Positions'
             dropDownContainerStyle={{borderColor:'white'}}
             style = {{borderColor:'white',borderRadius:4}}
-            setValue = {()=>{}}
-            onSelectItem ={(item) => {addPosition(item)}}
-            text
-            textStyle={{fontSize:16}}
+            
+            textStyle={{fontSize:20}}
             placeholderStyle={{color:'grey'}}
             listMode={'MODAL'}
             modalContentContainerStyle={{margin:40,backgroundColor:'transparent'}}
             theme = {'LIGHT'}
             modalTitle='Select Positions'
-            
-            renderBadgeItem={(props) => <Chip style = {styles.positions} >{props.value}</Chip>}
+            scroll
             setOpen={()=>updatePlayerPositionsOpen([team_id,playerId])}
             dropDownStyle={{
               height: 500 // Or     minHeight: 500
           }}
-          //extendableBadgeContainer={true}
           dropDownMaxHeight={500} // As     maxHeight: 500
          
 
-          />
-          {/* <RNPickerSelect 
+          /> */}
+          <RNPickerSelect 
             onValueChange={(value) => { updateSelectedPos([team_id,playerId,value])}}
             placeholder={{ label: 'Add positions', value: null }}
             style = {pickerSelectStyles}
             items = {positionSelectionData}
            
             useNativeAndroidPickerStyle={false}
-          /> */}
+          />
   
         </View>
         
         {/*Add position chip button*/}
         <Pressable 
-          style = {{marginHorizontal:10}}
+          style = {{marginHorizontal:15}}
           onPress = {() =>addPosition()}>
-          
+          <Icon 
+              name='plus' 
+              size = {40} 
+              color = '#0BD61F'
+            />
         </Pressable>
         
         {/*Displays all the position chips in a grid format*/}
@@ -313,7 +310,7 @@ function PlayerView({navigation }) {
         keyExtractor={item => item.id}
         style = {{flex:1}}
         contentContainerStyle={{paddingBottom:30,flexGrow:1}}
-        ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20}}>No players added yet press the '➕' to add players </Text></View>}
+        ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No players exist\n Press the "➕" to create a player'}</Text></View>}
    
       />
       </View>
@@ -347,9 +344,7 @@ const styles = StyleSheet.create({
   },
   positions: {
     
-    backgroundColor:'white',
-    borderColor:'black',
-    borderWidth:1
+    backgroundColor:'white'
   },
   playerTextInput : {
     fontSize: 20,

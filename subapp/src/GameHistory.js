@@ -25,10 +25,12 @@ const GameHistory = ({navigation}) => {
                 
             </View>
         <FlatList
-            data = {gameData}
+            data = {gameData.reverse()}
             keyExtractor = {item => item.game_id}
             renderItem = {(item)=>SaveView(item,deleteGame, team_id)}
-            ></FlatList>
+            contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+            ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No games played\n All games played will be shown here'}</Text></View>}
+            />
             </SafeAreaView>
     
     )
@@ -38,7 +40,9 @@ function SaveView ({item},deleteGame,team_id)
 {
     function format_time()
     {
-        let time = item.game_date
+        const time_data = item.game_date
+   
+        const time = new Date(time_data.year,time_data.month,time_data.day,time_data.hour,time_data.minute)
         const options = { hour:'numeric',minute:'numeric', year: 'numeric', month: 'long', day: 'numeric' };
         return time.toLocaleDateString('en-NZ',options)
     }
@@ -83,7 +87,8 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     container: {
-        marginHorizontal:20
+        marginHorizontal:20,
+        flex:1
     },
     iconContainer: {
         flexDirection:'row',

@@ -42,6 +42,7 @@ const SelectSchedule = ({navigation}) => {
         navigation.navigate('ScheduleOverview', {screen:'Schedule'})
     }
 
+ 
 
     return(
         <SafeAreaView style = {styles.container}>
@@ -59,7 +60,7 @@ const SelectSchedule = ({navigation}) => {
             />
             <View style = {styles.header}>
                 
-                <Text style = {{fontSize:40}}>Substituion Schedules</Text>
+                <Text style = {{fontSize:40}}>Subsheets</Text>
                 <View style = {{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
                     <Pressable onPress = {()=>toggleModalSetup()}>
                         <Icon 
@@ -72,10 +73,12 @@ const SelectSchedule = ({navigation}) => {
             </View>
    
         <FlatList
-            data = {scheduleData}
+            data = {scheduleData.reverse()}
             keyExtractor = {item => item.schedule_id}
             renderItem = {(item)=>SaveView(item,load_schedule,deleteSchedule, team_id)}
-     
+            contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+            ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No subsheets exist\n Press the "➕" to create a subsheet'}</Text></View>}
+            
             ></FlatList>
             
             </SafeAreaView>
@@ -88,7 +91,8 @@ function SaveView ({item},load_schedule,deleteSchedule,team_id)
     
     function format_time()
     {
-        let time = item.schedule_date
+        const time_data = item.schedule_date
+        const time = new Date(time_data.year,time_data.month,time_data.day,time_data.hour,time_data.minute)
         const options = { hour:'numeric',minute:'numeric', year: 'numeric', month: 'long', day: 'numeric' };
         return time.toLocaleDateString('en-NZ',options)
     }
@@ -161,7 +165,8 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     container: {
-        marginHorizontal:20
+        marginHorizontal:20,
+        flex:1
     },
     iconContainer: {
         flexDirection:'row',

@@ -204,7 +204,7 @@ const FormationSelection = (props) =>
            
             updateLayout([layoutData, positionSelectionDataAll[selectedLayout].layoutName])
             props.toggleModalFormations()
-            props.navigation.navigate('ScheduleOverview',{screen:'Schedule'})
+            props.navigation.navigate('ScheduleOverview',{screen:'Subsheet'})
         }
     }
 
