@@ -9,21 +9,20 @@ import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index, update_player_positions_open} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index,update_player_positions_open} from './actions.js';
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
-//import DropDownPicker from 'react-native-dropdown-picker';
 
 
 
 
 
 function PlayerView({navigation }) {
-  console.log('l')
+  
   //Setupredux vars
   const dispatch = useDispatch()
   const createPlayer = player_data => dispatch(create_player(player_data))
@@ -55,19 +54,15 @@ function PlayerView({navigation }) {
   {
     case '11H':
        positionSelectionData = [
-        {label: 'Striker', value:'ST'},
+     
         {label: 'Left Foward', value:'LF'},
         {label: 'Center Foward', value:'CF'},
         {label: 'Right Foward', value:'RF'},
         {label: 'Left Inner', value:'LI'},
         {label: 'Right Inner', value:'RI'},
-        {label: 'Left Midfield', value:'LM'},
-        {label: 'Center Midfield', value:'CM'},
-        {label: 'Right Midfield', value:'RM'},
         {label: 'Left Half', value:'LH'},
         {label: 'Center Half', value:'CH'},
         {label: 'Right Half', value:'RH'},
-        {label: 'Defender', value:'DF'},
         {label: 'Left Back', value:'LB'},
         {label: 'Center Back', value:'CB'},
         {label: 'Right Back', value:'RB'},
@@ -79,13 +74,9 @@ function PlayerView({navigation }) {
         {label: 'Left Foward', value:'LF'},
         {label: 'Center Foward', value:'CF'},
         {label: 'Right Foward', value:'RF'},
-        {label: 'Left Inner', value:'LI'},
-        {label: 'Right Inner', value:'RI'},
-        {label: 'Left Midfield', value:'LM'},
-        {label: 'Center Midfield', value:'CM'},
-        {label: 'Right Midfield', value:'RM'},
+        
+        {label: 'Midfield', value:'MF'},
         {label: 'Left Half', value:'LH'},
-        {label: 'Center Half', value:'CH'},
         {label: 'Right Half', value:'RH'},
         {label: 'Defender', value:'DF'},
         {label: 'Left Back', value:'LB'},
@@ -114,7 +105,7 @@ function PlayerView({navigation }) {
     const playerPositions = item.positions;
     const playerSelectedPos = item.selectedPos;
     const playerOpen = item.open;
-    
+    //const [values,setValues] = useState(false)
     //Creates a modal that then prompts the ability to delete a player
     const deletePlayer = () => {
       //Create alert to show to player
@@ -138,28 +129,31 @@ function PlayerView({navigation }) {
   
   
     //Render a position chip for each position in the list
-    const renderPositionChips = ({ item }) => (
-      
+    const renderPositionChips = ({ item }) => {
+      console.log(item)
+      return(
+
       <Chip 
-        style = {styles.positions} 
+        
         onPress = {() => {deletePosition(item)}} 
         onClose = {() => {}} >
           {item}
   
       </Chip>
+      )
       
-    );
+      };
     
   
     //Add a position to a player
-    function addPosition() 
+    function addPosition(k) 
     {
-      //Check if position isnt already in list or the selected pos is null
-      if (!playerPositions.includes(playerSelectedPos) && playerSelectedPos != null) 
+      let data = []
+      for(let i =0; i < k.length; i++)
       {
-        //Add the position to the player in the store
-        addPositionToPlayer([team_id,playerId,playerSelectedPos])
+        data.push(k[i].value)
       }
+      addPositionToPlayer([team_id,playerId,data])
   
     }
   
@@ -180,29 +174,42 @@ function PlayerView({navigation }) {
         <TextInput 
           style = {styles.playerTextInput}
           placeholder={playerName != '' ? playerName:'Player Name'}
-         
           placeholderTextColor= {playerName != '' ? 'black':"grey"} 
           onEndEditing={(data)=>(updateName([team_id,playerId,data.nativeEvent.text]))}
         />
   
         {/*Select postion bar*/}
         <View style ={styles.playerPositionSelector}>
-          {/* <DropDownPicker
+          
+        <DropDownPicker
             items = {positionSelectionData}
             open={playerOpen}
             multiple={true}
+            value = {playerPositions}
             max={20}
             placeholder='Select Positions'
             dropDownContainerStyle={{borderColor:'white'}}
             style = {{borderColor:'white',borderRadius:4}}
-            
-            textStyle={{fontSize:20}}
+            setValue = {()=>{}}
+            onSelectItem ={(item) => {addPosition(item)}}
+            text
+            textStyle={{fontSize:16}}
             placeholderStyle={{color:'grey'}}
-            listMode={'SCROLLVIEW'}
+            listMode={'MODAL'}
+            modalContentContainerStyle={{margin:40,backgroundColor:'transparent'}}
+            theme = {'LIGHT'}
+            modalTitle='Select Positions'
+            
+            renderBadgeItem={(props) => <Chip style = {styles.positions} >{props.value}</Chip>}
             setOpen={()=>updatePlayerPositionsOpen([team_id,playerId])}
+            dropDownStyle={{
+              height: 500 // Or     minHeight: 500
+          }}
+          //extendableBadgeContainer={true}
+          dropDownMaxHeight={500} // As     maxHeight: 500
          
 
-          /> */}
+          />
           {/* <RNPickerSelect 
             onValueChange={(value) => { updateSelectedPos([team_id,playerId,value])}}
             placeholder={{ label: 'Add positions', value: null }}
@@ -215,15 +222,11 @@ function PlayerView({navigation }) {
         </View>
         
         {/*Add position chip button*/}
-        {/* <Pressable 
+        <Pressable 
           style = {{marginHorizontal:10}}
           onPress = {() =>addPosition()}>
-            <Icon 
-              name='plus' 
-              size = {30} 
-              color = '#0BD61F'
-            />
-        </Pressable> */}
+          
+        </Pressable>
         
         {/*Displays all the position chips in a grid format*/}
         <View style = {styles.playerPositionChips}>
@@ -261,7 +264,7 @@ function PlayerView({navigation }) {
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null,
       intervalWidth: 0,
-      open: false,
+      open:false
     }])
     
     setCanAddPlayer(false)
@@ -283,7 +286,7 @@ function PlayerView({navigation }) {
   
 
   return(
-   <SafeAreaView style = {{marginHorizontal:20,flex:'1'}}>
+   <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
      <View style={{flexDirection:'row'}}>
       <Text style = {{fontSize:40}}>Team Overview</Text>
       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
@@ -308,14 +311,15 @@ function PlayerView({navigation }) {
         data={teamState.team_data[adjusted_team_index].team_player_data.team_players}
         renderItem={(item) => PlayerTab(item)}
         keyExtractor={item => item.id}
-        //contentContainerStyle={{paddingBottom:30}}
-        //ListEmptyComponent={()=><View style = {{justifyContent:'center',marginTop:50,alignItems:'center'}}><Text style = {{fontSize:20}}>No players added yet press the '➕' to add players </Text></View>}
-        
+        style = {{flex:1}}
+        contentContainerStyle={{paddingBottom:30,flexGrow:1}}
+        ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20}}>No players added yet press the '➕' to add players </Text></View>}
+   
       />
-      
       </View>
+      
+    
   </SafeAreaView>
-
     
     
     
@@ -339,13 +343,13 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
-    height:55
-
+    marginBottom: 8
   },
   positions: {
     
-    backgroundColor:'white'
+    backgroundColor:'white',
+    borderColor:'black',
+    borderWidth:1
   },
   playerTextInput : {
     fontSize: 20,
@@ -355,14 +359,11 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     backgroundColor: 'white',
     height: '90%',
-    flex: 2,
-    paddingLeft:4
+    flex: 1,
   },
   playerPositionSelector : {
-    flex: 3,  
-   
-    
-   
+    flex: 1,  
+    height: '90%'
   },
   playerAddPostions : {
     marginLeft: 20,

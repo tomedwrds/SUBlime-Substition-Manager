@@ -58,7 +58,7 @@ function teamReducer(state = teamState, action)
                 state.team_data.map(
                     (content, i) => content.team_id === action.payload[0] ? {...content, team_player_data: { 
                         ...content.team_player_data,team_players: content.team_player_data.team_players.map((content2,i) => content2.id === action.payload[1] ? 
-                        {...content2, positions: [...content2.positions, action.payload[2]]}
+                        {...content2, positions: action.payload[2]}
                         : content2)}}
                                             : content
                 )}

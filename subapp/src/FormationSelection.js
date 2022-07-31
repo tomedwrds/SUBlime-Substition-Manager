@@ -55,7 +55,7 @@ const FormationSelection = (props) =>
         layoutData: [
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [0,0,0,0,0,0,0],
-                [0,['Right Inner','RI'],0,0,0,['Left Inner','LI'],0],
+                [0,['Left Inner','LI'],0,0,0,['Right Inner','RI'],0],
                 [0,0,['Center Half','CH'],0,['Center Half','CH'],0,0],
                 [['Left Half','LH'],0,0,0,0,0,['Right Half','RH']],
                 [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
