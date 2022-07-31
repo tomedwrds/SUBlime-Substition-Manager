@@ -1,36 +1,31 @@
 import React from "react"
 import { View,StyleSheet,Text } from "react-native"
+import BasketballPitch from "./BasketballPitch"
+import HockeyPitch from "./HockeyPitch"
+import NetballPitch from "./NetballPitch"
 
 function GamePitch(props)
 {
+    const RenderedPitch = () =>
+    {
+        switch(props.sport)
+        {
+            case 'H':
+                return <HockeyPitch/>
+            case 'N':
+                return <NetballPitch/>
+            case 'B':
+                return <BasketballPitch/>
+            default:
+                <HockeyPitch/>
+        }
+    }
     
     return(
         <View style = {{flex:1}} >
             {/* Game pitch serves as view for all absolute drawing to take place within */}
             <View style = {styles.gamePitch}>
-
-                {/* Top quarter */}
-                <View style = {{flex: 1,flexDirection:'row', backgroundColor: 'green',borderBottomWidth:2,borderColor:'white'}}>
-                    <View style = {{flex:1, backgroundColor:'green'}}></View>
-                    <View style = {{flex:4}}>
-                        <View style = {{flex:17,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:2,borderColor:'white', borderBottomEndRadius:150,borderBottomStartRadius:150}}></View>
-                        <View style ={{flex:3}}></View>
-                    </View>
-                    <View style = {{flex:1, backgroundColor:'green'}}></View>
-                </View>
-                {/* Middle half of field */}
-                <View style = {{flex: 1, backgroundColor: 'green',borderBottomWidth:2,borderColor:'white'}}></View>
-                <View style = {{flex: 1, backgroundColor: 'green',borderBottomWidth:2,borderColor:'white'}}></View>
-                
-                {/* Bottom quarter */}
-                <View style = {{flex: 1, backgroundColor: 'green',flexDirection:'row'}}>
-                    <View style = {{flex:1, backgroundColor:'green'}}></View>
-                    <View style = {{flex:4}}>
-                        <View style = {{flex:3}}></View>
-                        <View style = {{flex:17,borderRightWidth:2,borderLeftWidth:2,borderTopWidth:2,borderColor:'white', borderTopLeftRadius:150,borderTopRightRadius:150}}></View>
-                    </View>
-                    <View style = {{flex:1, backgroundColor:'green'}}></View>
-                </View>
+                <RenderedPitch/>
             </View>    
             
             {/* Mapping of all icons to the pitch.

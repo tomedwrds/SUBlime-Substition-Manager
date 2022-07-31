@@ -28,7 +28,7 @@ function SaveView ({item},loadData,deleteSaveData)
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
                 <Text style = {styles.titleText}>{item.team_name}</Text>
-               
+               <Text style = {styles.subText}>Sport: {item.team_sport_full}</Text>
                
             </View>
             <View style = {styles.iconContainer}>
@@ -36,13 +36,21 @@ function SaveView ({item},loadData,deleteSaveData)
                     style = {styles.icon}
                     onPress = {()=>{loadData(item.team_id)}}
                     >
-                    <Text style = {{fontSize:40}}>✅</Text>
+                    <Icon 
+                        name='check' 
+                        size = {40} 
+                        color = '#0BD61F'
+                    />
                 </Pressable>
                 <Pressable 
                     style = {styles.icon}
                     onPress = {deleteTeam}
                     >
-                    <Text style = {{fontSize:40}}>❌</Text>
+                    <Icon 
+                        name='trash' 
+                        size = {40} 
+                        color = 'red'
+                    />
                 </Pressable>
             </View>
 

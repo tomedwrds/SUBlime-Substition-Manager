@@ -90,6 +90,23 @@ function PlayerView({navigation }) {
         {label: 'Left Back', value: 'LB'}
       ]
       break;
+    case 'N':
+      positionSelectionData = [
+        {label: 'Attack', value: 'A'},
+        {label: 'Centre', value: 'C'},
+        {label: 'Defence', value: 'D'},
+      ]
+      break;
+    case 'B':
+    positionSelectionData = [
+      {label: 'Point Guard (1)', value: 'PG-1'},
+      {label: 'Shooting Guard (2)', value: 'SG-2'},
+      {label: 'Small Foward (3)', value: 'SF-3'},
+      {label: 'Power Foward (4)', value: 'PF-4'},
+      {label: 'Centre (5)', value: 'C-5'}
+    ]
+      break;
+
     default:
       break;
 
@@ -254,10 +271,13 @@ function PlayerView({navigation }) {
        // Your useEffect code here to be run on update
     if(canAddPlayer)
 
-   { createPlayer([team_id,{
+   { 
+    let position = []
+    if(sport == 'N') position = ['A','C','D']
+    createPlayer([team_id,{
       id: current_player_index,
       name: '',
-      positions: [],
+      positions: position,
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       selectedPos: null,
       intervalWidth: 0,

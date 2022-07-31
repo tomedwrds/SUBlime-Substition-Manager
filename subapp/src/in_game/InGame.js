@@ -207,7 +207,7 @@ function InGame(props)
             <View style = {styles.pitchSide}>
                 
                
-                    <GamePitch layoutData = {pitchData}/>
+                    <GamePitch layoutData = {pitchData} sport ={teamData.team_data[team_index].team_sport}/>
                 
                 
                 

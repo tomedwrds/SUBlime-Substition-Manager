@@ -19,7 +19,8 @@ const FormationSelection = (props) =>
     const teamData = useSelector(state => state.teamReducer);
     const generalData = useSelector(state => state.generalReducer);
     const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
-   
+    
+    const team_sport = teamData.team_data[current_team_index].team_sport
     //This is the data sets used for the display of the formation
     const positionSelectionDataAll =   [
     
@@ -126,6 +127,49 @@ const FormationSelection = (props) =>
                 [0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0]]
     },
+    {
+        layoutId:8,
+        layoutName: 'Yr 3/4 Netball',
+        layoutSport: 'N', 
+        layoutData: [
+            [0,0,0,0,0,0,0],
+            [0,['Attack','A'],0,0,0,['Attack','A'],0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,['Centre','C'],0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,['Defence','D'],0,0,0,['Defence','D'],0],
+            [0,0,0,0,0,0,0]]
+    },
+    {
+        layoutId:9,
+        layoutName: 'Yr 5/6 Netball',
+        layoutSport: 'N', 
+        layoutData: [
+                [0,0,0,0,0,0,0],
+                [0,['Attack','A'],0,0,0,['Attack','A'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,['Centre','C'],0,['Centre','C'],0,0],
+                [0,0,0,0,0,0,0],
+                [0,['Defence','D'],0,0,0,['Defence','D'],0],
+                [0,0,0,0,0,0,0]]
+    },
+    {
+        layoutId:10,
+        layoutName: 'Basketball',
+        layoutSport: 'B', 
+        layoutData: [
+                [0,0,0,0,0,0,0],
+                
+                
+                [0,0,0,0,0,0,0],
+                [0,0,['Point Guard (1)','PG-1'],0,['Shooting Guard (2)', 'SG-2'],0,0],
+                [0,['Small Foward (3)',  'SF-3'],0,0,0,['Power Foward (4)', 'PF-4'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,['Centre (5)','C-5'],0,0,0],
+                
+                [0,0,0,0,0,0,0]]
+    },
+   
 
 ]   
     //Filters to only have formations relavent to sport code
@@ -238,7 +282,7 @@ const FormationSelection = (props) =>
                 </View>
 
                 <FlatList
-                renderItem={(item) => GameField(item,setSelectedLayout,selectedLayout)}
+                renderItem={(item) => GameField(item,setSelectedLayout,selectedLayout,team_sport)}
                 data = {positionSelectionData}
                 numColumns = {2}
                 keyExtractor = {item => item.layoutId}

@@ -23,10 +23,11 @@ const GameSetup = (props) =>
     //Setup hooks
     const [name,setName] = useState(null)
     const [sport,setSport] = useState(null)
+    const [fullSport,setFullSport] = useState(null)
  
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
-    
+    const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Netball',value:'N'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Test', value:'T'}]
     
     useEffect(() => {
         
@@ -35,7 +36,7 @@ const GameSetup = (props) =>
 
             
             //Get the position related data 
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport,team_sport_full:fullSport})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -138,8 +139,8 @@ const GameSetup = (props) =>
                     </View>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
-                        onValueChange={(value)=>{setSport(value)}}
-                        items ={[{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Netball',value:'N'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Test', value:'T'}]}
+                        onValueChange={(value,i)=>{setSport(value); setFullSport(sportData[i-1].label)}}
+                        items ={sportData}
                         placeholder = {{label:'',value:null}}
                         useNativeAndroidPickerStyle={false}
                        

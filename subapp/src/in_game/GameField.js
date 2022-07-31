@@ -3,7 +3,7 @@ import { View,StyleSheet,Text, Pressable } from "react-native"
 import GamePitch from "./GamePitch"
 
 
-const GameField = ({item},setSelectedLayout,selectedLayout) => {
+const GameField = ({item},setSelectedLayout,selectedLayout,team_sport) => {
 
     //Cutsomized styling to show what component is currently selected
     let selectedColor = '#D3D3D3'
@@ -38,7 +38,7 @@ const GameField = ({item},setSelectedLayout,selectedLayout) => {
                     {/* Tile text */}
                     <Text style = {styles.nameText}>{item.layoutName}</Text>
                     {/* View wrapper needs to exist to allow magic fuckery of absolute positioning  */}
-                    <GamePitch layoutData = {item.layoutData}/>
+                    <GamePitch layoutData = {item.layoutData} sport = {team_sport}/>
                 </View>
             </Pressable>
           

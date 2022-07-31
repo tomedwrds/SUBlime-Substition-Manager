@@ -46,10 +46,11 @@ const LoadSave = ({navigation}) =>
             </View>
                 <FlatList
             
-                data = {teamData}
+                data = {teamData.reverse()}
                 keyExtractor = {item => item.team_id}
                 renderItem = {(item)=>SaveView(item,loadData,deleteSaveData)}
                 style = {{flex:1}}
+                
                 contentContainerStyle={{paddingBottom:30,flexGrow:1}}
                 ListEmptyComponent={()=><View style = {{justifyContent:'center',alignItems:'center',flex:1}}><Text style = {{fontSize:20,textAlign:'center'}}>{'No teams found\n Go back to main menu to create a team'}</Text></View>}
                 />
