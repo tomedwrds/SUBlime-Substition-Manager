@@ -69,6 +69,7 @@ const ScheduleSetup = (props) =>
         onRequestClose={props.toggleModalSetup}
         animationType={'slide'}
         onShow={()=>{setIntervals(null);setIntervalW(null);setName(null)}}
+        supportedOrientations={['landscape']}
         >
             <SafeAreaView style = {styles.container} >
                 <View style = {styles.header}>

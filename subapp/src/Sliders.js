@@ -6,7 +6,7 @@ import {Pressable,View,FlatList,Alert,StyleSheet,Text,Modal,TextInput} from 'rea
 
 
 import { useSelector, useDispatch, } from 'react-redux'
-import { add_save_data, create_game_data, increment_save_index, save_game, save_schedule, update_current_interval, update_interval_width, update_player_interval_width, update_position, } from './actions';
+import { add_save_data, create_game_data, increment_save_index, save_game, save_schedule, update_current_interval, update_interval_width, update_player_interval_width, update_position,update_team_tutorial } from './actions';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
@@ -50,6 +50,7 @@ const SliderMain = (props) =>
   const saveSchedule = data => dispatch(save_schedule(data))
   const saveGame = data => dispatch(save_game(data))
   const current_interval = generalData.current_interval
+  const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
 
  
   
@@ -318,6 +319,7 @@ else
         animationType="slide"
         transparent={true}
         visible={modalVisible}
+        supportedOrientations={['landscape']}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
@@ -347,6 +349,28 @@ else
             </View>
           </View>
         </View>
+      </Modal>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={teamData.team_data[adjusted_team_index].team_tutorial[3]} 
+          supportedOrientations={['landscape']}
+      >
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Seasonal Playtime</Text>
+                  <Text style = {{textAlign:'center'}}>{'It is time to get down to business. On this page you can manage your newly created Subsheet. Tap on the positions bar to begin adding players into a position between a given time. Be warned, that your subsheet will be deleted if you don’t save it.\n\nOnce you have finished your Subsheet press the ‘✅’ button to begin the match.\n'}</Text>
+                 
+                  <View style = {{flexDirection:'row'}}>
+                  <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {updateTeamTutorial([team_id,3])}}
+                  >
+                  <Text style={styles.textStyle}>Close</Text>
+                  </Pressable>
+                  </View>
+              </View>
+          </View>
       </Modal>
       
       <View style = {{...styles.header, alignItems:'center'}}>

@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
-import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text } from 'react-native';
+import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text,Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
@@ -13,7 +13,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'
-import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index,update_player_positions_open} from './actions.js';
+import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index,update_player_positions_open,update_team_tutorial} from './actions.js';
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
 
@@ -36,6 +36,7 @@ function PlayerView({navigation }) {
   const updateName = index_and_name => dispatch(update_name(index_and_name))
   const updateSelectedPos = index_pos => dispatch(update_selected_pos(index_pos))
   const updatePlayerPositionsOpen = data => dispatch(update_player_positions_open(data))
+  const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
   //This is the id of the current team in use
   const team_id = useSelector(state => state.generalReducer).current_team_index
   //This is the adjusted index to account for deletion of players
@@ -56,16 +57,16 @@ function PlayerView({navigation }) {
        positionSelectionData = [
      
         {label: 'Left Foward', value:'LF'},
-        {label: 'Center Foward', value:'CF'},
+        {label: 'Centre Foward', value:'CF'},
         {label: 'Right Foward', value:'RF'},
         {label: 'Left Inner', value:'LI'},
         {label: 'Right Inner', value:'RI'},
       
         {label: 'Left Half', value:'LH'},
-        {label: 'Center Half', value:'CH'},
+        {label: 'Centre Half', value:'CH'},
         {label: 'Right Half', value:'RH'},
         {label: 'Left Back', value:'LB'},
-        {label: 'Center Back', value:'CB'},
+        {label: 'Centre Back', value:'CB'},
         {label: 'Right Back', value:'RB'},
         {label: 'Goal Keeper', value:'GK'}]
         break;
@@ -73,7 +74,7 @@ function PlayerView({navigation }) {
       positionSelectionData = [
         {label: 'Striker', value:'ST'},
         {label: 'Left Foward', value:'LF'},
-        {label: 'Center Foward', value:'CF'},
+        {label: 'Centre Foward', value:'CF'},
         {label: 'Right Foward', value:'RF'},
         
         {label: 'Midfield', value:'MF'},
@@ -81,7 +82,7 @@ function PlayerView({navigation }) {
         {label: 'Right Half', value:'RH'},
         {label: 'Defender', value:'DF'},
         {label: 'Left Back', value:'LB'},
-        {label: 'Center Back', value:'CB'},
+        {label: 'Centre Back', value:'CB'},
         {label: 'Right Back', value:'RB'},
         {label: 'Goal Keeper', value:'GK'}]
         break;
@@ -106,7 +107,41 @@ function PlayerView({navigation }) {
       {label: 'Centre (5)', value: 'C-5'}
     ]
       break;
-
+    case 'R':
+      positionSelectionData = [
+        {label: 'Loosehead Prop', value: 'LP'},
+        {label: 'Hooker', value: 'H'},
+        {label: 'Tighthead Prop', value: 'TP'},
+        {label: 'Loosehead Lock', value: 'LL'},
+        {label: 'Tighthead Lock', value: 'TL'},
+        {label: 'Blindside Flanker', value: 'BF'},
+        {label: 'Openside Flanker', value: 'OF'},
+        {label: 'Number 8', value: 'N8'},
+        {label: 'Scrum Half', value: 'SH'},
+        {label: 'Fly Half', value: 'FH'},
+        {label: 'Inside Centre', value: 'IC'},
+        {label: 'Outside Centre', value: 'OC'},
+        {label: 'Left Wing', value: 'LW'},
+        {label: 'Full Back', value: 'FB'},
+        {label: 'Right Wing', value: 'RW'}
+      ]
+        break;
+      case '11F':
+        positionSelectionData = [
+        
+          {label: 'Left Wing', value:'LW'},
+          {label: 'Centre Foward', value:'CF'},
+          {label: 'Right Wing', value:'RW'},
+          {label: 'Left Midfield', value:'LM'},
+          {label: 'Centre Midfield', value:'CM'},
+          {label: 'Centre Attacking Midfield', value:'CAM'},
+          {label: 'Centre Defending Midfield', value:'CDM'},
+          {label: 'Left Back', value:'LB'},
+          {label: 'Centre Back', value:'CB'},
+          {label: 'Right Back', value:'RB'},
+          {label: 'Goal Keeper', value:'GK'}]
+          
+          break;
     default:
       break;
 
@@ -304,6 +339,28 @@ function PlayerView({navigation }) {
 
   return(
    <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
+    <Modal
+          animationType="slide"
+          transparent={true}
+          visible={teamState.team_data[adjusted_team_index].team_tutorial[1]} 
+          supportedOrientations={['landscape']}
+      >
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Team Overview</Text>
+                  <Text style = {{textAlign:'center'}}>{'A team would be nothing without its player. On this page you can add players to your team by pressing the ‘+’ button. After that be sure to assign positions to your players.\n '}</Text>
+                 
+                  <View style = {{flexDirection:'row'}}>
+                  <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {updateTeamTutorial([team_id,1])}}
+                  >
+                  <Text style={styles.textStyle}>Close</Text>
+                  </Pressable>
+                  </View>
+              </View>
+          </View>
+      </Modal>
      <View style={{flexDirection:'row'}}>
       <Text style = {{fontSize:40}}>Team Overview</Text>
       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
@@ -397,6 +454,36 @@ const styles = StyleSheet.create({
   playerDelete : {
     padding: 4,
     paddingLeft: 8
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  
+  button: {
+    borderRadius: 9,
+    padding: 10,
+    elevation: 2,
+    borderWidth:2,
+    marginHorizontal:10,
+    backgroundColor:'white'
   },
   
   

@@ -1,8 +1,10 @@
 import React from "react"
 import { View,StyleSheet,Text } from "react-native"
 import BasketballPitch from "./BasketballPitch"
+import FootballPitch from "./FootballPitch"
 import HockeyPitch from "./HockeyPitch"
 import NetballPitch from "./NetballPitch"
+import RugbyPitch from "./RugbyPitch"
 
 function GamePitch(props)
 {
@@ -10,14 +12,26 @@ function GamePitch(props)
     {
         switch(props.sport)
         {
-            case 'H':
+            case '7H':
                 return <HockeyPitch/>
+                
+            case '11H':
+                return <HockeyPitch/>
+                
             case 'N':
                 return <NetballPitch/>
+                
             case 'B':
                 return <BasketballPitch/>
+            case '11F':
+                return <FootballPitch/>
+            case '7F':
+                return <FootballPitch/>  
+            case 'R':
+                return <RugbyPitch/>  
             default:
-                <HockeyPitch/>
+                return <HockeyPitch/>
+                
         }
     }
     
@@ -83,7 +97,7 @@ const styles = StyleSheet.create({
         
     },
     iconText: {
-        fontSize: 20,
+        fontSize: 16,
         color:'white'
     }
 })

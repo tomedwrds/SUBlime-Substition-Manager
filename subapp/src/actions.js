@@ -288,3 +288,12 @@ export const update_player_positions_open = data => dispatch => {
     payload: data
   });
 }
+
+export const UPDATE_TEAM_TUTORIAL = 'UPDATE_TEAM_TUTORIAL';
+
+export const update_team_tutorial = data => dispatch => {
+  dispatch({
+    type: UPDATE_TEAM_TUTORIAL,
+    payload: data
+  });
+}

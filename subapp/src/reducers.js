@@ -1,5 +1,5 @@
 
-import {CREATE_PLAYER,SAVE_GAME,UPDATE_FORMATION_NAME,UPDATE_PLAYER_INTERVAL_WIDTH,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_GAME, UPDATE_PLAYER_POSITIONS_OPEN} from './actions.js';
+import {CREATE_PLAYER,SAVE_GAME,UPDATE_TEAM_TUTORIAL,UPDATE_FORMATION_NAME,UPDATE_PLAYER_INTERVAL_WIDTH,REMOVE_PLAYER,INCREMENT_PLAYER_INDEX,CREATE_GAME_DATA,ADD_POSITION,REMOVE_POSITION,UPDATE_NAME,UPDATE_POSITION,UPDATE_INTERVAL_WIDTH, UPLOAD_LAYOUT,UPDATE_SELECTED_POS,UPDATE_CURRENT_INTERVAL,ADD_SAVE_DATA,DELETE_SAVE_DATA,UPLOAD_PLAYER_DATA,INCREMENT_SAVE_INDEX, UPDATE_TEAM_NAME, UPDATE_INTERVAL_LENGTH, UPDATE_TOTAL_INTERVALS, LOAD_GAME_DATA, SHOULD_MIRROR_INTERVALS, CREATE_TEAM, INCREMENT_TEAM_INDEX, UPDATE_CURRENT_TEAM_INDEX, SAVE_SCHEDULE, DELETE_SCHEDULE, DELETE_GAME, UPDATE_PLAYER_POSITIONS_OPEN} from './actions.js';
 
 import { combineReducers } from 'redux';
 
@@ -129,6 +129,13 @@ function teamReducer(state = teamState, action)
                 state.team_data.map(
                 (content,i) => content.team_id === action.payload[0] ? {...content, team_game_data: {...content.team_game_data,team_games: content.team_game_data.team_games.filter(item => item.game_id != action.payload[1])}
                     }
+                : content
+            )};
+        case UPDATE_TEAM_TUTORIAL:
+            return {...state,team_data: 
+                state.team_data.map(
+                (content,i) => content.team_id === action.payload[0] ? {...content, 
+                    team_tutorial: content.team_tutorial.map((item,i)=>i === action.payload[1] ? false:item)}
                 : content
             )};
 

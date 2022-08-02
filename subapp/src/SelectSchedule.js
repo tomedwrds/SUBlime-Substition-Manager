@@ -1,12 +1,13 @@
 import React from "react";
-import { Text,View,StyleSheet,Pressable,FlatList,Alert } from "react-native";
+import { Text,View,StyleSheet,Pressable,FlatList,Alert,Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals } from "./actions";
+import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals, update_team_tutorial } from "./actions";
 import ScheduleSetup from "./ScheduleSetup";
 import FormationSelection from "./FormationSelection";
+import { useFocusEffect } from "@react-navigation/native";
 const SelectSchedule = ({navigation}) => {
 
     const dispatch = useDispatch()
@@ -20,7 +21,7 @@ const SelectSchedule = ({navigation}) => {
     const updateIntervalLength = interval_length => dispatch(update_interval_length(interval_length))
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
-
+    const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
 
     //Modal managment
     const [displaySetup,setDisplaySetup] = useState(false)
@@ -41,11 +42,37 @@ const SelectSchedule = ({navigation}) => {
         shouldMirrorIntervals(scheduleData[schedule_index].schedule_data.mirror_intervals)
         navigation.navigate('ScheduleOverview', {screen:'Schedule'})
     }
+    
+    
+   
 
  
 
     return(
+        
         <SafeAreaView style = {styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={teamData.team_data[adjusted_team_index].team_tutorial[0]} 
+                supportedOrientations={['landscape']}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Subsheets</Text>
+                        <Text style = {{textAlign:'center'}}>{'In SUBlime you can create Subsheets. Subsheets are an overview of your substitutions during the game. You can add players to them to create your ideal game plan. \n'}</Text>
+                        <Text style = {{textAlign:'center',paddingBottom:10}}>Begin by pressing ‘+’ to create your first schedule.</Text>
+                        <View style = {{flexDirection:'row'}}>
+                        <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => {updateTeamTutorial([team_id,0])}}
+                        >
+                        <Text style={styles.textStyle}>Close</Text>
+                        </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <ScheduleSetup
                 displayModal = {displaySetup}
                 toggleModalSetup = {()=>toggleModalSetup()}
@@ -118,6 +145,7 @@ function SaveView ({item},load_schedule,deleteSchedule,team_id)
       }
    
     return(
+        
         <View style = {styles.body}>
             <View style = {styles.textContainer}>
                 <Text style ={styles.titleText}>{item.schedule_name}</Text>
@@ -183,7 +211,36 @@ const styles = StyleSheet.create({
     },
     subText: {
         color: 'darkgray'
-    }
+    },centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      
+      button: {
+        borderRadius: 9,
+        padding: 10,
+        elevation: 2,
+        borderWidth:2,
+        marginHorizontal:10,
+        backgroundColor:'white'
+      },
 })
 export default (SelectSchedule)
 

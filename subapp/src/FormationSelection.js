@@ -31,7 +31,7 @@ const FormationSelection = (props) =>
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [['Left Foward','LF'],0,0,0,0,0,['Right Foward','RF']],
                 [0,['Left Inner','LI'],0,0,0,['Right Inner','RI'],0],
-                [0,0,0,['Center Half','CH'],0,0,0],
+                [0,0,0,['Centre Half','CH'],0,0,0],
                 [['Left Half','LH'],0,0,0,0,0,['Right Half','RH']],
                 [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
                 [0,0,0,['Goal Keeper','GK'],0,0,0]]
@@ -44,7 +44,7 @@ const FormationSelection = (props) =>
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
                 [0,0,0,0,0,0,0],
-                [['Left Half','LH'],0,['Center Half','CH'],0,['Center Half','CH'],0,['Right Half','RH']],
+                [['Left Half','LH'],0,['Centre Half','CH'],0,['Centre Half','CH'],0,['Right Half','RH']],
                 [0,0,0,0,0,0,0],
                 [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
                 [0,0,0,['Goal Keeper','GK'],0,0,0]]
@@ -57,7 +57,7 @@ const FormationSelection = (props) =>
                 [0,0,0,['Centre Foward','CF'],0,0,0],
                 [0,0,0,0,0,0,0],
                 [0,['Left Inner','LI'],0,0,0,['Right Inner','RI'],0],
-                [0,0,['Center Half','CH'],0,['Center Half','CH'],0,0],
+                [0,0,['Centre Half','CH'],0,['Centre Half','CH'],0,0],
                 [['Left Half','LH'],0,0,0,0,0,['Right Half','RH']],
                 [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
                 [0,0,0,['Goal Keeper','GK'],0,0,0]]
@@ -70,7 +70,7 @@ const FormationSelection = (props) =>
                 [0,0,0,0,0,0,0],
                 [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
                 [0,0,0,0,0,0,0],
-                [['Left Half','LH'],0,['Center Half','CH'],0,['Center Half','CH'],0,['Right Half','RH']],
+                [['Left Half','LH'],0,['Centre Half','CH'],0,['Centre Half','CH'],0,['Right Half','RH']],
                 [0,0,0,0,0,0,0],
                 [['Left Back','LB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Right Back','RB']],
                 [0,0,0,['Goal Keeper','GK'],0,0,0]]
@@ -169,6 +169,85 @@ const FormationSelection = (props) =>
                 
                 [0,0,0,0,0,0,0]]
     },
+    {
+        layoutId:11,
+        layoutName: '4-3-3', 
+        layoutSport: '11F',
+        layoutData: [
+                [0,0,0,['Centre Foward','CF'],0,0,0],
+                [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
+                [0,0,['Left Midfield','LM'],0,['Right Midfield','RM'],0,0],
+                [0,0,0,['Centre Defending Midfield','CDM'],0,0,0],
+                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
+                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:12,
+        layoutName: '4-4-2', 
+        layoutSport: '11F',
+        layoutData: [
+                [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
+                [0,0,0,0,0,0,0],
+                [0,['Left Midfield','LM'],0,0,0,['Right Midfield','RM'],0],
+                [0,0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,0],
+                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
+                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:13,
+        layoutName: '4-4-2 Diamond', 
+        layoutSport: '11F',
+        layoutData: [
+                [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
+                
+                [0,0,0,['Centre Attacking Midfield','CAM'],0,0,0],
+                [0,0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,0],
+                [0,0,0,['Centre Defending Midfield','CDM'],0,0,0],
+                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
+                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:14,
+        layoutName: '3-4-3', 
+        layoutSport: '11F',
+        layoutData: [
+                [0,0,0,['Centre Foward','CF'],0,0,0],
+                [0,['Left Wing','LW'],0,0,0,['Right Foward','RW'],0],
+                [0,0,0,0,0,0,0],
+                [['Left Midfield','LM'],0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,['Left Midfield','RM']],
+                [0,0,0,0,0,0,0],
+                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:15,
+        layoutName: '3-4-3', 
+        layoutSport: '7F',
+        layoutData: [
+                [0,0,0,['Centre Foward','CF'],0,0,0],
+                [0,['Left Wing','LW'],0,0,0,['Right Foward','RW'],0],
+                [0,0,0,0,0,0,0],
+                [['Left Midfield','LM'],0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,['Left Midfield','RM']],
+                [0,0,0,0,0,0,0],
+                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:16,
+        layoutName: 'Rugby', 
+        layoutSport: 'R',
+        layoutData: [
+                [0,0,['Loosehead Prop', 'LP'],['Hooker','H'],['Tighthead Prop', 'TP'],0,0],
+                [0,0,['Loosehead Lock', 'LL'],0,['Tighthead Lock', 'TL'],0,0],
+                [0,['Blindside Flanker','BF'],0,0,['Openside Flanker', 'OF'],0,0],
+                [0,0,['Number 8', 'N8'],['Scrum Half','SH'],0,0,0],
+                [0,0,0,['Fly Half','FH'],['Inside Centre','IC'],0,0],
+                [0,0,0,0,0,['Outside Centre','OC'],0],
+                [0,['Left Wing','LW'],0,0,['Full Back','FB'],0,['Right Wing','RW']]]
+    },
    
 
 ]   
@@ -261,6 +340,7 @@ const FormationSelection = (props) =>
         onRequestClose={props.toggleModalFormation}
         animationType={'slide'}
         onShow={()=>{setSelectedLayout(null);}}
+        supportedOrientations={['landscape']}
         
         >
             <SafeAreaView>

@@ -1,12 +1,12 @@
 import React, { useState,useEffect } from 'react'
-import {Text,StyleSheet,View,FlatList,Pressable} from 'react-native'
+import {Text,StyleSheet,View,FlatList,Pressable,Modal} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useSelector,useDispatch } from 'react-redux';
 import UpcomingSub from './UpcomingSub.js'
 import GamePitch from './GamePitch.js';
-import { update_current_interval } from '../actions.js';
+import { update_current_interval,update_team_tutorial } from '../actions.js';
 import { useKeepAwake } from 'expo-keep-awake';
 //Note not globalized
 const totalColumns = 7;
@@ -22,21 +22,23 @@ function InGame(props)
     const positionData = useSelector(state => state.positionsReducer).position_data
     const subData =useSelector(state => state.generalReducer).game_data;
     
-    
+    const generalData = useSelector(state => state.generalReducer)
     const teamData =useSelector(state => state.teamReducer);
-    const current_team_index = useSelector(state => state.generalReducer).current_team_index
+
 
 
     //Used to account for deletion of certain items when going on index
-    const team_index = teamData.team_data.findIndex(item => item.team_id == current_team_index)
-    const team_data = teamData.team_data[team_index].team_player_data
+    const team_id = generalData.current_team_index
+    const adjusted_team_index = teamData.team_data.findIndex(item => item.team_id == team_id)
+
+    const team_data = teamData.team_data[adjusted_team_index].team_player_data
     
     
     const intervalLength = useSelector(state => state.positionsReducer).interval_length;
-    const teamName = teamData.team_data[team_index].team_name
+    const teamName = teamData.team_data[adjusted_team_index].team_name
    
     const totalInterval = useSelector(state => state.positionsReducer).total_intervals
-    
+    const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
     useKeepAwake()
     //Set up vars that handle the timer
     const second = props.second
@@ -170,7 +172,28 @@ function InGame(props)
     return(
         
         <SafeAreaView style = {styles.body}>
-            
+            <Modal
+          animationType="slide"
+          transparent={true}
+          supportedOrientations={['landscape']}
+          visible={teamData.team_data[adjusted_team_index].team_tutorial[4]} 
+      >
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Gametime</Text>
+                  <Text style = {{textAlign:'center'}}>{'Let the games begin. This screen displays a countdown to upcoming substitutions on the left and the field of play on the right. If you need to make changes to the Subsheet during the match head over to the Subsheet page.\n\nPress the ‘⏯’ to start the match\n'}</Text>
+                 
+                  <View style = {{flexDirection:'row'}}>
+                  <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {updateTeamTutorial([team_id,4])}}
+                  >
+                  <Text style={styles.textStyle}>Close</Text>
+                  </Pressable>
+                  </View>
+              </View>
+          </View>
+      </Modal>
             <View style = {styles.infoSide}>
                 <View style = {styles.gameInfo}>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
@@ -207,7 +230,7 @@ function InGame(props)
             <View style = {styles.pitchSide}>
                 
                
-                    <GamePitch layoutData = {pitchData} sport ={teamData.team_data[team_index].team_sport}/>
+                    <GamePitch layoutData = {pitchData} sport ={teamData.team_data[adjusted_team_index].team_sport}/>
                 
                 
                 
@@ -257,7 +280,37 @@ const styles = StyleSheet.create({
     generalText:{
         fontSize:24,
         
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      
+      button: {
+        borderRadius: 9,
+        padding: 10,
+        elevation: 2,
+        borderWidth:2,
+        marginHorizontal:10,
+        backgroundColor:'white'
+      },
    
    
     

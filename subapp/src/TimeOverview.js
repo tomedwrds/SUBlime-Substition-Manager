@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Text,StyleSheet,View, SectionList } from "react-native";
+import { Text,StyleSheet,View, SectionList,Modal,Pressable } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RNPickerSelect from 'react-native-picker-select';
 
 
 
-
+import { update_team_tutorial } from "./actions";
 
 
 
@@ -15,17 +15,18 @@ import RNPickerSelect from 'react-native-picker-select';
 const TimeOverview = () => {
    
     const teamData = useSelector(state => state.teamReducer);
-    
+    const dispatch = useDispatch()
     const generalData = useSelector(state => state.generalReducer);
-    const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
-    const gameData = teamData.team_data[current_team_index].team_game_data.team_games
-    
+    const team_id = generalData.current_team_index
+    const adjusted_team_index = teamData.team_data.findIndex(item => item.team_id == team_id)
+    const gameData = teamData.team_data[adjusted_team_index].team_game_data.team_games
+    const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
     const [displayType,setDislayType] = useState('Total')
 
 
     
 
-    const team_data = teamData.team_data[current_team_index].team_player_data.team_players
+    const team_data = teamData.team_data[adjusted_team_index].team_player_data.team_players
     let timeData = []
 
     //generate the time data depdent on type
@@ -219,6 +220,28 @@ const TimeOverview = () => {
 
     return(
         <SafeAreaView style = {{flex:1}}>
+            <Modal
+          animationType="slide"
+          transparent={true}
+          visible={teamData.team_data[adjusted_team_index].team_tutorial[2]} 
+          supportedOrientations={['landscape']}
+      >
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Seasonal Playtime</Text>
+                  <Text style = {{textAlign:'center'}}>{'Equal and fair playtime is key for enjoyment for all in sports. This page displays the playtime of all players across the season. If you wish you can get a more analytical overview of playtime by selecting the ‘Average’ or ‘Breakdown options. When creating your Subsheet you can view a time breakdown specific to that Subsheet.\n '}</Text>
+                 
+                  <View style = {{flexDirection:'row'}}>
+                  <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {updateTeamTutorial([team_id,2])}}
+                  >
+                  <Text style={styles.textStyle}>Close</Text>
+                  </Pressable>
+                  </View>
+              </View>
+          </View>
+      </Modal>
             <View style = {styles.timeContainer}>
                 <View style = {{flexDirection:'row'}}>
                     <Text style = {styles.titleText}>Season Playtime Allocation</Text>
@@ -300,7 +323,37 @@ const styles = StyleSheet.create({
       
      
     
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      
+      button: {
+        borderRadius: 9,
+        padding: 10,
+        elevation: 2,
+        borderWidth:2,
+        marginHorizontal:10,
+        backgroundColor:'white'
+      },
 })
 
 const pickerSelectStyles = StyleSheet.create({
