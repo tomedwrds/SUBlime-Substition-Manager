@@ -9,7 +9,7 @@ import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text,Mod
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
-import DropDownPicker from 'react-native-dropdown-picker';
+
 import RNPickerSelect from 'react-native-picker-select';
 
 import { useSelector, useDispatch } from 'react-redux'

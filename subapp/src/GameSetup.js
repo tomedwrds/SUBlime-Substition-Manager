@@ -36,7 +36,7 @@ const GameSetup = (props) =>
 
             
             //Get the position related data 
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport,team_sport_full:fullSport,team_tutorial: [true,true,true,true,true]})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:'N',team_sport_full:'Netball',team_tutorial: [true,true,true,true,true]})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -57,7 +57,7 @@ const GameSetup = (props) =>
     function saveSettings()
     {
         //Check if names have been changed
-        if(name == null || sport == null)
+        if(false)
         {
            
             
@@ -140,7 +140,7 @@ const GameSetup = (props) =>
                     </View>
                     <RNPickerSelect
                         style = {pickerSelectStyles}
-                        onValueChange={(value,i)=>{setSport(value); setFullSport(sportData[i-1].label)}}
+                        onValueChange={(value,i)=>{setSport(value); setFullSport(sportData[i-1].label); console.log(value)}}
                         items ={sportData}
                         placeholder = {{label:'',value:null}}
                         useNativeAndroidPickerStyle={false}
