@@ -46,6 +46,7 @@ const ScheduleOverview = ({navigation}) => {
                 options={({navigation})=> ({
                   tabBarButton:props => <TouchableOpacity {...props} onPress={()=>navigation.navigate('TeamOverview', {screen:'Subsheets'})}/>
             })}/>
+            
             <Tab.Screen name="Subsheet" children={()=>
             <SliderMain
             navigation = {navigation}

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch, ScrollView, Modal } from "react-native";
 import SafeViewAndroid from "./SafeViewAndroid";
 import { SafeAreaView } from "react-native-safe-area-context";
-import RNPickerSelect from 'react-native-picker-select';
+
 import { useDispatch,useSelector } from "react-redux";
+import SelectDropdown from "react-native-select-dropdown";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index, update_formation_name } from "./actions";
 const ScheduleSetup = (props) => 
 {
@@ -106,13 +107,29 @@ const ScheduleSetup = (props) =>
                             <Text style = {styles.infoText}>2 - halfs 3 - thirds 4 - quarters</Text>
                         </View>
                         <View style ={{borderRadius:9,overflow:'hidden'}}>
-                        <RNPickerSelect
-                            style = {pickerSelectStyles}
-                            onValueChange={(value)=>{setIntervals(value)}}
-                            items ={Array.from({length: 4}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
-                            placeholder = {{label:'',value:null}}
-                            useNativeAndroidPickerStyle={false}
-                        
+                    
+                            <SelectDropdown
+                                data={Array.from({length: 4}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
+                                onSelect={(selectedItem, index) => {
+                                    setIntervals(selectedItem.value);
+                                    
+                                }}
+                                buttonTextAfterSelection={(selectedItem) => {
+                                    // text represented after item is selected
+                                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                    return selectedItem.label
+                                }}
+                                rowTextForSelection={(item) => {
+                                    // text represented for each item in dropdown
+                                    // if data array is an array of objects then return item.property to represent item in dropdown
+                                    return item.label
+                                }}
+                                defaultButtonText={' '}
+                                buttonStyle = {styles.dropDown}
+                                buttonTextStyle={styles.dropDownText}
+                                rowTextStyle={styles.dropDownText}
+                                rowStyle={{borderRadius:4}}
+                                dropdownStyle={{borderRadius:9}}
                             />
                             </View>
                             
@@ -123,13 +140,30 @@ const ScheduleSetup = (props) =>
                             <Text style = {styles.infoText}>Length of each interval in minutes</Text>
                         </View>
                         <View style ={{borderRadius:9,overflow:'hidden'}}>
-                            <RNPickerSelect
-                            style = {pickerSelectStyles}
-                            onValueChange={(value)=>{setIntervalW(value)}}
-                            items ={Array.from({length: 100}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
-                            placeholder = {{label:'',value:null}}
-                            useNativeAndroidPickerStyle={false}
+                            <SelectDropdown
+                                data={Array.from({length: 45}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
+                                onSelect={(selectedItem, index) => {
+                                    setIntervalW(selectedItem.value);
+                                    
+                                }}
+                                buttonTextAfterSelection={(selectedItem) => {
+                                    // text represented after item is selected
+                                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                    return selectedItem.label
+                                }}
+                                rowTextForSelection={(item) => {
+                                    // text represented for each item in dropdown
+                                    // if data array is an array of objects then return item.property to represent item in dropdown
+                                    return item.label
+                                }}
+                                defaultButtonText={' '}
+                                buttonStyle = {styles.dropDown}
+                                buttonTextStyle={styles.dropDownText}
+                                rowTextStyle={styles.dropDownText}
+                                rowStyle={{borderRadius:4}}
+                                dropdownStyle={{borderRadius:9}}
                             />
+                           
                         </View>
                     </View>
                 
@@ -188,56 +222,25 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize:10,
         color:'grey'
+    },
+    dropDown: {
+        
+        fontSize: 20,
+        backgroundColor: '#ebebeb',
+        padding:0,
+        fontSize:24,
+        borderRadius:9,
+        width:450,
+        height:60,
+  
+        
+        textAlign: 'center',
+    },
+    dropDownText: {
+        fontSize: 24,
+        color: 'black',
     }
 })
 
-const pickerSelectStyles = StyleSheet.create({
-  
-    inputAndroid: {
-      
-        fontSize: 1,
-        color: 'black',
-        fontSize: 20,
-        backgroundColor: '#ebebeb',
-        padding:12,
- 
-        borderRadius:9,
-        width:450,
-        
-        alignItems:'center',
-        justifyContent:'center',
-        
-        textAlign: 'center',
-      
-   
-  },
-    
-     
-
-
-    inputIOS: {
-     
-      fontSize: 16,
-      color: 'black',
-      fontSize: 20,
-      backgroundColor: '#ebebeb',
-      padding:12,
-      fontSize:24,
-      borderRadius:9,
-      width:450,
-
-      
-      textAlign: 'center',
-
-  
-   
-    
-  
-    
-  },
-    placeholder: {
-      color: '#bfbbbb'
-    }
-  });
 
 export default (ScheduleSetup)

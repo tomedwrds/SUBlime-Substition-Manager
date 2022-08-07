@@ -3,9 +3,10 @@ import { Text,StyleSheet,View, TextInput, Pressable, Alert, Switch, Modal } from
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import RNPickerSelect from 'react-native-picker-select';
+
 import { useDispatch,useSelector } from "react-redux";
 import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index } from "./actions";
+import SelectDropdown from "react-native-select-dropdown";
 const GameSetup = (props) => 
 {
   
@@ -27,8 +28,8 @@ const GameSetup = (props) =>
  
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
-    const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Netball',value:'N'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Rugby',value:'R'},{label: 'Test', value:'T'}]
-    
+    const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Junior Netball Yr 3-6',value:'N'},{label: 'Netball',value:'NS'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Rugby',value:'R'},{label: 'Test', value:'T'}]
+  
     useEffect(() => {
         
         if(canAddTeam && !leavingPage)
@@ -36,7 +37,7 @@ const GameSetup = (props) =>
 
             
             //Get the position related data 
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:'N',team_sport_full:'Netball',team_tutorial: [true,true,true,true,true]})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport,team_sport_full:fullSport,team_tutorial: [true,true,true,true,true]})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -57,7 +58,7 @@ const GameSetup = (props) =>
     function saveSettings()
     {
         //Check if names have been changed
-        if(false)
+        if(name == null || sport == null)
         {
            
             
@@ -117,8 +118,9 @@ const GameSetup = (props) =>
                     <Text style = {{fontSize:40}}>✅</Text>
                 </Pressable>
             </View>
-            <ScrollView >
-                <Text style = {{fontSize:28}}>Team Information</Text>
+            <Text style = {{fontSize:28}}>Enter Team Information</Text>
+            <ScrollView style = {{flex:1}}>
+                
                 <View style = {styles.inputArea}>
                     <View style ={styles.subTextView} >
                         <Text style = {styles.fieldTitle}>Team Name</Text>
@@ -131,21 +133,44 @@ const GameSetup = (props) =>
                         />
                     
                 </View>
-                
+              
                 <View style = {styles.inputArea}>
            
                     <View style ={styles.subTextView} >
                         <Text style = {styles.fieldTitle}>Sport</Text>
                         
                     </View>
-                    <RNPickerSelect
+                    <SelectDropdown
+                        data={sportData}
+                        onSelect={(selectedItem, index) => {
+                            setSport(selectedItem.value);
+                             setFullSport(sportData[index].label)
+                        }}
+                        buttonTextAfterSelection={(selectedItem) => {
+                            // text represented after item is selected
+                            // if data array is an array of objects then return selectedItem.property to render after item is selected
+                            return selectedItem.label
+                        }}
+                        rowTextForSelection={(item) => {
+                            // text represented for each item in dropdown
+                            // if data array is an array of objects then return item.property to represent item in dropdown
+                            return item.label
+                        }}
+                        defaultButtonText={' '}
+                        buttonStyle = {styles.dropDown}
+                       buttonTextStyle={styles.dropDownText}
+                       rowTextStyle={styles.dropDownText}
+                       rowStyle={{borderRadius:4}}
+                       dropdownStyle={{borderRadius:9}}
+                    />
+                    {/* <RNPickerSelect
                         style = {pickerSelectStyles}
-                        onValueChange={(value,i)=>{setSport(value); setFullSport(sportData[i-1].label); console.log(value)}}
+                        onValueChange={(value,i)=>{setSport(value); setFullSport(sportData[i-1].label)}}
                         items ={sportData}
                         placeholder = {{label:'',value:null}}
                         useNativeAndroidPickerStyle={false}
                        
-                        />
+                        /> */}
                         
                 </View>
                 {/* <Text style = {{fontSize:28}}>Game Settings</Text>
@@ -193,7 +218,8 @@ const GameSetup = (props) =>
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal:20
+        marginHorizontal:20,
+        flex:1
     },
     subTextView: {
         width: 200
@@ -204,7 +230,7 @@ const styles = StyleSheet.create({
         marginVertical:8,
         
         alignItems:'center',
-     
+        height:60,
         
      
         
@@ -224,56 +250,30 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize:10,
         color:'grey'
-    }
-})
-
-const pickerSelectStyles = StyleSheet.create({
-  
-    inputAndroid: {
-      
-        fontSize: 16,
-        color: 'black',
+    },
+    dropDown: {
+        
         fontSize: 20,
         backgroundColor: '#ebebeb',
-        padding:12,
+        padding:0,
         fontSize:24,
         borderRadius:9,
         width:450,
+        height:60,
   
         
         textAlign: 'center',
-  
-     
-      
-   
-  },
-    
-     
-
-
-    inputIOS: {
-     
-      fontSize: 16,
-      color: 'black',
-      fontSize: 20,
-      backgroundColor: '#ebebeb',
-      padding:12,
-      fontSize:24,
-      borderRadius:9,
-      width:450,
-
-      
-      textAlign: 'center',
-
-  
-   
-    
-  
-    
-  },
-    placeholder: {
-      color: '#bfbbbb'
+    },
+    dropDownText: {
+        fontSize: 24,
+        color: 'black',
     }
-  });
+})
+
+
+    
+  
+    
+
 
 export default (GameSetup)

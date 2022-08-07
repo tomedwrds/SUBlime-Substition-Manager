@@ -22,15 +22,16 @@ const HomeScreen = ({navigation}) =>
                 <Text style = {{fontSize:70}}>SUBlime</Text>
             </View>
             <View style = {{flex:7, alignItems:'center',justifyContent:'center'}}>
-                <View style = {{flex:1}}></View>
-                <Pressable onPress ={()=> setDisplaySetup(true)} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center',marginBottom:10}}>
-                    <Text style = {{padding:30, fontSize:30}}>New Team</Text>
+           
+                <Pressable onPress ={()=> setDisplaySetup(true)} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center',marginBottom:10,flex:3,justifyContent:'center',maxHeight:120}}>
+                    <Text style = {{fontSize:30}}>New Team</Text>
                 </Pressable>
                 
-                <Pressable onPress ={()=> navigation.navigate('LoadSave')} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center'}}>
-                    <Text style = {{padding:30, fontSize:30}}>Load Team</Text>
+                <Pressable onPress ={()=> navigation.navigate('LoadSave')} style = {{borderWidth:2,borderRadius:9,width:240,alignItems:'center',flex:3,justifyContent:'center',maxHeight:120}}>
+                    <Text style = {{fontSize:30}}>Load Team</Text>
                 </Pressable>
-                <View style = {{flex:1}}></View>
+                <View style= {{flex:1}}/>
+                
             </View>
             
         </View>

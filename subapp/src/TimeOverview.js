@@ -3,9 +3,8 @@ import { Text,StyleSheet,View, SectionList,Modal,Pressable } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector,useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
-import RNPickerSelect from 'react-native-picker-select';
 
-
+import SelectDropdown from "react-native-select-dropdown";
 
 import { update_team_tutorial } from "./actions";
 
@@ -217,7 +216,7 @@ const TimeOverview = () => {
         )
         
     }
-
+  
     return(
         <SafeAreaView style = {{flex:1}}>
             <Modal
@@ -251,20 +250,36 @@ const TimeOverview = () => {
                     
                 </View>
                 <View style = {styles.belowArea}>
-                    <Text style = {{fontSize:20}}>Display Type</Text>
+                    <Text style = {{fontSize:20,marginRight:20}}>Display Type</Text>
                     <View style = {{alignItems:'center'}}>
-                        
-                        <RNPickerSelect
-                            onValueChange={(value) => {setDislayType(value)}}
-                            items={[
+                        <SelectDropdown
+                            data={[
+                                { label: 'Total', value: 'Total' },
                                 { label: 'Average', value: 'Average' },
                                 { label: 'Breakdown', value: 'Breakdown' },
                                 
                             ]}
-                            placeholder={{label:'Total',value:'Total'}}
-                            style = {pickerSelectStyles}
-                            useNativeAndroidPickerStyle={false}
+                            onSelect={(selectedItem) => {
+                                setDislayType(selectedItem.value)
+                            }}
+                            buttonTextAfterSelection={(selectedItem, index) => {
+                                // text represented after item is selected
+                                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                return selectedItem.label
+                            }}
+                            rowTextForSelection={(item, index) => {
+                                // text represented for each item in dropdown
+                                // if data array is an array of objects then return item.property to represent item in dropdown
+                                return item.label
+                            }}
+                            buttonStyle={styles.dropDown}
+                            buttonTextStyle={styles.dropDownText}
+                            rowTextStyle={styles.dropDownText}
+                            defaultValue={'Total'}
+                            defaultButtonText={'Total'}
+                            dropdownStyle={{borderRadius:9}}
                         />
+                        
                     </View>
                 </View>
                 
@@ -291,7 +306,8 @@ const styles = StyleSheet.create({
         fontSize: 40
     },
     subText: {
-        fontSize:30
+        fontSize:30,
+        
     },
     timeBar: {
 
@@ -354,50 +370,25 @@ const styles = StyleSheet.create({
         marginHorizontal:10,
         backgroundColor:'white'
       },
+      dropDown: {
+        
+        fontSize: 16,
+      color: 'black',
+      fontSize: 20,
+      //backgroundColor: '#ebebeb',
+      textAlign: 'center',
+      borderWidth:2,
+     
+      borderRadius:9,
+      width:180,
+      justifyContent:'center'
+    },
+    dropDownText: {
+        fontSize: 24,
+        color: 'black',
+        
+    }
 })
 
-const pickerSelectStyles = StyleSheet.create({
-  
-    inputAndroid: {
-      
-      fontSize: 16,
-      color: 'black',
-      fontSize: 20,
-      //backgroundColor: '#ebebeb',
-      textAlign: 'center',
-      borderWidth:2,
-      marginLeft:10,
-      padding:10,
-      borderRadius:9,
-      width:180
-   
-  },
-    
-     
-  
-  
-    inputIOS: {
-     
-      fontSize: 16,
-      color: 'black',
-      fontSize: 20,
-      //backgroundColor: '#ebebeb',
-      textAlign: 'center',
-      borderWidth:2,
-      marginLeft:10,
-      padding:10,
-      borderRadius:9,
-      width:180
-      
-  
-  
-   
-    
-  
-    
-  },
-    placeholder: {
-      color: 'black'
-    }
-  });
+
 export default (TimeOverview)

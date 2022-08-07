@@ -1,6 +1,6 @@
 {
   "name": "subapp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -24,9 +24,9 @@
     "react-native": "0.64.3",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-paper": "^4.11.2",
-    "react-native-picker-select": "^8.0.4",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-select-dropdown": "^2.0.4",
     "react-native-super-grid": "^4.2.0",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",

@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SliderBar from './SliderBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import assignNameColor from './sliders/assignNameColor';
-import RNPickerSelect from 'react-native-picker-select';
+import SelectDropdown from 'react-native-select-dropdown';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
 
@@ -325,6 +325,7 @@ else
           setModalVisible(!modalVisible);
         }}
       >
+      
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={{fontSize:32}}>Final Steps</Text>
@@ -405,17 +406,35 @@ else
       </View>
       
       <View style = {styles.belowArea}>
-        <Text style = {{fontSize:20}}>View</Text>
+        <Text style = {{fontSize:20,marginRight:10}}>View</Text>
           <View style = {{alignItems:'center'}}>
-            <RNPickerSelect
-                onValueChange={(value) => setViewType(value)}
-                items={[
-                    { label: 'Player', value: 'Player' },
-                      
+           
+             <SelectDropdown
+                data={[
+                    {label:'Position',value:'Position'},
+                    { label: 'Player', value: 'Player' }
+                   
+                    
                 ]}
-                placeholder={{label:'Position',value:'Position'}}
-                style = {pickerSelectStyles}
-                useNativeAndroidPickerStyle={false}
+                onSelect={(selectedItem) => {
+                  setViewType(selectedItem.value)
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.label
+                }}
+                rowTextForSelection={(item) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item.label
+                }}
+                buttonStyle={styles.dropDown}
+                buttonTextStyle={styles.dropDownText}
+                rowTextStyle={styles.dropDownText}
+                defaultValue={'Position'}
+                defaultButtonText={'Position'}
+                dropdownStyle={{borderRadius:9}}
             />
           </View>
         
@@ -545,6 +564,24 @@ const styles = StyleSheet.create({
     marginHorizontal:10,
     backgroundColor:'white'
   },
+  dropDown: {
+        
+    fontSize: 16,
+  color: 'black',
+  fontSize: 20,
+  //backgroundColor: '#ebebeb',
+  textAlign: 'center',
+  borderWidth:2,
+ 
+  borderRadius:9,
+  width:180,
+  justifyContent:'center'
+},
+dropDownText: {
+    fontSize: 24,
+    color: 'black',
+    
+}
   
 })
   

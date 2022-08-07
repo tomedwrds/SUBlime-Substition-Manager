@@ -2,7 +2,7 @@ import React from "react";
 import { Alert,Text,View,Pressable,TextInput,StyleSheet,FlatList } from "react-native";
 import { Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import RNPickerSelect from 'react-native-picker-select';
+
 import DropDownPicker from "react-native-dropdown-picker";
 const PlayerTab = ({item},positionSelectionData,updateName,addPositionToPlayer,removePositionFromPlayer,removePlayer,updateSelectedPos,positionState,current_team_index) => {
   

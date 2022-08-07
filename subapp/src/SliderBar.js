@@ -3,6 +3,7 @@ import { Dimensions,View,Text,StyleSheet, ImageBackground } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from "react-native-gesture-handler";
 import AddPlayer from "./AddPlayer";
 import assignNameColor from "./sliders/assignNameColor";
+import SelectDropdown from "react-native-select-dropdown";
 //General setup vars
 
 const sliderBarRightMargin =20
@@ -21,7 +22,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
     const intervalLength = positionsData.interval_length
-
+  
     
     //Adjust were interval width is recieved from depdent on picker select data
     let positionIntervalWidth = item.position_interval_width
@@ -43,7 +44,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       //pickerSelectData = playerData[positionId].positions.map(item => ({label: item.name,value:item.id}))
     }
     
-    
+    if(pickerSelectData.length == 0) pickerSelectData.push({value:null,label:'No players added to this position'})
+   
   
     const totalIntervals = positionsData.total_intervals
     
@@ -456,7 +458,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                       
                       return(
                         
-                        
+                  
                           <View key = {i} style = {{ width: (item.place-prop.overlap[i-1].place)*positionIntervalWidth,backgroundColor:'red', opacity: (item.type == 'end'? 0.3: 0),height:sliderContentHeight}} >
                            <ImageBackground imageStyle = {{resizeMode:'repeat'}} source = {require('./images/overlap.png')} style = {{flex:1}}>
                             <View style = {{flex:1}}></View>
@@ -498,16 +500,43 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
           if(i >= (currentInterval-1)*intervalLength && i < ((currentInterval)*intervalLength) )
           {
            
+            const key = i
+            const name = prop 
+            const index = i 
+            const offset =intervalLength*(currentInterval-1)
             
+
             return(
-                <AddPlayer pickerSelectData ={pickerSelectData}
-                //i is for index within positiontimeline. PositionId is the id of the position 
-                updatePosition = { (value) => {updatePosition([i,value,positionId])}} 
-                key = {i}  
-                name = {prop } 
-                index = {i} 
-                offset ={intervalLength*(currentInterval-1)} ></AddPlayer>
-              
+              <View key = {i}  style = {{flex:1,borderColor:'black',justifyContent:'center'}}>
+  
+        
+                    {(name == null)  ?
+                    <View style = {{alignItems:'center',justifyContent:'center',}}>
+                      <SelectDropdown
+                      data={pickerSelectData}
+                      onSelect={(selectedItem, index) => {
+                        updatePosition([i,selectedItem.value,positionId])
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        // text represented after item is selected
+                        // if data array is an array of objects then return selectedItem.property to render after item is selected
+                        return selectedItem.label
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        // text represented for each item in dropdown
+                        // if data array is an array of objects then return item.property to represent item in dropdown
+                        return item.label
+                      }}
+                      
+                      defaultButtonText={((index+1)-offset).toString()}
+                      defaultValue={'asf'}
+                      buttonStyle={{width:'100%',backgroundColor:'transparent'}}
+                    />
+                     
+                    </View> : <View></View> 
+                   
+        }
+                  </View>
             )
           }
         })}

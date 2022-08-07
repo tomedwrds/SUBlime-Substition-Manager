@@ -9,14 +9,12 @@ import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text,Mod
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
-
-import RNPickerSelect from 'react-native-picker-select';
+import SelectDropdown from 'react-native-select-dropdown';
 
 import { useSelector, useDispatch } from 'react-redux'
 import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index,update_player_positions_open,update_team_tutorial} from './actions.js';
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
-
 
 
 
@@ -183,7 +181,7 @@ function PlayerView({navigation }) {
   
     //Render a position chip for each position in the list
     const renderPositionChips = ({ item }) => (
-      
+     
       <Chip 
         style = {styles.positions} 
         onPress = {() => {deletePosition(item)}} 
@@ -230,7 +228,7 @@ function PlayerView({navigation }) {
   
         {/*Select postion bar*/}
         <View style ={styles.playerPositionSelector}>
-          
+    
         {/* <DropDownPicker
             items = {positionSelectionData}
             open={playerOpen}
@@ -255,14 +253,41 @@ function PlayerView({navigation }) {
          
 
           /> */}
-          <RNPickerSelect 
-            onValueChange={(value) => { updateSelectedPos([team_id,playerId,value])}}
+          
+          {/* <RNPickerSelect 
+            onValueChange={(value) => {}}
             placeholder={{ label: 'Add positions', value: null }}
             style = {pickerSelectStyles}
             items = {positionSelectionData}
            
             useNativeAndroidPickerStyle={false}
-          />
+          /> */}
+          
+       
+
+<SelectDropdown
+                        data={positionSelectionData}
+                        onSelect={(selectedItem) => {
+                          updateSelectedPos([team_id,playerId,selectedItem.value])
+                        }}
+                        buttonTextAfterSelection={(selectedItem) => {
+                            // text represented after item is selected
+                            // if data array is an array of objects then return selectedItem.property to render after item is selected
+                            return selectedItem.label
+                        }}
+                        rowTextForSelection={(item) => {
+                            // text represented for each item in dropdown
+                            // if data array is an array of objects then return item.property to represent item in dropdown
+                            return item.label
+                        }}
+                        defaultButtonText={'Add positions'}
+                       buttonStyle = {styles.dropDown}
+                       buttonTextStyle={styles.dropDownText}
+                       rowTextStyle={styles.dropDownText}
+                       dropdownStyle={{borderRadius:9,width:260}}
+                    
+                       
+                    />
   
         </View>
         
@@ -432,10 +457,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '90%',
     flex: 1,
+    paddingLeft:10
   },
   playerPositionSelector : {
     flex: 1,  
-    height: '90%'
+    height: '90%',
+   
   },
   playerAddPostions : {
     marginLeft: 20,
@@ -485,7 +512,24 @@ const styles = StyleSheet.create({
     marginHorizontal:10,
     backgroundColor:'white'
   },
-  
+  dropDown:
+  {
+    fontSize: 16,
+    color: 'black',
+    fontSize: 20,
+    backgroundColor: 'white',
+    height: '100%',
+    borderRadius: 4,
+    width:'100%'
+  },
+  dropDownText:{
+    fontSize:20,
+    color: 'grey',
+    alignItems:'flex-start',
+    justifyContent:'flex-start',
+    textAlign:'left',
+    padding:0
+  }
   
 });
 
