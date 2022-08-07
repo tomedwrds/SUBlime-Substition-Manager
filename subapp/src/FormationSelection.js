@@ -248,6 +248,21 @@ const FormationSelection = (props) =>
                 [0,0,0,0,0,['Outside Centre','OC'],0],
                 [0,['Left Wing','LW'],0,0,['Full Back','FB'],0,['Right Wing','RW']]]
     },
+    {
+        layoutId:17,
+        layoutName: 'Netball', 
+        layoutSport: 'NS',
+        layoutData: [
+                [0,0,0,['Goal Shoot','GS'],0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,['Goal Attack','GA'],0,0,0,['Wing Attack','WA'],0],
+                
+                [0,0,0,['Centre','C'],0,0,0],
+                
+                [0,['Wing Defence','WD'],0,0,0,['Goal Defence','GD'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,['Goal Keep','GK'],0,0,0]]
+    },
    
 
 ]   

@@ -20,6 +20,8 @@ function GamePitch(props)
                 
             case 'N':
                 return <NetballPitch/>
+            case 'NS':
+                return <NetballPitch/>
                 
             case 'B':
                 return <BasketballPitch/>

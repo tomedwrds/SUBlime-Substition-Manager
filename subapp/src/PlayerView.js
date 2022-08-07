@@ -96,6 +96,17 @@ function PlayerView({navigation }) {
         {label: 'Defence', value: 'D'},
       ]
       break;
+    case 'NS':
+      positionSelectionData = [
+        {label: 'Goal Shoot', value: 'GS'},
+        {label: 'Goal Attack', value: 'GA'},
+        {label: 'Wing Attack', value: 'WA'},
+        {label: 'Centre', value: 'C'},
+        {label: 'Wing Defence', value: 'WD'},
+        {label: 'Goal Defence', value: 'GD'},
+        {label: 'Goal Keep', value: 'GK'},
+      ]
+      break;
     case 'B':
     positionSelectionData = [
       {label: 'Point Guard (1)', value: 'PG-1'},
