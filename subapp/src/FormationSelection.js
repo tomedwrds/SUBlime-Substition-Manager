@@ -224,16 +224,17 @@ const FormationSelection = (props) =>
     },
     {
         layoutId:15,
-        layoutName: '3-4-3', 
+        layoutName: '2-2-2', 
         layoutSport: '7F',
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [0,['Left Wing','LW'],0,0,0,['Right Foward','RW'],0],
-                [0,0,0,0,0,0,0],
-                [['Left Midfield','LM'],0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,['Left Midfield','RM']],
-                [0,0,0,0,0,0,0],
-                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+        layoutData:  
+            [
+            [0,0,0,0,0,0,0],
+            [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
+            [0,0,0,0,0,0,0],
+            [['Left Midfield','LM'],0,0,0,0,0,['Right Midfield','RM']],
+            [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,['Goal Keeper','GK'],0,0,0]]
     },
     {
         layoutId:16,
@@ -263,7 +264,49 @@ const FormationSelection = (props) =>
                 [0,0,0,0,0,0,0],
                 [0,0,0,['Goal Keep','GK'],0,0,0]]
     },
-   
+    {
+        layoutId:18,
+        layoutName: '2-3-2-1', 
+        layoutSport: '9F',
+        layoutData: [
+            [0,0,0,['Centre Foward','CF'],0,0,0],
+            [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
+            [0,0,0,0,0,0,0],
+            [['Left Midfield','LM'],0,0,['Centre Midfield','CM'],0,0,['Right Midfield','RM']],
+            
+            [0,0,0,0,0,0,0],
+            [0,['Centre Back','CB'],0,0,0,['Centre Back','CB'],0],
+            [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:19,
+        layoutName: '3-2-3', 
+        layoutSport: '9F',
+        layoutData: [
+            [0,0,0,['Centre Foward','CF'],0,0,0],
+            [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
+            [0,0,0,0,0,0,0],
+            [0,0,['Left Midfield','LM'],0,['Right Midfield','RM'],0,0],
+            
+            
+            [0,['Left Back','LB'],0,0,0,['Right Back','RB'],0],
+            [0,0,0,['Centre Back','CB'],0,0,0],
+            [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
+    {
+        layoutId:20,
+        layoutName: '3-3', 
+        layoutSport: '7F',
+        layoutData:  
+            [
+                [0,0,0,0,0,0,0],
+                [0,['Left Wing','LW'],0,['Centre Foward','CF'],0,['Right Wing','RW'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0],
+                [0,['Left Back','LB'],0,['Centre Back','CB'],0,['Right Back','RB'],0],
+                [0,0,0,0,0,0,0],
+                [0,0,0,['Goal Keeper','GK'],0,0,0]]
+    },
 
 ]   
     //Filters to only have formations relavent to sport code

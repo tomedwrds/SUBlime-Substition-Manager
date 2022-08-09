@@ -28,7 +28,7 @@ const GameSetup = (props) =>
  
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
-    const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Junior Netball Yr 3-6',value:'N'},{label: 'Netball',value:'NS'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 8 Aside',value:'8F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Rugby',value:'R'},{label: 'Test', value:'T'}]
+    const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Junior Netball Yr 3-6',value:'N'},{label: 'Netball',value:'NS'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 9 Aside',value:'9F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Rugby',value:'R'},{label: 'Test', value:'T'}]
   
     useEffect(() => {
         
@@ -43,7 +43,7 @@ const GameSetup = (props) =>
 
             setCanAddTeam(false)
             setLeavingPage(true)
-            props.navigation.navigate('TeamOverview',{screen:'Subsheets'})
+            props.navigation.navigate('TeamOverview',{screen:'Team'})
             props.closeModal()
             
         }
@@ -105,7 +105,7 @@ const GameSetup = (props) =>
         >
         <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
-                <Text style = {{fontSize:40,marginBottom:20}}>Game Setup</Text>
+                <Text style = {{fontSize:40,marginBottom:20}}>Team Setup</Text>
                 
                 <Pressable 
                     onPress={()=>{props.closeModal()}}

@@ -22,7 +22,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
     const intervalLength = positionsData.interval_length
-  
+    let dropDownWidth = 140
     
     //Adjust were interval width is recieved from depdent on picker select data
     let positionIntervalWidth = item.position_interval_width
@@ -44,7 +44,8 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       //pickerSelectData = playerData[positionId].positions.map(item => ({label: item.name,value:item.id}))
     }
     
-    if(pickerSelectData.length == 0) pickerSelectData.push({value:null,label:'No players added to this position'})
+    if(pickerSelectData.length == 0) {pickerSelectData.push({value:null,label:"Go to the 'team' tab to add a player to this position."});dropDownWidth = 450}
+    
    
   
     const totalIntervals = positionsData.total_intervals
@@ -511,7 +512,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
   
         
                     {(name == null)  ?
-                    <View style = {{alignItems:'center',justifyContent:'center',}}>
+                    <View style = {{alignItems:'center',justifyContent:'center',flex:1}}>
                       <SelectDropdown
                       data={pickerSelectData}
                       onSelect={(selectedItem, index) => {
@@ -527,11 +528,26 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                         // if data array is an array of objects then return item.property to represent item in dropdown
                         return item.label
                       }}
+                      renderCustomizedButtonChild={(item,i,number=(index+1)-offset)=>{
+                   
+                        return (
+                          
+                            <Text style = {{fontSize:16,textAlign:'center'}}>{number}</Text>
+                          )
+                      }}
                       
-                      defaultButtonText={((index+1)-offset).toString()}
-                      defaultValue={'asf'}
-                      buttonStyle={{width:'100%',backgroundColor:'transparent'}}
+                     // defaultButtonText={((index+1)-offset).toString()}
+                      defaultValue={'a'}
+                     
+                    
+                      buttonStyle={{padding:0,margin:0,width:'100%',backgroundColor:'transparent'}}
+                      buttonTextStyle={{padding:0,margin:0}}
+                      rowStyle={{padding:0,margin:0}}
+                      
+                      dropdownStyle={{borderRadius:9,width:dropDownWidth}}
+                      
                     />
+                    
                      
                     </View> : <View></View> 
                    

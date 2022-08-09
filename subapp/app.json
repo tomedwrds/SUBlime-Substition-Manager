@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "SUBlime Substitution Managment",
-    "slug": "subapp",
-    "version": "1.0.2",
+    "slug": "SUBlime",
+    "version": "1.0.4",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "splash": {

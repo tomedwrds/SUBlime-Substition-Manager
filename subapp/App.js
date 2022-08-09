@@ -26,6 +26,7 @@ import ScheduleOverview from './src/ScheduleOverview';
 import GameOverview from './src/in_game/GameOverview';
 
 
+
 const AppWrapper = () => {
 
  
@@ -52,6 +53,7 @@ const App = () => {
         headerShown: false
       }}
       >
+        
         <Stack.Screen name= 'HomeScreen' component={HomeScreen} />
         <Stack.Screen name= 'GameSetup' component={GameSetup} />
         <Stack.Screen name= 'LoadSave' component={LoadSave} />

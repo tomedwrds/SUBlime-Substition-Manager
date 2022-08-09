@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
-import { View, Pressable, TextInput, Button,StyleSheet, Alert, FlatList,Text,Modal } from 'react-native';
+import { View, Pressable, Button,StyleSheet, Alert, FlatList,Text,Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {add,create_player,add_position, remove_position, remove_player, update_name, update_selected_pos, increment_player_index,update_player_positions_open,update_team_tutorial} from './actions.js';
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
-
+import { TextInput } from 'react-native-element-textinput';
 
 
 
@@ -145,12 +145,42 @@ function PlayerView({navigation }) {
           {label: 'Centre Midfield', value:'CM'},
           {label: 'Centre Attacking Midfield', value:'CAM'},
           {label: 'Centre Defending Midfield', value:'CDM'},
+          {label: 'Right Midfield', value:'RM'},
           {label: 'Left Back', value:'LB'},
           {label: 'Centre Back', value:'CB'},
           {label: 'Right Back', value:'RB'},
           {label: 'Goal Keeper', value:'GK'}]
           
           break;
+        case '9F':
+          positionSelectionData = [
+          
+            {label: 'Left Wing', value:'LW'},
+            {label: 'Centre Foward', value:'CF'},
+            {label: 'Right Wing', value:'RW'},
+            {label: 'Left Midfield', value:'LM'},
+            {label: 'Centre Midfield', value:'CM'},
+            {label: 'Right Midfield', value:'RM'},
+            {label: 'Left Back', value:'LB'},
+            {label: 'Centre Back', value:'CB'},
+            {label: 'Right Back', value:'RB'},
+            {label: 'Goal Keeper', value:'GK'}]
+            
+            break;
+        case '7F':
+          positionSelectionData = [
+          
+            {label: 'Left Wing', value:'LW'},
+            {label: 'Centre Foward', value:'CF'},
+            {label: 'Right Wing', value:'RW'},
+            {label: 'Left Midfield', value:'LM'},
+            {label: 'Right Midfield', value:'RM'},
+            {label: 'Left Back', value:'LB'},
+            {label: 'Centre Back', value:'CB'},
+            {label: 'Right Back', value:'RB'},
+            {label: 'Goal Keeper', value:'GK'}]
+            
+            break;
     default:
       break;
 
@@ -279,7 +309,13 @@ function PlayerView({navigation }) {
 <SelectDropdown
                         data={positionSelectionData}
                         onSelect={(selectedItem) => {
-                          updateSelectedPos([team_id,playerId,selectedItem.value])
+                          //Check if position isnt already in list or the selected pos is null
+                          if (!playerPositions.includes(selectedItem.value) && selectedItem.value != null) 
+                          {
+                            //Add the position to the player in the store
+                            addPositionToPlayer([team_id,playerId,selectedItem.value])
+                          }
+                         // updateSelectedPos([team_id,playerId,selectedItem.value])
                         }}
                         buttonTextAfterSelection={(selectedItem) => {
                             // text represented after item is selected
@@ -303,15 +339,7 @@ function PlayerView({navigation }) {
         </View>
         
         {/*Add position chip button*/}
-        <Pressable 
-          style = {{marginHorizontal:15}}
-          onPress = {() =>addPosition()}>
-          <Icon 
-              name='plus' 
-              size = {40} 
-              color = '#0BD61F'
-            />
-        </Pressable>
+     
         
         {/*Displays all the position chips in a grid format*/}
         <View style = {styles.playerPositionChips}>
@@ -384,7 +412,7 @@ function PlayerView({navigation }) {
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
                   <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Team Overview</Text>
-                  <Text style = {{textAlign:'center'}}>{'A team would be nothing without its player. On this page you can add players to your team by pressing the ‘+’ button. After that be sure to assign positions to your players.\n '}</Text>
+                  <Text style = {{textAlign:'center'}}>{'A team would be nothing without its player. On this page you can add players to your team by pressing the ‘+’ button. You can select as many positions as you like per player.\n\nOnce you have added some players press the ‘Subsheets’ button to continue\n'}</Text>
                  
                   <View style = {{flexDirection:'row'}}>
                   <Pressable
@@ -487,7 +515,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     textAlign: 'center',
-    flex: 1.5
+    flex: 1.5,
+    marginLeft:15
   },
   playerDelete : {
     padding: 4,

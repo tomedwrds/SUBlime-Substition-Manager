@@ -31,6 +31,8 @@ const AddPlayer =(props) =>
                         return item.label
                       }}
                       defaultButtonText={((props.index+1)-props.offset).toString()}
+                      buttonStyle={{backgroundColor:'red'}}
+                      dropdownStyle={{backgroundColor:'red'}}
                     //  buttonStyle={{wid}}
                     />
                       {/* <RNPickerSelect 

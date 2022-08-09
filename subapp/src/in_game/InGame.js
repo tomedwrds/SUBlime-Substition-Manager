@@ -84,6 +84,7 @@ function InGame(props)
                 //Check to make sure end of game hasnt been reached to prevent indexing errors
                 if(notReachedEnd)
                 {
+                   
                     setPitchData(() => updatePitchData(minute+1))
                 }
                 //If its the end of the interval pause the timer and update the current interval

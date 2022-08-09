@@ -27,7 +27,7 @@ const LoadSave = ({navigation}) =>
         //Load the page that the sliders is on
         
         updateCurrentTeamIndex(i)
-        navigation.replace('TeamOverview',{screen:'Subsheets'})
+        navigation.replace('TeamOverview',{screen:'Team'})
     }
    
 

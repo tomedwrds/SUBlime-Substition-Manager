@@ -359,8 +359,8 @@ else
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Seasonal Playtime</Text>
-                  <Text style = {{textAlign:'center'}}>{'It is time to get down to business. On this page you can manage your newly created Subsheet. Tap on the positions bar to begin adding players into a position between a given time. Be warned, that your subsheet will be deleted if you don’t save it.\n\nOnce you have finished your Subsheet press the ‘✅’ button to begin the match.\n'}</Text>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Subsheet</Text>
+                  <Text style = {{textAlign:'center'}}>{'It is time to get down to business. On this page you can manage your newly created Subsheet. Tap on a minute to begin adding players into a position at that time. You can then drag the added player to increase their playtime. Be warned, that your subsheet will be deleted if you don’t save it.\n\nOnce you have finished your Subsheet press the ‘✅’ button to begin the match.\n'}</Text>
                  
                   <View style = {{flexDirection:'row'}}>
                   <Pressable

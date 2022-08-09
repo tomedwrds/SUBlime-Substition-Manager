@@ -29,6 +29,8 @@ function GamePitch(props)
                 return <FootballPitch/>
             case '7F':
                 return <FootballPitch/>  
+            case '9F':
+                return <FootballPitch/>  
             case 'R':
                 return <RugbyPitch/>  
             default:
