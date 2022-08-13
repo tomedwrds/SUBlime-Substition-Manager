@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useDispatch,useSelector } from "react-redux";
 import SelectDropdown from "react-native-select-dropdown";
-import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index, update_formation_name } from "./actions";
+import { should_mirror_intervals, update_interval_length,create_team, increment_team_index,update_team_name, update_total_intervals, update_current_team_index, update_formation_name, update_interval_selector } from "./actions";
 const ScheduleSetup = (props) => 
 {
     //Setup redux
@@ -14,6 +14,7 @@ const ScheduleSetup = (props) =>
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
     const updateFormationName = name => dispatch(update_formation_name(name))
+    const updateIntervalSelector = data => dispatch(update_interval_selector(data))
    
     const mirror = useSelector(state => state.positionsReducer).mirror_intervals
   
@@ -49,8 +50,33 @@ const ScheduleSetup = (props) =>
         }
         else
         {
+            //Create the interval selector data
+            let interval_selector = []
+            if(intervalW >= 30)
+            {
+                //If its greater than 30 the interval is split into two parts. The lower section is a and upper section is b. We need to find the offset for the upper section
+                const upper_interval_offset = Math.ceil(intervalW / 2)
+                //Now add the data for each interval adding in the lower and upper section
+                for(let interval = 0; interval < intervals; interval ++)
+                {
+                    interval_selector.push({intervalTag: (interval+1)+'a',upperIntervalOffset: upper_interval_offset,intervalValue:interval+1,lower:true},{intervalTag: (interval+1)+'b',upperIntervalOffset: upper_interval_offset,intervalValue:interval+1,lower:false})
+                }
+            }
+            else
+            {
+                //Otherwise just create an interval selector without sub tags
+                for(let interval = 0; interval < intervals; interval ++)
+                {
+                    interval_selector.push({intervalTag: (interval+1),upperIntervalOffset: intervalW,intervalValue:interval+1,lower:true})
+                }
+            }
+           
+
+
             updateIntervalLength(intervalW)
             updateTotalIntervals(intervals)
+            updateIntervalSelector(interval_selector)
+
             updateFormationName(name)
             props.toggleModalSetup()
             props.toggleModalFormations()

@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import assignNameColor from './sliders/assignNameColor';
 import SelectDropdown from 'react-native-select-dropdown';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -62,7 +63,30 @@ const SliderMain = (props) =>
   const [otherTeamName, setOtherTeamName] = useState('')
   const [viewType, setViewType] = useState('Position')
 
+  const [intervalTab,setIntervalTab] = useState([...Array(positionsData.total_intervals)])
 
+
+  //set up vars for handling interval selector
+
+  const intervalSelector = positionsData.interval_selector
+  const intervalLength = positionsData.interval_length
+
+  //Setup interval bounds
+  const intervalLowerBound = (lower? intervalLength*(positionsData.current_interval-1):intervalLength*(positionsData.current_interval-1)+upperIntervalOffset)
+  const intervalUperBound = (lower? intervalLength*(positionsData.current_interval-1)+upperIntervalOffset:intervalLength*(positionsData.current_interval))
+  const intervalLengthProper = intervalUperBound-intervalLowerBound
+
+  //We want to set upperInterval Off
+  const [upperIntervalOffset, setUpperIntervalOffset] = useState(intervalSelector[0].upperIntervalOffset)
+  const [lower,setLower] = useState(true)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      updateCurrentInterval(1)
+      setUpperIntervalOffset(intervalSelector[0].upperIntervalOffset)
+      setLower(true)
+    }, [])
+  );
 
   //Get data for updating schedule on fly
   let minutesPlayed = props.minute
@@ -77,8 +101,8 @@ const SliderMain = (props) =>
   const updateShcheduleInGame = () => {
     //Create alert to show to player
     Alert.alert(
-      "Do you wish to update the schedule?",
-      'This feature is new and unstable and may crash the app. Additonally any changes to player play time is not reflected.',
+      "Do you wish to update the subsheet?",
+      'This feature is new and unstable and may crash the app. Additonally any changes to player play time is not reflected on the season totals.',
       [
         //Creates an array of selectable player
         {
@@ -89,7 +113,7 @@ const SliderMain = (props) =>
           text: "Confirm", 
           onPress: () => 
           {
-           selectionComplete() 
+            checkForGaps() 
     }
           
          
@@ -99,6 +123,9 @@ const SliderMain = (props) =>
   }
 
  
+
+
+
 let sliderData = []
 
 
@@ -111,7 +138,7 @@ if(viewType == 'Player')
     let initials = playerData[i].name
 
     //Create the position timeline 
-    let timeline = new Array(positionsData.total_intervals*positionsData.interval_length).fill(null)
+    let timeline = new Array(positionsData.total_intervals*intervalLength).fill(null)
 
     sliderData.push({position_id:id,position_inititals:initials,position_name:initials,position_interval_width:100,position_timeline:timeline})
   }
@@ -141,11 +168,10 @@ else
   sliderData = positionsData.position_data
 }
 
-
-  function selectionComplete ()
+  function checkForGaps ()
   {
     //Check if there is any gaps in the game schedule
-    let isGap = false
+    var isGap = false
 
     //Loop through all position data to check
     for(let i =0; i< positionsData.position_data.length; i++)
@@ -161,17 +187,40 @@ else
         }
       }
     }
+    if(isGap)
+    {
+      Alert.alert(
+        "Warning",
+        "There is unassigned playtime in your Subsheet",
+        [
+          {
+            text: "Cancel",
+          
+            style: "cancel"
+          },
+          { text: "Continue",
+          onPress: () =>{ checkForOverlap()} }
+        ]
+      );
+    }
+    else
+    {
+      checkForOverlap()
+    }
+  }
 
-    let isOverlap = false
+  function checkForOverlap()
+  {
+    var isOverlap = false
     //check if there is an over lap
-    for(let min = 0; min < positionsData.interval_length*current_interval; min++)
+    for(let min = 0; min < intervalLength*current_interval; min++)
     {
       let players = []
       for(let pos = 0; pos < positionsData.position_data.length; pos++)
       {
         players.push(positionsData.position_data[pos].position_timeline[min])
         const duplicate = players.some(element => {
-          if (players.indexOf(element) !== players.lastIndexOf(element)) {
+          if (players.indexOf(element) !== players.lastIndexOf(element) && !players.includes(null)) {
             return true;
           }
       
@@ -185,27 +234,37 @@ else
       }
      
     }
-    
-
-    //evaluate wether there is a gap
-    if(isGap || isOverlap) 
+    if (isOverlap)
     {
-      //If there is a gap create a modal prompt 
       Alert.alert(
-        "Error",
-        'Schedule not complete or player overlap occuring',
+        "Warning",
+        "A player has been assigned multiple positions in a single minute",
         [
-          //Creates an array of selectable player
           {
-            text: "Close",
+            text: "Cancel",
             style: "cancel"
-          }
+          },
+          { text: "Continue",
+          onPress: () => selectionComplete() }
         ]
-      )
-
+      );
     }
     else
     {
+      selectionComplete()
+    }
+    
+  }
+  function selectionComplete ()
+  {
+    
+
+
+
+    
+
+  
+   
       //If not gaps create the sub data 
       const subData = []
       let subId = 0
@@ -222,7 +281,7 @@ else
         for(let k = 0; k < positionTimeline.length; k++)
         {
           //Check wether name has changed and also check to make sure that it is not the start of new interval
-          if(priorPerson != positionTimeline[k] && k % positionsData.interval_length != 0)
+          if(priorPerson != positionTimeline[k] && k % intervalLength != 0)
           {
             subData.push({subId: subId, subMin: k,subPlayerOn:assignNameColor(priorPerson,playerData)[0] ,subPlayerOff: assignNameColor(positionTimeline[k],playerData)[0],subPos:positionInitials,subCords: positionCords})
             subId ++
@@ -280,7 +339,7 @@ else
 
      }
       
-    }
+    
   }
 
   function saveData ()
@@ -291,6 +350,7 @@ else
     
   }
  
+
     useEffect(() => {
       if(canAddPlayer)
       {
@@ -310,7 +370,11 @@ else
     
   
     },[canAddPlayer]);
-  
+
+
+
+ 
+    
   return(
       
     <SafeAreaView>
@@ -343,7 +407,7 @@ else
             </Pressable>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => {if(otherTeamName!= '') {setModalVisible(!modalVisible); selectionComplete()}}}
+              onPress={() => {if(otherTeamName!= '') {setModalVisible(!modalVisible); checkForGaps()}}}
             >
               <Text style={styles.textStyle}>Begin Match</Text>
             </Pressable>
@@ -437,6 +501,7 @@ else
                 dropdownStyle={{borderRadius:9}}
             />
           </View>
+          
         
         <View style = {styles.intervalSelectionContainer}>
         <Text style = {{fontSize:20}}>Interval</Text>  
@@ -444,35 +509,59 @@ else
         <View style = {styles.intervalSelection}>
         {/* Cheap way to create an element a certain amount of times */}
         
-        {[...Array(positionsData.total_intervals)].map((prop,i) => { 
-          
-          //i+1 is used as current interval doesnt start at 0
-          let color = 'transparent'
-          let textColor = 'black'
-          if((i+1) == generalData.current_interval) {color = '#95b7ed'; textColor = 'white'}
-
-          return(
-             
-            <Pressable key = {i} onPress={()=>{updateCurrentInterval(i+1)}} style = {{...styles.intervalButton, backgroundColor:color}} >
-              <Text  style = {{...styles.intervalText,color:textColor}}>{i+1}</Text>
-            </Pressable>
+        {
+         
+          intervalSelector.map((prop,i) => { 
             
-          )
-        })}
+            //i+1 is used as current interval doesnt start at 0
+            let color = 'transparent'
+            let textColor = 'black'
+            if((prop.intervalValue) == generalData.current_interval && prop.lower == lower) {color = '#95b7ed'; textColor = 'white'}
+            
+            return(
+              
+              <Pressable key = {i} onPress={()=>{updateCurrentInterval(prop.intervalValue);setUpperIntervalOffset(prop.upperIntervalOffset);setLower(prop.lower)}} style = {{...styles.intervalButton, backgroundColor:color}} >
+                <Text  style = {{...styles.intervalText,color:textColor}}>{prop.intervalTag}</Text>
+              </Pressable>
+              
+            )
+          })
+        }
         </View>
         </View>
       
     
         
       </View>
+      <View style = {{flexDirection:'row',marginRight:20}}>
+        <View style = {{justifyContent:'center',alignItems:'center'}}>
+          <Text style = {{fontSize:30,textAlignVertical:'center',textAlign:'center',width:70}}>🕛</Text>
+          </View>
+        {
+            
+            Array((lower? upperIntervalOffset:intervalLength) - (lower? 1:upperIntervalOffset) + 1).fill().map((_, idx) =>  (lower? 1:upperIntervalOffset) + idx).map((prop) => {
+        
+            return(
+              
+              <View key = {prop} style = {{flex:1,justifyContent:'center',alignItems:'center',paddingTop:10}}>
+                <Text style = {{fontSize:20}}>{prop}</Text>
+              </View>
+            )
+          })
+        }
+      </View>
       
         
-          <FlatList scrollEnabled 
+          <FlatList 
+          scrollEnabled={moveDir==null} 
           initialNumToRender={sliderData.length} 
           data = {sliderData} 
-          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval)} 
+          renderItem={(item)=> SliderBar(item,updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,current_interval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval,intervalLength,upperIntervalOffset,lower)} 
           keyExtractor ={item => item.position_id}
-          contentContainerStyle={{flexGrow:1,paddingBottom:150}}
+          contentContainerStyle={{flexGrow:1,paddingBottom:200}}
+         
+
+        
           
           />
     

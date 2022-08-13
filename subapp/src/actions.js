@@ -297,3 +297,12 @@ export const update_team_tutorial = data => dispatch => {
     payload: data
   });
 }
+
+export const UPDATE_INTERVAL_SELECTOR = 'UPDATE_INTERVAL_SELECTOR';
+
+export const update_interval_selector = data => dispatch => {
+  dispatch({
+    type: UPDATE_INTERVAL_SELECTOR,
+    payload: data
+  });
+}

@@ -28,6 +28,7 @@ const GameSetup = (props) =>
  
     const [canAddTeam,setCanAddTeam] = useState(false)
     const [leavingPage,setLeavingPage] = useState(false)
+    const [positionless,setPoisitonless] = useState(false)
     const sportData = [{label:'Hockey 7 Aside', value:'7H'},{label:'Hockey 11 Aside',value:'11H'},{label: 'Junior Netball Yr 3-6',value:'N'},{label: 'Netball',value:'NS'},{label: 'Basketball',value:'B'},{label: 'Football 7 Aside',value:'7F'},{label: 'Football 9 Aside',value:'9F'},{label: 'Football 11 Aside',value:'11F'},{label: 'Rugby',value:'R'},{label: 'Test', value:'T'}]
   
     useEffect(() => {
@@ -37,7 +38,7 @@ const GameSetup = (props) =>
 
             
             //Get the position related data 
-            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport,team_sport_full:fullSport,team_tutorial: [true,true,true,true,true]})
+            createTeam({team_id: teamIndex,team_name: name,team_player_data: {team_players:[],team_player_index:0},team_schedule_data: {team_schedules: [], team_schedule_index:0},team_game_data:{team_games:[],team_game_index:0},team_sport:sport,team_sport_full:fullSport,team_tutorial: [true,true,true,true,true],team_positionless:positionless})
             updateCurrentTeamIndex(teamIndex)
             incrementTeamIndex(1)
 
@@ -173,43 +174,17 @@ const GameSetup = (props) =>
                         /> */}
                         
                 </View>
-                {/* <Text style = {{fontSize:28}}>Game Settings</Text>
+                
                 <View style = {styles.inputArea}>
-                    <View style ={styles.subTextView} >
-                        <Text style = {styles.fieldTitle}>Total Intervals</Text>
-                        <Text style = {styles.infoText}>2 - halfs 3 - thirds 4 - quarters</Text>
-                    </View>
-                    <RNPickerSelect
-                        style = {pickerSelectStyles}
-                        onValueChange={(value)=>{setIntervals(value)}}
-                        items ={Array.from({length: 4}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
-                        placeholder = {{label:'',value:null}}
-                       
+                        <View style ={styles.subTextView}>
+                            <Text style = {styles.fieldTitle}>Positionless</Text>
+                            <Text style = {styles.infoText}>{`(Recommended for social teams)\nAssigns every position to\nevery player.`}</Text>
+                        </View>
+                        <Switch
+                            value = {positionless}
+                            onValueChange={()=>{setPoisitonless(!positionless)}}
                         />
-                        
-                </View>
-                <View style = {styles.inputArea}>
-                    <View style ={styles.subTextView}>
-                        <Text style = {styles.fieldTitle}>Interval Length</Text>
-                        <Text style = {styles.infoText}>Length of each interval in minutes</Text>
                     </View>
-                    <RNPickerSelect
-                    style = {pickerSelectStyles}
-                    onValueChange={(value)=>{setIntervalW(value)}}
-                    items ={Array.from({length: 100}, (_, i) => ({label: (i+1).toString(),value:(i+1)}))}
-                    placeholder = {{label:'',value:null}}
-                    />
-                </View>
-                <View style = {styles.inputArea}>
-                    <View style ={styles.subTextView}>
-                        <Text style = {styles.fieldTitle}>Mirror Intervals</Text>
-                        <Text style = {styles.infoText}>{`Makes the schedule of every\ninterval identical to the first one`}</Text>
-                    </View>
-                    <Switch
-                        value = {mirror}
-                        onValueChange={()=>{shouldMirrorIntervals(!mirror)}}
-                    />
-                </View> */}
             </ScrollView>
         </SafeAreaView>
         </Modal>

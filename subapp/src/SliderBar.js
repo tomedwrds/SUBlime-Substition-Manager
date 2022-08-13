@@ -7,13 +7,13 @@ import SelectDropdown from "react-native-select-dropdown";
 //General setup vars
 
 const sliderBarRightMargin =20
-const sliderBarTopMargin = 20
+const sliderBarTopMargin = 10
 const sliderBorderWidth = 1
-const sliderBodyHeight = 100 
+const sliderBodyHeight = 70 
 const sliderContentHeight = sliderBodyHeight - sliderBorderWidth*2
 const screen_width = Dimensions.get('window').width-sliderBarRightMargin
 const image = { uri: "https://www.seekpng.com/png/full/9-95144_diagonal-stripes-png-graphic-transparent-parallel.png" };
-const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval) =>
+const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,dragBar,setDragBar,startTile,setStartTile,positionsData,playerData,assignNameColor,currentInterval,viewType,updatePlayerIntervalWidth,team_id,minutesPlayed,activeGameInterval,interval_length,upperIntervalOffset,lower) =>
 { 
 
   
@@ -21,9 +21,17 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     const positionName = item.position_inititals
     const positionId = item.position_id
     const positionTimeline = item.position_timeline
-    const intervalLength = positionsData.interval_length
+    const intervalLength = interval_length
     let dropDownWidth = 140
-    
+
+
+    //Setup interval bounds
+    const intervalLowerBound = (lower? intervalLength*(currentInterval-1):intervalLength*(currentInterval-1)+upperIntervalOffset)
+    const intervalUperBound = (lower? intervalLength*(currentInterval-1)+upperIntervalOffset:intervalLength*(currentInterval))
+    const intervalLengthProper = intervalUperBound-intervalLowerBound
+
+  
+  
     //Adjust were interval width is recieved from depdent on picker select data
     let positionIntervalWidth = item.position_interval_width
     if(viewType == 'Player')
@@ -55,7 +63,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
        if(viewType == 'Position')
        {
         //Get the start tile - newStartTile is used as opposed to a hook as hooks update async and therefore arent ideal
-        let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        let dragStartTile = Math.floor(drag.nativeEvent.x / positionIntervalWidth) + intervalLowerBound
         
      
         
@@ -81,19 +89,19 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         if (positionTimeline[dragStartTile] != null && dragStartTile >= minutesPlayed)
         {
             //Setupvars prior name is used to see when blobs end, and flound_bob is used to determine what blob to turn into drag bar
-            let prior_name =  positionTimeline[(currentInterval-1)*intervalLength]
+            let prior_name =  positionTimeline[intervalLowerBound]
             let blob_length = 0
             let found_blob = false
             
             //Loop through all of the invervals
-            for( let i = (currentInterval-1)*intervalLength; i <= currentInterval*intervalLength; i++)
+            for( let i = intervalLowerBound; i <= intervalUperBound; i++)
             {
                 
                 //This is used to check if tile has changed without causing an indesxing error
-                if (i < currentInterval*intervalLength) {var tileChanged = positionTimeline[i] != prior_name}
+                if (i < intervalUperBound) {var tileChanged = positionTimeline[i] != prior_name}
                 
                 //Check to see if a blob has finished being iterated over as the name has changed or end of intervals has been reacheds
-                if (tileChanged || i==currentInterval*intervalLength )
+                if (tileChanged || i==intervalUperBound )
                 {
                 
                 
@@ -103,7 +111,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                         //Set found blob to false so a 2nd drag bar isnt created
                         found_blob = false
                         
-                        const offsetI = i -(currentInterval-1)*intervalLength
+                        const offsetI = i -intervalLowerBound
                         
                         //Determine x pos of half of the blob this is done for determing drag direction
                         const half_blob_x = (offsetI-blob_length)*positionIntervalWidth + blob_length*positionIntervalWidth/2 
@@ -136,7 +144,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                 
                     }
                     //Set prior name check exists to prevent indexing error
-                    if (i < currentInterval*intervalLength)
+                    if (i < intervalUperBound)
                     {
                         prior_name = positionTimeline[i]
                     }
@@ -169,7 +177,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     }
     const dragEnd = (drag) => {
        
-        const endTile = Math.round(drag.nativeEvent.x / positionIntervalWidth) + intervalLength*(currentInterval-1)
+        const endTile = Math.round(drag.nativeEvent.x / positionIntervalWidth) + intervalLowerBound
         
         if (moveDir == 'right')
         {
@@ -283,18 +291,18 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
      //loop through whole list
 
     //Add overlapped data for minutes
-    if(minutesPlayed >= (currentInterval-1)*intervalLength && activeGameInterval == currentInterval)
+    if(minutesPlayed >= intervalLowerBound && activeGameInterval == currentInterval)
     {
-      transformed_data.push({name:'Already Played',length:minutesPlayed%intervalLength,color:'white',overlap:[]})
+      transformed_data.push({name:'Already Played',length:minutesPlayed%intervalLengthProper,color:'white',overlap:[]})
       
-     for(let i = (currentInterval-1)*intervalLength+minutesPlayed%intervalLength; i < currentInterval*intervalLength; i++)
+     for(let i = intervalLowerBound+minutesPlayed%intervalLengthProper; i < intervalUperBound; i++)
      {
       
       
        
        
       //Checking if next tile is diffrent - indexing error prevention
-      if( i < (currentInterval)*intervalLength-1)
+      if( i < intervalUperBound-1)
       {
         var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];
       }
@@ -341,20 +349,20 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
     }
     else if(currentInterval < activeGameInterval)
     {
-      console.log('l')
-      transformed_data.push({name:'Already Played',length:intervalLength,color:'white',overlap:[]})
+     
+      transformed_data.push({name:'Already Played',length:intervalLengthProper,color:'white',overlap:[]})
       
     }
     else
     {
-      for(let i = (currentInterval-1)*intervalLength; i < currentInterval*intervalLength; i++)
+      for(let i = intervalLowerBound; i < intervalUperBound; i++)
      {
       
       
        
        
       //Checking if next tile is diffrent - indexing error prevention
-      if( i < (currentInterval)*intervalLength-1)
+      if( i < intervalUperBound-1)
       {
         var isNextTileSame = positionTimeline[i] == positionTimeline[ i+1];
       }
@@ -423,17 +431,18 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
       
       {/* First view is the primary view all the other views are stacked on top of this. Onlayout is used to setup calculations*/}
       <View 
-       key = {positionName}
+       key = {lower}
         onLayout={(k) => {
+          
         if(viewType == 'Position')
         {
-          updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+          updateIntervalWidth([positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/(intervalUperBound-intervalLowerBound)])
           
         } 
         else
         {
           
-          updatePlayerIntervalWidth([team_id,positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/intervalLength])
+          updatePlayerIntervalWidth([team_id,positionId,(k.nativeEvent.layout.width-sliderBorderWidth*2)/(intervalUperBound-intervalLowerBound)])
         }
       }}
         
@@ -498,16 +507,16 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
         {/* Layer that handles the picker selects */}
         {positionTimeline.map((prop,i) => {   
            
-          if(i >= (currentInterval-1)*intervalLength && i < ((currentInterval)*intervalLength) )
+          if(i >= intervalLowerBound && i < intervalUperBound )
           {
            
             const key = i
             const name = prop 
             const index = i 
             const offset =intervalLength*(currentInterval-1)
-            
-
+       
             return(
+              
               <View key = {i}  style = {{flex:1,borderColor:'black',justifyContent:'center'}}>
   
         
@@ -532,7 +541,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                    
                         return (
                           
-                            <Text style = {{fontSize:16,textAlign:'center'}}>{number}</Text>
+                            <Text style = {{fontSize:16,textAlign:'center'}}>+{/*number*/}</Text>
                           )
                       }}
                       
@@ -540,7 +549,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                       defaultValue={'a'}
                      
                     
-                      buttonStyle={{padding:0,margin:0,width:'100%',backgroundColor:'transparent'}}
+                      buttonStyle={{padding:0,margin:0,width:'100%',backgroundColor:'transparent',borderRightWidth:((index == intervalUperBound-1)? 0:1),height:'70%'}}
                       buttonTextStyle={{padding:0,margin:0}}
                       rowStyle={{padding:0,margin:0}}
                       
@@ -587,7 +596,7 @@ const styles = StyleSheet.create({
       borderRadius: 9,
       justifyContent: 'center'
     },
-    dragBar: {
+    dragBar: { 
       opacity:0.6,
       height:sliderContentHeight,
       borderRadius: 9

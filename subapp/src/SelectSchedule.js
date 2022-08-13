@@ -22,7 +22,7 @@ const SelectSchedule = ({navigation}) => {
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
     const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
-
+    const updateIntervalSelector = data => dispatch(updateIntervalSelector(data))
     //Modal managment
     const [displaySetup,setDisplaySetup] = useState(false)
     function toggleModalSetup (){setDisplaySetup(!displaySetup); }
@@ -40,7 +40,39 @@ const SelectSchedule = ({navigation}) => {
         updateIntervalLength(scheduleData[schedule_index].schedule_data.interval_length)
         updateTotalIntervals(scheduleData[schedule_index].schedule_data.total_intervals)
         shouldMirrorIntervals(scheduleData[schedule_index].schedule_data.mirror_intervals)
-        navigation.navigate('ScheduleOverview', {screen:'Schedule'})
+        if (scheduleData[schedule_index].schedule_data.interval_selector == undefined)
+        {
+            //Create the interval selector data
+            let interval_selector = []
+            const total_intervals = scheduleData[schedule_index].schedule_data.total_intervals
+            const interval_length = scheduleData[schedule_index].schedule_data.interval_length
+            if(interval_length >= 30)
+            {
+                //If its greater than 30 the interval is split into two parts. The lower section is a and upper section is b. We need to find the offset for the upper section
+                const upper_interval_offset = Math.ceil(scheduleData[schedule_index].schedule_data.interval_length / 2)
+                //Now add the data for each interval adding in the lower and upper section
+                for(let interval = 0; interval < total_intervals; interval ++)
+                {
+                    interval_selector.push({intervalTag: (interval+1)+'a',upperIntervalOffset: upper_interval_offset,intervalValue:interval+1,lower:true},{intervalTag: (interval+1)+'b',upperIntervalOffset: upper_interval_offset,intervalValue:interval+1,lower:false})
+                }
+            }
+            else
+            {
+                //Otherwise just create an interval selector without sub tags
+                for(let interval = 0; interval < total_intervals; interval ++)
+                {
+                    interval_selector.push({intervalTag: (interval+1),upperIntervalOffset: interval_length,intervalValue:interval+1,lower:true})
+                }
+            }
+            updateIntervalSelector(interval_selector)
+
+
+        }
+        else
+        {
+
+        }
+        navigation.navigate('ScheduleOverview', {screen:'Subsheet'})
     }
     
     

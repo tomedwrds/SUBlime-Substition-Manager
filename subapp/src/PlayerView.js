@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import { Chip } from 'react-native-paper';
-import { View, Pressable, Button,StyleSheet, Alert, FlatList,Text,Modal } from 'react-native';
+import { View, Pressable, Button,StyleSheet, Alert, FlatList,Text,Modal,Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,6 +16,9 @@ import {add,create_player,add_position, remove_position, remove_player, update_n
 import getPositionInitals from './player_selection/get_position_initals.js';
 import generateSchedule from './schedule auto generation/generateSchedule.js';
 import { TextInput } from 'react-native-element-textinput';
+import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { Video } from 'expo-av';
 
 
 
@@ -47,7 +50,7 @@ function PlayerView({navigation }) {
 
   //Get the position selection data depdent on what sport
   const sport = teamState.team_data[adjusted_team_index].team_sport
- 
+  const positionless = teamState.team_data[adjusted_team_index].team_positionless
   let positionSelectionData = []
   switch(sport)
   {
@@ -265,6 +268,7 @@ function PlayerView({navigation }) {
           placeholder={playerName != '' ? playerName:'Player Name'}
           placeholderTextColor= {playerName != '' ? 'black':"grey"} 
           onEndEditing={(data)=>(updateName([team_id,playerId,data.nativeEvent.text]))}
+          inputStyle={styles.playerTextInput}
         />
   
         {/*Select postion bar*/}
@@ -314,6 +318,7 @@ function PlayerView({navigation }) {
                           {
                             //Add the position to the player in the store
                             addPositionToPlayer([team_id,playerId,selectedItem.value])
+                            
                           }
                          // updateSelectedPos([team_id,playerId,selectedItem.value])
                         }}
@@ -327,11 +332,25 @@ function PlayerView({navigation }) {
                             // if data array is an array of objects then return item.property to represent item in dropdown
                             return item.label
                         }}
+                        renderCustomizedRowChild={(item)=>{
+                          //Check if position exists inside the players position data if it does render a 
+                          const pos = item.value
+
+                          if(playerPositions.includes(pos))
+                          {
+                            return <View style = {styles.dropDownRow}><Text style = {styles.dropDownText}>{item.label}</Text></View>
+                          }
+                          else
+                          {
+                            return <View style = {styles.dropDownRow}><Text style = {styles.dropDownText}>{item.label}</Text></View>
+                          }
+                        }}
                         defaultButtonText={'Add positions'}
                        buttonStyle = {styles.dropDown}
                        buttonTextStyle={styles.dropDownText}
                        rowTextStyle={styles.dropDownText}
                        dropdownStyle={{borderRadius:9,width:260}}
+                       
                     
                        
                     />
@@ -372,7 +391,8 @@ function PlayerView({navigation }) {
 
    { 
     let position = []
-    if(sport == 'N') position = ['A','C','D']
+   
+    if(positionless == true) position = positionSelectionData.map(item=> item.value)
     createPlayer([team_id,{
       id: current_player_index,
       name: '',
@@ -402,18 +422,19 @@ function PlayerView({navigation }) {
   
 
   return(
-   <SafeAreaView style = {{marginHorizontal:20,flex:1}}>
+   <SafeAreaView style = {styles.body}>
     <Modal
           animationType="slide"
           transparent={true}
           visible={teamState.team_data[adjusted_team_index].team_tutorial[1]} 
           supportedOrientations={['landscape']}
       >
-          <View style={styles.centeredView}>
+        
+           <View style={styles.centeredView}>
               <View style={styles.modalView}>
                   <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Team Overview</Text>
                   <Text style = {{textAlign:'center'}}>{'A team would be nothing without its player. On this page you can add players to your team by pressing the ‘+’ button. You can select as many positions as you like per player.\n\nOnce you have added some players press the ‘Subsheets’ button to continue\n'}</Text>
-                 
+                  {/* <Image style ={{flex:1}}source={require('./images/giphy.gif')}/> */}
                   <View style = {{flexDirection:'row'}}>
                   <Pressable
                   style={[styles.button, styles.buttonClose]}
@@ -423,7 +444,8 @@ function PlayerView({navigation }) {
                   </Pressable>
                   </View>
               </View>
-          </View>
+          </View> 
+          
       </Modal>
      <View style={{flexDirection:'row'}}>
       <Text style = {{fontSize:40}}>Team Overview</Text>
@@ -444,7 +466,7 @@ function PlayerView({navigation }) {
     
 
     <View style = {{flex:1}}>
-      <FlatList
+      <KeyboardAwareFlatList
      
         data={teamState.team_data[adjusted_team_index].team_player_data.team_players}
         renderItem={(item) => PlayerTab(item)}
@@ -468,7 +490,7 @@ const styles = StyleSheet.create({
   body: {
     
     flex: 1,
-    flexDirection: 'column',
+    marginHorizontal:20
     
   },
   playerBar : {
@@ -488,7 +510,7 @@ const styles = StyleSheet.create({
     backgroundColor:'white'
   },
   playerTextInput : {
-    fontSize: 20,
+    fontSize: 18,
     marginRight: 3,
     marginLeft: 3,
     borderRadius: 4,
@@ -496,7 +518,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '90%',
     flex: 1,
-    paddingLeft:10
+    paddingLeft:3
   },
   playerPositionSelector : {
     flex: 1,  
@@ -569,6 +591,11 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     textAlign:'left',
     padding:0
+  },
+  dropDownRow: {
+    flex:1,
+    justifyContent:'center',
+    paddingLeft:4
   }
   
 });

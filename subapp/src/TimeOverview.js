@@ -62,28 +62,19 @@ const TimeOverview = () => {
                 }
             for(let game = 0; game < gameData.length; game ++)
             {
-                //Get the id of all players in the team and put in the list index 0 id index 1 array of all minutes for each game 
-                
-                
-               
-                
+                //Loop through all players in every game and add ther time data for that game if they didnt play 0 minutes
                 for(let player = 0; player < gameData[game].game_data.length;player++)
                 {
                     let data = gameData[game].game_data[player]
                     let indexToAddTime = timeData.findIndex(item => item[0] == data[0]) 
                     if(indexToAddTime != -1)
-                    {
-                        
-                        
+                    {          
                         timeData[indexToAddTime][1].push(data[1])
                         
                     }
-                }
-                    
-
-            }
-                
-             //Loop through time data and average all lists
+                } 
+            }  
+            //Loop through time data and average all lists
             for(let player = 0; player < timeData.length; player++)
             {
         
@@ -119,7 +110,7 @@ const TimeOverview = () => {
                         //Add to total time
                         timeData[indexToAddTime].total += data[1]
 
-                        //add the time data for game to ds
+                        //add the time data for game to display
                         timeData[indexToAddTime].data.push([game,data[1]])
                     }
                 }
