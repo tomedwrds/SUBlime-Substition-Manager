@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals, update_team_tutorial } from "./actions";
+import { delete_schedule, update_layout,update_interval_length,update_total_intervals,should_mirror_intervals, update_team_tutorial, update_interval_selector } from "./actions";
 import ScheduleSetup from "./ScheduleSetup";
 import FormationSelection from "./FormationSelection";
 import { useFocusEffect } from "@react-navigation/native";
@@ -22,7 +22,7 @@ const SelectSchedule = ({navigation}) => {
     const updateTotalIntervals = intervals => dispatch(update_total_intervals(intervals))
     const shouldMirrorIntervals = data => dispatch(should_mirror_intervals(data))
     const updateTeamTutorial = data => dispatch(update_team_tutorial(data))
-    const updateIntervalSelector = data => dispatch(updateIntervalSelector(data))
+    const updateIntervalSelector = data => dispatch(update_interval_selector(data))
     //Modal managment
     const [displaySetup,setDisplaySetup] = useState(false)
     function toggleModalSetup (){setDisplaySetup(!displaySetup); }
@@ -40,8 +40,10 @@ const SelectSchedule = ({navigation}) => {
         updateIntervalLength(scheduleData[schedule_index].schedule_data.interval_length)
         updateTotalIntervals(scheduleData[schedule_index].schedule_data.total_intervals)
         shouldMirrorIntervals(scheduleData[schedule_index].schedule_data.mirror_intervals)
+       
         if (scheduleData[schedule_index].schedule_data.interval_selector == undefined)
         {
+            console.log('123')
             //Create the interval selector data
             let interval_selector = []
             const total_intervals = scheduleData[schedule_index].schedule_data.total_intervals
@@ -64,14 +66,15 @@ const SelectSchedule = ({navigation}) => {
                     interval_selector.push({intervalTag: (interval+1),upperIntervalOffset: interval_length,intervalValue:interval+1,lower:true})
                 }
             }
+        
             updateIntervalSelector(interval_selector)
 
 
         }
-        else
-        {
+        // else
+        // {
 
-        }
+        // }
         navigation.navigate('ScheduleOverview', {screen:'Subsheet'})
     }
     
@@ -88,6 +91,7 @@ const SelectSchedule = ({navigation}) => {
                 transparent={true}
                 visible={teamData.team_data[adjusted_team_index].team_tutorial[0]} 
                 supportedOrientations={['landscape']}
+                onRequestClose={() => {updateTeamTutorial([team_id,0])}}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>

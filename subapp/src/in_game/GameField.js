@@ -1,28 +1,68 @@
 import React from "react"
-import { View,StyleSheet,Text, Pressable } from "react-native"
+import { View,StyleSheet,Text, Pressable, Alert } from "react-native"
 import GamePitch from "./GamePitch"
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useDispatch } from "react-redux";
 
 
-const GameField = ({item},setSelectedLayout,selectedLayout,team_sport) => {
+
+const GameField = ({item},setSelectedLayout,selectedLayout,team_sport,formationManagment,teamId,deleteFormation) => {
+    
 
     //Cutsomized styling to show what component is currently selected
     let selectedColor = '#D3D3D3'
-    if (item.layoutId ==selectedLayout)
+    if (setSelectedLayout != null)
     {
-        selectedColor = '#6ba1c4'
+        
+        if (item.layoutId ==selectedLayout)
+        {
+            selectedColor = '#6ba1c4'
+        }
     }
 
     function updateSelection ()
     {
-        
+     
         //If not already selected, select. If selected unselect
-        if (item.layoutId != selectedLayout)
+        if(setSelectedLayout != undefined)
         {
             setSelectedLayout(item.layoutId)
         }
+      
+    }
+
+    function DeleteFormation()
+    {
+        if(formationManagment)
+        {
+            return <Pressable onPress = {()=>
+                Alert.alert(
+                    "Confirmation",
+                    'Do you wish to delete this player',
+                    [
+                      //Array of selectable buttons
+                     
+                      { 
+                        text: "Close", 
+                       
+                      },
+                      { 
+                        text: "Confirm", 
+                        onPress: () => deleteFormation([teamId, item.layoutId])
+                       
+                      }
+                    ]
+                  )}>
+                <Icon 
+                    name='trash' 
+                    size = {24} 
+                    color = 'red'
+                />
+            </Pressable>
+        }
         else
         {
-            setSelectedLayout(null)
+            return null
         }
     }
     if(item.layoutId != -1)
@@ -30,13 +70,21 @@ const GameField = ({item},setSelectedLayout,selectedLayout,team_sport) => {
         return(
             
             
-            <Pressable style = {{flex:1}} onPress = {()=>{(updateSelection())}}>
+            <Pressable style = {{flex:1}} onPress = {()=>{(updateSelection()) }}>
 
                 {/* gamePitchContainer is the wrapping view of all elemenets all formating of background color, border, margin etc is in this */}
                 <View style = {{...styles.gamePitchContainer,backgroundColor:selectedColor}}>
                     
                     {/* Tile text */}
-                    <Text style = {styles.nameText}>{item.layoutName}</Text>
+                    <View style = {{flexDirection:'row',alignItems:'center'}}>
+                        <View style ={{flex:1,justifyContent:'center'}}>
+                         <Text style = {styles.nameText}>{item.layoutName}</Text>
+                        </View>
+                        <View style ={{alignItems:'flex-end',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                            <DeleteFormation/>
+                        </View> 
+                       
+                    </View>
                     {/* View wrapper needs to exist to allow magic fuckery of absolute positioning  */}
                     <GamePitch layoutData = {item.layoutData} sport = {team_sport}/>
                 </View>

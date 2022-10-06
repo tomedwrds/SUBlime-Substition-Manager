@@ -362,7 +362,7 @@ else
         const current_date = new Date()
         const savedDate = {year:current_date.getFullYear(),month:current_date.getMonth(),day: current_date.getDate(), hour: current_date.getHours(),minute: current_date.getMinutes()}
         let savedPositionsData =positionsData;
-   
+        savedPositionsData = {formation_name: savedPositionsData.formation_name, interval_length: savedPositionsData.interval_length,mirror_intervals:savedPositionsData.mirror_intervals,position_data:savedPositionsData.position_data,total_intervals:savedPositionsData.total_intervals}
         saveSchedule([team_id,{schedule_id: savedId, schedule_name: savedName, schedule_date: savedDate, schedule_data:savedPositionsData}])
         setCanAddPlayer(false)
         
@@ -420,6 +420,7 @@ else
           transparent={true}
           visible={teamData.team_data[adjusted_team_index].team_tutorial[3]} 
           supportedOrientations={['landscape']}
+          onRequestClose={() => {updateTeamTutorial([team_id,3])}}
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
@@ -539,11 +540,11 @@ else
           </View>
         {
             
-            Array((lower? upperIntervalOffset:intervalLength) - (lower? 1:upperIntervalOffset) + 1).fill().map((_, idx) =>  (lower? 1:upperIntervalOffset) + idx).map((prop) => {
+            Array((lower? upperIntervalOffset:intervalLength) - (lower? 1:upperIntervalOffset+1) + 1).fill().map((_, idx) =>  (lower? 1:upperIntervalOffset+1) + idx).map((prop) => {
         
             return(
               
-              <View key = {prop} style = {{flex:1,justifyContent:'center',alignItems:'center',paddingTop:10}}>
+              <View key = {prop} style = {{flex:1,justifyContent:'center',alignItems:'center',paddingTop:10,borderRadius:1,borderColor:'red'}}>
                 <Text style = {{fontSize:20}}>{prop}</Text>
               </View>
             )

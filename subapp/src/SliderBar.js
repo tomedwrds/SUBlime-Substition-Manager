@@ -541,7 +541,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                    
                         return (
                           
-                            <Text style = {{fontSize:16,textAlign:'center'}}>+{/*number*/}</Text>
+                            <Text style = {{fontSize:16,textAlign:'center'}}>{number}</Text>
                           )
                       }}
                       
@@ -549,7 +549,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                       defaultValue={'a'}
                      
                     
-                      buttonStyle={{padding:0,margin:0,width:'100%',backgroundColor:'transparent',borderRightWidth:((index == intervalUperBound-1)? 0:1),height:'70%'}}
+                      buttonStyle={{padding:0,margin:0,width:'100%',backgroundColor:'transparent',/*borderRightWidth:((index == intervalUperBound-1)? 0:1),*/height:'70%'}}
                       buttonTextStyle={{padding:0,margin:0}}
                       rowStyle={{padding:0,margin:0}}
                       

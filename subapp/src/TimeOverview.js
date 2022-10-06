@@ -215,6 +215,7 @@ const TimeOverview = () => {
           transparent={true}
           visible={teamData.team_data[adjusted_team_index].team_tutorial[2]} 
           supportedOrientations={['landscape']}
+          onRequestClose={() => {updateTeamTutorial([team_id,2])}}
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>

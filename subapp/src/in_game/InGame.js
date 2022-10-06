@@ -178,6 +178,7 @@ function InGame(props)
           transparent={true}
           supportedOrientations={['landscape']}
           visible={teamData.team_data[adjusted_team_index].team_tutorial[4]} 
+          onRequestClose={() => {updateTeamTutorial([team_id,4])}}
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>

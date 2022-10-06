@@ -428,6 +428,7 @@ function PlayerView({navigation }) {
           transparent={true}
           visible={teamState.team_data[adjusted_team_index].team_tutorial[1]} 
           supportedOrientations={['landscape']}
+          onRequestClose={() => {updateTeamTutorial([team_id,1])}}
       >
         
            <View style={styles.centeredView}>

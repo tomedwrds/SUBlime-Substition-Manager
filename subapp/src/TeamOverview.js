@@ -8,6 +8,7 @@ import TimeOverview from "./TimeOverview";
 import SelectSchedule from "./SelectSchedule";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GameHistory from "./GameHistory";
+import FormationManagment from "./in_game/FormationsManagment";
 
 const screenOptions = (route, color) => {
     let iconName;
@@ -27,6 +28,9 @@ const screenOptions = (route, color) => {
         break;
     case 'Back':
       iconName = 'arrow-left';
+      break;
+    case 'Formations':
+      iconName = 'columns'
       break;
       default:
         break;
@@ -58,7 +62,7 @@ const TeamOverview = () => {
             <Tab.Screen name="Team" component = {PlayerView}  />
             <Tab.Screen name="Season Playtime" component = {TimeOverview}  />
             <Tab.Screen name="Game History" component = {GameHistory}  />
-            
+            <Tab.Screen name="Formations" component = {FormationManagment}  />
             
         </Tab.Navigator>
         

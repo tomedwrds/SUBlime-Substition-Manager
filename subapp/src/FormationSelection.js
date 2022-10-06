@@ -16,301 +16,16 @@ const FormationSelection = (props) =>
     const positionState = useSelector(state => state.positionsReducer);
     const updateLayout = layout_data => dispatch(update_layout(layout_data))
     
+    
     const teamData = useSelector(state => state.teamReducer);
     const generalData = useSelector(state => state.generalReducer);
     const current_team_index = teamData.team_data.findIndex(item => item.team_id == generalData.current_team_index)
     
     const team_sport = teamData.team_data[current_team_index].team_sport
     //This is the data sets used for the display of the formation
-    const positionSelectionDataAll =   [
     
-    {   layoutId: 0,
-        layoutName: 'The Classic', 
-        layoutSport: '11H',
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [['Left Foward','LF'],0,0,0,0,0,['Right Foward','RF']],
-                [0,['Left Inner','LI'],0,0,0,['Right Inner','RI'],0],
-                [0,0,0,['Centre Half','CH'],0,0,0],
-                [['Left Half','LH'],0,0,0,0,0,['Right Half','RH']],
-                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:1,
-        layoutName: '3-4-3', 
-        layoutSport: '11H',
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
-                [0,0,0,0,0,0,0],
-                [['Left Half','LH'],0,['Centre Half','CH'],0,['Centre Half','CH'],0,['Right Half','RH']],
-                [0,0,0,0,0,0,0],
-                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:2,
-        layoutName: 'Park the Bus',
-        layoutSport: '11H', 
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Left Inner','LI'],0,0,0,['Right Inner','RI'],0],
-                [0,0,['Centre Half','CH'],0,['Centre Half','CH'],0,0],
-                [['Left Half','LH'],0,0,0,0,0,['Right Half','RH']],
-                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:3,
-        layoutName: '4-4-2', 
-        layoutSport: '11H',
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                [0,['Left Foward','LF'],0,0,0,['Right Foward','RF'],0],
-                [0,0,0,0,0,0,0],
-                [['Left Half','LH'],0,['Centre Half','CH'],0,['Centre Half','CH'],0,['Right Half','RH']],
-                [0,0,0,0,0,0,0],
-                [['Left Back','LB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Right Back','RB']],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:4,
-        layoutName: '2-2-2', 
-        layoutSport: '7H',
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                [0,0,['Left Foward','LF'],0,['Right Foward','RF'],0,0],
-                [0,0,0,0,0,0,0],
-                [0,0,['Left Half','LH'],0,['Right Half','RH'],0,0],
-                [0,0,0,0,0,0,0],
-                [0,0,['Left Back','LB'],0,['Right Back','RB'],0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:5,
-        layoutName: '3-3', 
-        layoutSport: '7H',
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                [0,['Left Foward','LF'],0,['Centre Foward','CF'],0,['Right Foward','RF'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Left Back','LB'],0,['Centre Back','CB'],0,['Right Back','RB'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:6,
-        layoutName: '7 aside', 
-        layoutSport: '7H',
-        layoutData: [
-                [0,0,0,['Striker','ST'],0,0,0],
-                [0,['Striker','ST'],0,0,0,['Striker','ST'],0],
-                [0,0,0,0,0,0,0],
-                [0,['Midfield','MF'],0,0,0,['Midfield','MF'],0],
-                [0,0,0,['Defender','DF'],0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:7,
-        layoutName: 'The test',
-        layoutSport: 'T', 
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                [0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Left Back','LB'],['Left Back','LB'],0,0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0]]
-    },
-    {
-        layoutId:8,
-        layoutName: 'Yr 3/4 Netball',
-        layoutSport: 'N', 
-        layoutData: [
-            [0,0,0,0,0,0,0],
-            [0,['Attack','A'],0,0,0,['Attack','A'],0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,['Centre','C'],0,0,0],
-            [0,0,0,0,0,0,0],
-            [0,['Defence','D'],0,0,0,['Defence','D'],0],
-            [0,0,0,0,0,0,0]]
-    },
-    {
-        layoutId:9,
-        layoutName: 'Yr 5/6 Netball',
-        layoutSport: 'N', 
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                [0,['Attack','A'],0,0,0,['Attack','A'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,['Centre','C'],0,['Centre','C'],0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Defence','D'],0,0,0,['Defence','D'],0],
-                [0,0,0,0,0,0,0]]
-    },
-    {
-        layoutId:10,
-        layoutName: 'Basketball',
-        layoutSport: 'B', 
-        layoutData: [
-                [0,0,0,0,0,0,0],
-                
-                
-                [0,0,0,0,0,0,0],
-                [0,0,['Point Guard (1)','PG-1'],0,['Shooting Guard (2)', 'SG-2'],0,0],
-                [0,['Small Foward (3)',  'SF-3'],0,0,0,['Power Foward (4)', 'PF-4'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,['Centre (5)','C-5'],0,0,0],
-                
-                [0,0,0,0,0,0,0]]
-    },
-    {
-        layoutId:11,
-        layoutName: '4-3-3', 
-        layoutSport: '11F',
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
-                [0,0,['Left Midfield','LM'],0,['Right Midfield','RM'],0,0],
-                [0,0,0,['Centre Defending Midfield','CDM'],0,0,0],
-                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
-                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:12,
-        layoutName: '4-4-2', 
-        layoutSport: '11F',
-        layoutData: [
-                [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Left Midfield','LM'],0,0,0,['Right Midfield','RM'],0],
-                [0,0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,0],
-                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
-                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:13,
-        layoutName: '4-4-2 Diamond', 
-        layoutSport: '11F',
-        layoutData: [
-                [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
-                
-                [0,0,0,['Centre Attacking Midfield','CAM'],0,0,0],
-                [0,0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,0],
-                [0,0,0,['Centre Defending Midfield','CDM'],0,0,0],
-                [['Left Back','LB'],0,0,0,0,0,['Right Back','RB']],
-                [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:14,
-        layoutName: '3-4-3', 
-        layoutSport: '11F',
-        layoutData: [
-                [0,0,0,['Centre Foward','CF'],0,0,0],
-                [0,['Left Wing','LW'],0,0,0,['Right Foward','RW'],0],
-                [0,0,0,0,0,0,0],
-                [['Left Midfield','LM'],0,['Centre Midfield','CM'],0,['Centre Midfield','CM'],0,['Left Midfield','RM']],
-                [0,0,0,0,0,0,0],
-                [0,['Centre Back','CB'],0,['Centre Back','CB'],0,['Centre Back','CB'],0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:15,
-        layoutName: '2-2-2', 
-        layoutSport: '7F',
-        layoutData:  
-            [
-            [0,0,0,0,0,0,0],
-            [0,0,['Centre Foward','CF'],0,['Centre Foward','CF'],0,0],
-            [0,0,0,0,0,0,0],
-            [['Left Midfield','LM'],0,0,0,0,0,['Right Midfield','RM']],
-            [0,0,['Centre Back','CB'],0,['Centre Back','CB'],0,0],
-            [0,0,0,0,0,0,0],
-            [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:16,
-        layoutName: 'Rugby', 
-        layoutSport: 'R',
-        layoutData: [
-                [0,0,['Loosehead Prop', 'LP'],['Hooker','H'],['Tighthead Prop', 'TP'],0,0],
-                [0,0,['Loosehead Lock', 'LL'],0,['Tighthead Lock', 'TL'],0,0],
-                [0,['Blindside Flanker','BF'],0,0,['Openside Flanker', 'OF'],0,0],
-                [0,0,['Number 8', 'N8'],['Scrum Half','SH'],0,0,0],
-                [0,0,0,['Fly Half','FH'],['Inside Centre','IC'],0,0],
-                [0,0,0,0,0,['Outside Centre','OC'],0],
-                [0,['Left Wing','LW'],0,0,['Full Back','FB'],0,['Right Wing','RW']]]
-    },
-    {
-        layoutId:17,
-        layoutName: 'Netball', 
-        layoutSport: 'NS',
-        layoutData: [
-                [0,0,0,['Goal Shoot','GS'],0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Goal Attack','GA'],0,0,0,['Wing Attack','WA'],0],
-                
-                [0,0,0,['Centre','C'],0,0,0],
-                
-                [0,['Wing Defence','WD'],0,0,0,['Goal Defence','GD'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,['Goal Keep','GK'],0,0,0]]
-    },
-    {
-        layoutId:18,
-        layoutName: '2-3-2-1', 
-        layoutSport: '9F',
-        layoutData: [
-            [0,0,0,['Centre Foward','CF'],0,0,0],
-            [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
-            [0,0,0,0,0,0,0],
-            [['Left Midfield','LM'],0,0,['Centre Midfield','CM'],0,0,['Right Midfield','RM']],
-            
-            [0,0,0,0,0,0,0],
-            [0,['Centre Back','CB'],0,0,0,['Centre Back','CB'],0],
-            [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:19,
-        layoutName: '3-2-3', 
-        layoutSport: '9F',
-        layoutData: [
-            [0,0,0,['Centre Foward','CF'],0,0,0],
-            [0,['Left Wing','LW'],0,0,0,['Right Wing','RW'],0],
-            [0,0,0,0,0,0,0],
-            [0,0,['Left Midfield','LM'],0,['Right Midfield','RM'],0,0],
-            
-            
-            [0,['Left Back','LB'],0,0,0,['Right Back','RB'],0],
-            [0,0,0,['Centre Back','CB'],0,0,0],
-            [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-    {
-        layoutId:20,
-        layoutName: '3-3', 
-        layoutSport: '7F',
-        layoutData:  
-            [
-                [0,0,0,0,0,0,0],
-                [0,['Left Wing','LW'],0,['Centre Foward','CF'],0,['Right Wing','RW'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0],
-                [0,['Left Back','LB'],0,['Centre Back','CB'],0,['Right Back','RB'],0],
-                [0,0,0,0,0,0,0],
-                [0,0,0,['Goal Keeper','GK'],0,0,0]]
-    },
-
-]   
     //Filters to only have formations relavent to sport code
-    let positionSelectionData = positionSelectionDataAll.filter(item => item.layoutSport == teamData.team_data[current_team_index].team_sport)
+    const positionSelectionData = teamData.team_data[current_team_index].team_formation_data.team_formations
     
     //Place an empty formation in to fill space if odd number
     if(positionSelectionData.length% 2 == 1)
@@ -356,7 +71,8 @@ const FormationSelection = (props) =>
         {
             ///Format the selected layout data
             let layoutData = []
-            let layoutDataRaw = positionSelectionDataAll[selectedLayout].layoutData
+            let adjustedIndex = positionSelectionData.findIndex(item => selectedLayout==item.layoutId)
+            let layoutDataRaw = positionSelectionData[adjustedIndex].layoutData
             let index = 0;
             //Iterate through the ds
             for(let rows = 0; rows < layoutDataRaw.length; rows++)
@@ -383,7 +99,7 @@ const FormationSelection = (props) =>
                 }
             }
            
-            updateLayout([layoutData, positionSelectionDataAll[selectedLayout].layoutName])
+            updateLayout([layoutData, positionSelectionData[adjustedIndex].layoutName])
             props.toggleModalFormations()
             props.navigation.navigate('ScheduleOverview',{screen:'Subsheet'})
         }

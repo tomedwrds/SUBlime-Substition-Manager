@@ -306,3 +306,23 @@ export const update_interval_selector = data => dispatch => {
     payload: data
   });
 }
+
+export const CREATE_FORMATION = 'CREATE_FORMATION';
+
+export const create_formation = data => dispatch => {
+  dispatch({
+    type: CREATE_FORMATION,
+    payload: data
+  });
+}
+
+export const DELETE_FORMATION = 'DELETE_FORMATION';
+
+export const delete_formation = data => dispatch => {
+  dispatch({
+    type: DELETE_FORMATION,
+    payload: data
+  });
+}
+
+
