@@ -18,7 +18,7 @@ import generateSchedule from './schedule auto generation/generateSchedule.js';
 import { TextInput } from 'react-native-element-textinput';
 import { KeyboardAvoidingView } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import { Video } from 'expo-av';
+
 
 
 
