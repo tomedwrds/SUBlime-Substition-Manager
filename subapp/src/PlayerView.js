@@ -433,8 +433,8 @@ function PlayerView({navigation }) {
         
            <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Team Overview</Text>
-                  <Text style = {{textAlign:'center'}}>{'A team would be nothing without its player. On this page you can add players to your team by pressing the ‘+’ button. You can select as many positions as you like per player.\n\nOnce you have added some players press the ‘Subsheets’ button to continue\n'}</Text>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Team Management</Text>
+                  <Text style = {{textAlign:'center'}}>{"A team would be nothing without its player's. On this page you can add players to your team by pressing the ‘+’ button. You can select as many positions as you like per player.\n\nOnce you have added some players press the ‘Subsheets’ button to continue\n"}</Text>
                   {/* <Image style ={{flex:1}}source={require('./images/giphy.gif')}/> */}
                   <View style = {{flexDirection:'row'}}>
                   <Pressable
@@ -449,7 +449,7 @@ function PlayerView({navigation }) {
           
       </Modal>
      <View style={{flexDirection:'row'}}>
-      <Text style = {{fontSize:40}}>Team Overview</Text>
+      <Text style = {{fontSize:40}}>Team Management📋</Text>
       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
         <Pressable 
        
@@ -468,7 +468,7 @@ function PlayerView({navigation }) {
 
     <View style = {{flex:1}}>
       <KeyboardAwareFlatList
-     
+        removeClippedSubviews={false}
         data={teamState.team_data[adjusted_team_index].team_player_data.team_players}
         renderItem={(item) => PlayerTab(item)}
         keyExtractor={item => item.id}

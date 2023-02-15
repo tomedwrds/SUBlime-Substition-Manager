@@ -182,7 +182,7 @@ function InGame(props)
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Gametime</Text>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Game Overview</Text>
                   <Text style = {{textAlign:'center'}}>{'Let the games begin. This screen displays a countdown to upcoming substitutions on the left and the field of play on the right. If you need to make changes to the Subsheet during the match head over to the Subsheet page.\n\nPress the ‘⏯’ to start the match\n'}</Text>
                  
                   <View style = {{flexDirection:'row'}}>

@@ -217,7 +217,8 @@ const ScheduleSetup = (props) =>
 const styles = StyleSheet.create({
     container: {
        marginHorizontal:20,
-       flex:1
+       flex:1,
+       marginTop:24,
     },
     subTextView: {
         width: 200

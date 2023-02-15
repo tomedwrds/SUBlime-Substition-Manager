@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "SUBlime Substitution Managment",
+    "name": "SUBlime Substitution Manager",
     "slug": "SUBlime",
-    "version": "1.0.5",
+    "version": "1.0.8",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "splash": {
@@ -21,11 +21,12 @@
       "bundleIdentifier": "com.sublimedeveloper.subapp"
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.sublimedeveloper.subapp"
+      "package": "com.sublimesubstitutionmanager"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,5 +36,7 @@
         "projectId": "7c9563dd-6084-45f5-a44e-72e11000d3d6"
       }
     }
+    
+   
   }
 }

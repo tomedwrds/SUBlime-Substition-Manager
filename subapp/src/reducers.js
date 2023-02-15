@@ -53,6 +53,9 @@ function teamReducer(state = teamState, action)
                                             : content
                 )}
 
+
+
+
         case ADD_POSITION:
             return {...state,team_data: 
                 state.team_data.map(
@@ -301,3 +304,5 @@ export default rootReducer = combineReducers({
     savedReducer,
     teamReducer
 });
+
+

@@ -322,7 +322,7 @@ else
                   
                   if (indexToAddTime != -1)
                   {
-                      timeData[player][1] +=1
+                      timeData[indexToAddTime][1] +=1
                   }
               }
           }
@@ -424,7 +424,7 @@ else
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Subsheet</Text>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Subsheet Creation</Text>
                   <Text style = {{textAlign:'center'}}>{'It is time to get down to business. On this page you can manage your newly created Subsheet. Tap on a minute to begin adding players into a position at that time. You can then drag the added player to increase their playtime. Be warned, that your subsheet will be deleted if you don’t save it.\n\nOnce you have finished your Subsheet press the ‘✅’ button to begin the match.\n'}</Text>
                  
                   <View style = {{flexDirection:'row'}}>
@@ -440,7 +440,7 @@ else
       </Modal>
       
       <View style = {{...styles.header, alignItems:'center'}}>
-      <Text style ={{fontSize:40}}>Game Overview🏑</Text>
+      <Text style ={{fontSize:40}}>Subsheet Creation🏑</Text>
       
         
          
@@ -471,10 +471,10 @@ else
       </View>
       
       <View style = {styles.belowArea}>
-        <Text style = {{fontSize:20,marginRight:10}}>View</Text>
+        <Text style = {{fontSize:20,marginRight:10}}></Text>
           <View style = {{alignItems:'center'}}>
            
-             <SelectDropdown
+             {/* <SelectDropdown
                 data={[
                     {label:'Position',value:'Position'},
                     { label: 'Player', value: 'Player' }
@@ -500,7 +500,7 @@ else
                 defaultValue={'Position'}
                 defaultButtonText={'Position'}
                 dropdownStyle={{borderRadius:9}}
-            />
+            /> */}
           </View>
           
         

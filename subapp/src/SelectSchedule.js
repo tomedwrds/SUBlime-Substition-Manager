@@ -95,7 +95,7 @@ const SelectSchedule = ({navigation}) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Subsheets</Text>
+                        <Text style={{fontSize:32,marginBottom:20,textAlign:'center'}}>Welcome to SUBlime – Subsheet Management</Text>
                         <Text style = {{textAlign:'center'}}>{'In SUBlime you can create Subsheets. Subsheets are an overview of your substitutions during the game. You can add players to them to create your ideal game plan. \n'}</Text>
                         <Text style = {{textAlign:'center',paddingBottom:10}}>Begin by pressing ‘+’ to create your first subsheet.</Text>
                         <View style = {{flexDirection:'row'}}>
@@ -123,7 +123,7 @@ const SelectSchedule = ({navigation}) => {
             />
             <View style = {styles.header}>
                 
-                <Text style = {{fontSize:40}}>Subsheets</Text>
+                <Text style = {{fontSize:40}}>Subsheet Management</Text>
                 <View style = {{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
                     <Pressable onPress = {()=>toggleModalSetup()}>
                         <Icon 

@@ -90,7 +90,7 @@ const FormationManagment = () =>
                 <CreateFormation sport = {team_sport} displayModal={displayModal} setDisplayModal = {setDisplayModal} teamIndex = {generalData.current_team_index} createFormation={createFormation} formationId = {teamData.team_data[adjusted_team_index].team_formation_data.team_formation_index}/>
                 <View style = {styles.header}>
                     <View>
-                        <Text style = {{fontSize:40}}>Formations</Text>
+                        <Text style = {{fontSize:40}}>Formation Managment</Text>
                     </View>
                     <Pressable style = {{alignItems:'flex-end',flex:1}} onPress={() => {setDisplayModal(!displayModal)}}>
                         

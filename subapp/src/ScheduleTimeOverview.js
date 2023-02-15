@@ -25,8 +25,10 @@ const ScheduleTimeOverview = () => {
     let timeData = []
     for(let k = 0; k < team_data.length; k++ )
     {
+        
         timeData.push([team_data[k].id,0])
     }
+
 
 
     //generate the time data
@@ -43,7 +45,7 @@ const ScheduleTimeOverview = () => {
                 
                 if (indexToAddTime != -1)
                 {
-                    timeData[player][1] +=1
+                    timeData[indexToAddTime][1] +=1
                 }
             }
         }
@@ -82,7 +84,7 @@ const ScheduleTimeOverview = () => {
         <SafeAreaView style = {{flex:1}}>
             <View style = {styles.timeContainer}>
                 <View style = {{flexDirection:'row'}}>
-                    <Text style = {styles.titleText}>Playtime Allocation</Text>
+                    <Text style = {styles.titleText}>Gametime Allocation 🕒</Text>
                     <View style = {{justifyContent:'center',alignItems:'flex-end',flex:1}}>
                         <Text style = {{fontSize:40}}>⏰</Text>
                     </View>

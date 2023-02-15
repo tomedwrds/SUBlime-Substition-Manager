@@ -219,7 +219,7 @@ const TimeOverview = () => {
       >
           <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Seasonal Playtime</Text>
+                  <Text style={{fontSize:32,marginBottom:20}}>Welcome to SUBlime – Seasonal Gametime</Text>
                   <Text style = {{textAlign:'center'}}>{'Equal and fair playtime is key for enjoyment for all in sports. This page displays the playtime of all players across the season. If you wish you can get a more analytical overview of playtime by selecting the ‘Average’ or ‘Breakdown options. When creating your Subsheet you can view a time breakdown specific to that Subsheet.\n '}</Text>
                  
                   <View style = {{flexDirection:'row'}}>
@@ -235,7 +235,7 @@ const TimeOverview = () => {
       </Modal>
             <View style = {styles.timeContainer}>
                 <View style = {{flexDirection:'row'}}>
-                    <Text style = {styles.titleText}>Season Playtime Allocation</Text>
+                    <Text style = {styles.titleText}>Season Gametime Allocation 🕒</Text>
                     <View style = {{justifyContent:'center',alignItems:'flex-end',flex:1}}>
                         <Text style = {{fontSize:40}}>⏰</Text>
                     </View>

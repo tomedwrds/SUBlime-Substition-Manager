@@ -488,6 +488,7 @@ const GameSetup = (props) =>
 const styles = StyleSheet.create({
     container: {
         marginHorizontal:20,
+        marginTop:24,
         flex:1
     },
     subTextView: {

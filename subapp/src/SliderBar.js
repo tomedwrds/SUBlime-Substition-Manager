@@ -541,7 +541,7 @@ const SliderBar = ({item},updatePosition,updateIntervalWidth,moveDir,setMoveDir,
                    
                         return (
                           
-                            <Text style = {{fontSize:16,textAlign:'center'}}>{number}</Text>
+                            <Text style = {{fontSize:16,textAlign:'center'}}>+</Text>
                           )
                       }}
                       

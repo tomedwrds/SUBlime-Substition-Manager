@@ -117,7 +117,7 @@ const FormationSelection = (props) =>
         supportedOrientations={['landscape']}
         
         >
-            <SafeAreaView>
+            <SafeAreaView style= {{marginTop:30}}>
                 <View style = {styles.header}>
                     <View>
                         <Text style = {{fontSize:40}}>Select a Formation</Text>

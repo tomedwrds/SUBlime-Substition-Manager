@@ -110,9 +110,12 @@ const CreateFormation = (props) => {
         <Modal
         supportedOrientations={['landscape']}
         visible ={props.displayModal}
-        onRequestClose = {()=>props.setDisplayModal(!props.displayModal)}
+        onRequestClose = {()=>props.setDisplayModal(!props.displayModal)
+        
+        }
+        animationType={'slide'}
         >
-            <SafeAreaView style={{flexDirection:'row',flex:1}}>
+            <SafeAreaView style={{flexDirection:'row',flex:1,marginHorizontal:20,marginTop:30}}>
                 <View style ={{flex:1,marginLeft:10}}>
                     <Text style = {{fontSize:40}}>Formation Creation</Text>
                     <TextInput placeholderTextColor={'#bfbbbb'} 
@@ -122,11 +125,7 @@ const CreateFormation = (props) => {
                     </View>
                     <View style ={{flexDirection:'row',marginTop:1,alignItems:'center'}}>
                         <Pressable onPress={()=>addNewFormation()}>
-                        <Icon 
-              name='plus' 
-              size = {50} 
-              color = '#0BD61F'
-            />
+                        <Text style ={{fontSize:40}}>💾</Text>
                         </Pressable>
                         <Pressable onPress={()=>
                         Alert.alert(
@@ -140,11 +139,7 @@ const CreateFormation = (props) => {
                             
                             
                             } style ={{marginLeft:10}}>
-                        <Icon 
-              name='close' 
-              size = {50} 
-              color = 'red'
-            />
+                            <Text style ={{fontSize:40}}>🗑️</Text>
                         </Pressable>
                     </View>
                 </View>
