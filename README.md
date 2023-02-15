@@ -16,4 +16,5 @@ The written portfolio and project code is included in the repo. I have also incl
 
 ## Download Links
 IOS: https://apps.apple.com/us/app/sublime-substitution-manager/id1637565106
+
 Android: https://play.google.com/store/apps/details?id=com.sublimesubstitutionmanager
