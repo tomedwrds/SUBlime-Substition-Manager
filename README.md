@@ -1,4 +1,7 @@
-![SUBlime logo](https://github.com/tomedwrds/SUBlime-Substition-Manager/blob/master/subapp/assets/iconsmall.png)
+<p align="center">
+  <img width="256" height="256" src="https://github.com/tomedwrds/SUBlime-Substition-Manager/blob/master/subapp/assets/iconsmall.png">
+</p>
+
 # Sublime Substitution Manager
 SUBlime Substituion Manager is a sports management app targeted at increasing inclusivity and enjoyment in junior sports by ensuring the equal allocation of play time for all players. SUBlime was developed in collaboration with Christchurch Netball, Mainland Football and Canterbury Basketball. SUBlime is available for download on IOS and Android.
 
